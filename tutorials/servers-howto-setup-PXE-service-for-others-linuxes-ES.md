@@ -1,5 +1,7 @@
 Preparar un alpine, para brindar el servicio PXE TFTP y asi se pueda arrancar otras computadoras con dicho servicio.
 
+No es un secreto quela wiki de alpine es una de las peores.. asi que tenemos esta guia detallada:
+
 ## requisitos
 
 * red, opciones:
@@ -119,11 +121,26 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86/alpine-netboot-3.1
 
 tar xfz netboot.tar.gz
 
-wget http://archive.debian.org/debian-archive/debian/dists/wheezy/main/installer-i386/current/images/SHA256SUMS
+apk add syslinux
 
-wget http://archive.debian.org/debian-archive/debian/dists/wheezy/Release
+cp /usr/share/syslinux/pxelinux.0 /srv/tftp/
+cp /usr/share/syslinux/ldlinux/ldlinux.c32  /srv/tftp/
+cp /usr/share/syslinux/libcom32.c32 /srv/tftp/
+cp /usr/share/syslinux/libutil.c32 /srv/tftp/
+cp /usr/share/syslinux/pxechn.c32 /srv/tftp/
 
-wget http://archive.debian.org/debian-archive/debian/dists/wheezy/Release.gpg
+mkdir pxelinux.cfg
+cat > pxelinux.cfg/default << EOF
+MENU TITLE PXE
+PROMPT 0
+TIMEOUT 3
+default alpine
+LABEL alpine
+        MENU LABEL install
+        KERNEL boot/vmlinuz-lts
+        INITRD boot/initramfs-lts
+        APPEND ip=dhcp modloop=http://192.168.1.2/boot/modloop-lts alpine_repo=http://192.168.1.2/main modules=loop,squashfs,sd-mod,usb-storage nomodeset vag=normal nofb xforcevesa
+EOF
 
 chmod -R 755 /srv/tftp/
 
@@ -138,44 +155,44 @@ y protocolo ambos el UDP y el TCP.
 
 **Archivos para repos offline**:
 
+**Archivos para repos offline**:
+
 El instalador una vez iniciado buscara un web repositorio, y si no 
 tienes internet no podra seguir, asi que podemos emularlo con 
-un repositorio desde el ISO debian (cualquiera netinstall, dvbd/cd, etc)
+un repositorio desde el ISO alpine (cualquiera netinstall, dvbd/cd, etc)
 localmente con lighttpd, apache2 etc..
 
-Si estas instalando un debian oldstable, intentara usar "stable" como 
-distro ademas por lo que aun con internet fallaria con versiones viejas.
+Si estas instalando un alpine oldstable, intentara tomar los archivos
+desde internet porlo que fallara asi que deberas proveeer los archivos.
 
 ```
-apt-get install lighttpd
+apk add lighttpd
 
-lighty-enable-mod accesslog  dir-listing status
+rc-update add lighttpd default
 
-lighty-disable-mod unconfigured
+mkdir -p /var/lib/lighttpd
+mkdir -p /run/lighttpd
+chown -R lighttpd:lighttpd /var/www/localhost/
+chown -R lighttpd:lighttpd /var/lib/lighttpd
+chown -R lighttpd:lighttpd /var/log/lighttpd
+chown -R lighttpd:lighttpd /run/lighttpd
+
+sed -i 's#\#.*server.port.*=.*#server.port          = 80#g' /etc/lighttpd/lighttpd.conf
+sed -i 's/#.*dir-listing.activate.*=.*/   dir-listing.activate     = "enable"/' /etc/lighttpd/lighttpd.conf
 
 service lighttpd restart
 
 cd /srv/tftp/
 
-apk add wget
+apk add wget coreutils util-linux
 
 wget https://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86/alpine-standard-3.11.13-x86.iso
 
-apk add coreutils
-
 mkdir /srv/tftp/alpine-iso
+mkdir /var/www/localhost/htdocs/main
 mount alpine-standard-3.11.13-x86.iso /srv/tftp/alpine-iso -o loop
-cp -rf /srv/tftp/debian-iso/* /var/www/ -o loop
+cp -rf /srv/tftp/alpine-iso/apks/* /var/www/localhost/htdocs/main/
 ```
-
-Adicional para que funcione debe alterarse estos archivos
-
-* /srv/tftp/debian-installer/i386/boot-screens/txt.cfg
-* /srv/tftp/debian-installer/i386/boot-screens/adtxt.cfg
-* /srv/tftp/debian-installer/i386/boot-screens/spk.cfg
-
-La linea `append` hacia el final agregar siempre `debian-installer/allow_unauthenticated=true`
-sino no podra usar los repos ni archivos installer desde la red local.
 
 ## Configuracion maquina 2
 
