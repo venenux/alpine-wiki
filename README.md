@@ -44,7 +44,7 @@ How to contribute to this project? Check the [How to contribute](#how-to-contrib
 - Matrix
   - 👥 https://matrix.to/#/#alpine-linux-english:matrix.org
 
-# LISENCE
+# LICENSE
 
 **CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
 in any medium or format for noncommercial purposes only, and only so long as attribution is given 
