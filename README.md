@@ -10,7 +10,7 @@ a Linux distribution [with base on musl libc](alpine/base-with-muslc-and-busybox
 and [defaults commands to Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox), 
 with option to change that!
 
-Where to start? Check the [Tutorials and Docs](#tutorials-and-docs) section.
+Where to start? Check the [Tutorials and Docs](#tutorials-and-docs) section. [This is not an official project](alpine/copyright.md)
 
 How to contribute to this project? Check the [How to contribute](#how-to-contribute) section.
 
@@ -28,6 +28,21 @@ How to contribute to this project? Check the [How to contribute](#how-to-contrib
 ### How to contribute
 
 * [Contribution.md](alpine/contribution.md)
+
+### Social network and contact
+
+- 🗯 IRC
+  - 💬 `##alpine_telegram_english`
+  - 💬 `#alpine_linux_english`
+- 📱 Telegram https://t.me/alpine_linux
+  - 🇬🇧 https://t.me/alpine_linux_english
+  - 🇷🇺 https://t.me/alpine_linux_pycckuu (dual english russian, low activity)
+  - 🇨🇴 https://t.me/alpine_linux_espanol
+  - 🇧🇬 https://t.me/alpine_linux_bulgarian (dual english bulgarian, low activity)
+  - 🇨🇳 https://t.me/alpine_linux_chinese (dual english chinese, low activity)
+  - 📡 https://t.me/opentechnologies (open languajes but english as main)
+- Matrix
+  - 👥 https://matrix.to/#/#alpine-linux-english:matrix.org
 
 # LISENCE
 
