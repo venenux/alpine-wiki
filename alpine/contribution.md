@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://codeberg.org/repo-avatars/36054-748761d616a7bf1d6849e904aee637dc" alt="Alpine Linux" width="350" />
+  <img src="apine-logo-telegram-groups.jpg" alt="Alpine Linux" width="350" />
 </p>
 
 ---
