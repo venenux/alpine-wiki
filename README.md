@@ -4,11 +4,11 @@
 
 # alpine_wiki
 
-This is a markdown based effor to provide non-minimalist documentation 
-for a minimalist operating system named [Alpine Linux](alpine/about.md), 
-a Linux distribution [with base on musl libc](alpine/base-with-muslc-and-busybox.md#base-with-muslc) 
-and [defaults commands to Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox), 
-with option to change that!
+This is a markdown-based effort to provide a non-minimalist documentation 
+for the minimalist operating system [Alpine Linux](alpine/about.md);
+a Linux distribution based upon the [Musl LibC](alpine/base-with-muslc-and-busybox.md#base-with-muslc) 
+and defaults commands to [Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox)
+but not limited to only those options.
 
 Where to start? Check the [Tutorials and Docs](#tutorials-and-docs) section. [This is not an official project](alpine/copyright.md)
 
