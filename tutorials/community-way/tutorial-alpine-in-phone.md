@@ -11,7 +11,7 @@
 ### To exit alpine:
 `exit`
 
-### To start alpine again,open termux,(start command) 
+### To start alpine again,open termux,(start command)  
 `startalpine`
 ---
 
