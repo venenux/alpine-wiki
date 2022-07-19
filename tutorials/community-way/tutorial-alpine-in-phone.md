@@ -1,23 +1,33 @@
 
 # INSTALL ALPINE LINUX ON PHONE!
 
-###  Download & Install termux/iSH shell:
-#### For Android:
-[Download Termux.apk](https://f-droid.org/repo/com.termux_118.apk)
-> If link doesn't work then manually download from f-droid.org
-
-#### For iOS:
+## For iOS:
 [Download iSH Shell](https://apps.apple.com/us/app/ish-shell/id1436902243)
+>This app provides you Alpine-Linux,thats it!  
+___
 
-### To Install alpine linux,Open termux app:
-`pkg install git && curl -LO https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh && bash TermuxAlpine.sh && startalpine`
 
-### To exit alpine:
-`exit`
+## For Android:
+[Download Termux.apk](https://f-droid.org/repo/com.termux_118.apk)
+> If link doesn't work then manually download and install from f-droid.org
+>Install app,and follow more steps as follows:
 
-### To start alpine again,open termux,(start command)  
- `startalpine`
+### To install Alpine-Linux,open termux app and use following command:
+  `pkg install git && curl -LO https://raw.githubusercontent.com/Hax4us/TermuxAlpine/master/TermuxAlpine.sh && bash TermuxAlpine.sh && startalpine`  
+>Copy-paste it in termux.
+>
+>Its successfully installed if no error is seen.
+___
+
+### To logout/exit Alpine-Linux:
+  `exit`  
+
+### To start Alpine-Linux again:  
+ `startalpine`  
 ---
+[Join our community,Help or discuss with us.](https://t.me/alpine_linux_english)
+
+___
 
 ####  *Refrence Sources* :
 [iSH Github](https://github.com/ish-app/ish)
