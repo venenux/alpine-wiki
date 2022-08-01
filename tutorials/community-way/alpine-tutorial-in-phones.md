@@ -10,6 +10,12 @@ the Alpine operating system, just like a kind of virtual machine but its not!
 
 If you want more help directly [ask for help here](../README.md#help-online-directly).
 
+## Introduction
+
+TERMUX or ISH are applications providing linux like environment.
+
+Using Alpine-linux is beneficial for programmers,computer science students, 
+
 ## Requirements
 
 1. **IMPORTANT REQUIREMENT** Let's remember that you must have a minimum understanding 
@@ -85,4 +91,16 @@ A simple `apk upgrade -a` will fix it.
 * [Ask for help here](../README.md#help-online-directly)
 * [About Alpine linux](../../alpine/about.md)
 
+# LICENSE
+
+**CC BY-NC-SA**: this project allows reusers to distribute, remix, adapt, and build upon the material 
+in any medium or format for noncommercial purposes only, and only so long as attribution is given 
+to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
+material under identical terms,  includes the following elements:
+
+* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
+* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+
+For more information check the [../alpine/copyright.md](../alpine/copyright.md)
 
