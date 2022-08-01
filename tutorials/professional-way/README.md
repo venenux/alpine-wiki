@@ -1,38 +1,12 @@
-Community way of alpine wiki documentation
-=========================================
+Alpine wiki in Professional ways
+================================
 
-The **tutorials are hands-on docs** expected to try and achieve the goals described 
-in each step, possibly with the help of a good example. The output in one step 
-is the starting point for the following steps.
+The documentation here requires a minimum medium or advanced level of knowledge in Linux, 
+if you do not have the level it is recommended that you read the [documents in the NEWBIE category](../../newbie/README.md)
 
-The **Howtos are smaller articles** explaining how to perform a particular task 
-with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
+## SERVICES
 
-Those documents are community made and may or not may have updated.
-For more up to date documents check [the main index at tutorials/README.md](../README.md)
-
-## INSTALL
-
-TODO
-
-## PHONES
-
-* [alpine-tutorial-in-phones.md](alpine-tutorial-in-phones.md)
-    * [phones-androit-allow-external-apps-install.md](phones-androit-allow-external-apps-install.md)
-
-## DESKTOPS
-
-* [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
-
-## SERVERS
-
-* [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
-
-## DESKTOP
-
-TODO
-
-NOTE: in this directory (we will called category spaces) each member or contributor will or can put their own tutorial or guides
+* [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
 
 ## Convention for naming the files:
 

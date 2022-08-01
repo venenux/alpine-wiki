@@ -1,9 +1,24 @@
 Alpine Linux tutorias and how tos
 =================================
 
-This category section will try to guide new ones with almost basic enought knowledge of Linux.
+The **tutorials are hands-on docs** expected to try and achieve the goals described 
+in each step, possibly with the help of a good example. The output in one step 
+is the starting point for the following steps.
 
-**CONSIDERATIONS**: Please check the [Feature Differences OF THIS ALPINE LINUX](../newbies/README.md#feature-differences) 
+The **Howtos are smaller articles** explaining how to perform a particular task 
+with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
+
+## TUTORIALS AND HOW TOS
+
+We divided the guides, tutorials and howtos in 3 main sections (directories):
+
+1. [newbies](../newbies) (formal ways of doing things but with explanations, mostly for begginers)
+2. [community-way](community-way) (informal ways of doing things, with minimal or no explanations)
+3. [professional-way](professional-way) (informal ways but with more explanations and implicit security)
+
+## Acknowledges
+
+**CONSIDERATIONS**: Please check the [Feature Differences OF ALPINE LINUX](../newbies/README.md#feature-differences) 
 but those are the main ones you should considering before usage of Alpine linux:
 
 1. Alpine Linux **is designed for power users, with security and simplicity in mind**.
@@ -18,15 +33,6 @@ but you can use linux using [termux](tutorial-alpine-in-phone.md) or [ish](tutor
 * **Time**, you will need time, cos you will need to read a lot!
 * **Computer**, you should **have a pc, or phone**, and must have a UNIX like operating system, like MAC/IOS or Androit/Linux
 * **Internet**, and minimal bandwitch of internet network.. 
-
-## TUTORIALS AND HOW TOS
-
-We divided the guides, tutorials and howtos in 3 main sections, one for new new fresh users (newbies)
-and the others two for impatients:
-
-1. [newbies](../newbies)
-2. [community-way](community-way)
-3. [professional-way](professional-way)
 
 ## Help online directly
 
