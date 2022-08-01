@@ -18,7 +18,8 @@ All contributors are expected to abide by our [Rules of Conduct](rules-of-conduc
 
 #### Contributing Guidelines
 
-Thanks for your interest in contributing to the project! Those are the **areas or ways you can contribute**:
+Thanks for your interest in contributing to the project! Those are the 
+**areas or ways you can contribute**:
 
 - Help to improve and redact into the wiki:
     - [How to join and fill a suggestion](#how-to-join-and-fill-a-suggestion)
@@ -27,7 +28,8 @@ Thanks for your interest in contributing to the project! Those are the **areas o
     - [How to join and apply for bug issue handler](#how-to-join-and-apply-for-bug-issue-handler)
     - [How to join and apply for repo sync manager](#how-to-join-and-apply-for-repo-sync-manager)
 
-Each of ***those areas or ways have already alternative ways to do the same**, cos obviously will need minimal requirements already explained in each section.
+Each of ***those areas or ways have already alternative ways to do the same**, 
+cos obviously will need minimal requirements already explained in each section.
 
 ## How to join and fill a suggestion
 
