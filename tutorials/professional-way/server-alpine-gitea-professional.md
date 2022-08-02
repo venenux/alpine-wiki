@@ -1,7 +1,7 @@
 # alpine server gitea
 
 Gitea is a community managed lightweight code hosting solution written in Go. 
-It is a fork of Gogs.
+It is a fork of Gogs. For a more simple guide use the [alpine-howto-gitea-package.md](../community-way/alpine-howto-gitea-package.md)
 
 ## Clarifications
 

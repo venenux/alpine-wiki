@@ -27,6 +27,7 @@ TODO
 ## SERVERS
 
 * [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
+* [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
 
 ## DESKTOP
 
