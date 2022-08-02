@@ -17,7 +17,7 @@ of your machine:
 - [Storage](#storage)
 - [Peripherals](#peripherals)
 
-#### Architectures
+## Architectures
 
 **Architecture means kind of computer. The most popular architecture is
 the misnamed "Intel IBM PC"** or "i386" which is actually in fact the
@@ -37,7 +37,14 @@ supported by Alpine:
 | ppc64le        | v3.6    | current | for 64-bit big-endian PowerPC and Power ISA processors like some MAC computers.                            |
 | s390x          | v3.6    | v3.15.0 | For the Super powered IBM mainframes, especially IBM Z and IBM LinuxONE servers.                           |
 
-#### Memory
+#### CPU
+
+* Intel
+    * Core i3 8121U are supported from alpine v3.6 to v3.14
+* AMD
+    * AMD Semprom are pretty slower with recent kernels, so its practically not supported
+
+## Memory
 
 **Means minimum amount of RAM memory. Need of RAM it depends of the
 meaning of the installation**, any hardware are supported and there is
@@ -54,7 +61,7 @@ minimum sizes for:
 | ppc64le     | 256 Megs         | 512 Megs           | 1 Gigs          | 6 Gigs            |
 | s390x       | 128 Megs         | 256 Megs           | 1 Gigs          | N/A               |
 
-#### Storage
+## Storage
 
 **Means any external or internal storage device that can be added after
 or before install to use** by the Alpine Linux system. Currently depends
@@ -64,7 +71,7 @@ of the current linux kernel supported.
 SD** card that can be detected by USB BUS by the linux kernel subsystem
 during install.
 
-#### Peripherals
+## Peripherals
 
 **Means any external or internal device that can be added after or
 before install to detectd** by the Alpine Linux system. Currently
@@ -112,6 +119,9 @@ the only problem are few modules like Broadcom (that some not matter if
 are older or newer will require compilation and firmware) and the 
 Realtek Semiconductor only if your device are so so recent.
 
+* prism54 FullMAC PCI / Cardbus devices used to be supported only by the
+  prism54 wireless driver its not supported by alpine, only debian 4, 5, and 6 supports
+
 
 # Software requirements
 
@@ -120,7 +130,7 @@ Realtek Semiconductor only if your device are so so recent.
 - [Storage](#storage)
 - [Firmware](#firmware)
 
-### Media
+## Media
 
 **Means the files need for dump the install media, and later boot from
 the target install** machine, of course downloaded from
@@ -146,7 +156,7 @@ and latest versions, **the age of these devices will require that you do
 not use software so modern** that it always increases the requirements 
 to do the same task as any recent version of same.
 
-### Booting
+## Booting
 
 **Means support for kind of BIOS setup of machine, and where can be
 media downloaded will be boot**, please for more info check [Alpine and UEFI](alpine-and-uefi.md)) wiki page
@@ -172,7 +182,7 @@ it when it boots. Typical keys are: `F9`-`F12`, sometimes `F7` or
 enter the BIOS configuration and adjust the boot settings, for which
 typical keys are: `Del.` `F1` `F2` `F6` or `Esc.`
 
-### Space
+## Space
 
 **This means amount of available space in disk partitions to perform a
 kind of install** and of course will depends of type and meaning of your
