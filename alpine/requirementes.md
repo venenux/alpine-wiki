@@ -29,8 +29,8 @@ supported by Alpine:
 | Supported Arch | since   | until   | Meaning of installation and target architecture                                                            |
 | -------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------- |
 | x86\_64        | all     | current | The popular AMD64 compatible 64-bit x86 based machines, i386 is not recommended for newer/latest hardware. |
-| x86            | all     | current | The all popular 32 bit intel (i386 pc 32bit) and x86\_64 (i686 pc 64bit and amd64)compatible (both)        |
-| ppc64le        | v3.6    | current | For the PowerPC devices with pure little-endian mode, mostly for POWER8 and POWER9                         |
+| x86            | all     | current | The all popular 32 bit intel (i386 pc 32bit) and x86\_64 with 32bit compatible (i686 pc 64bit amd64)      |
+| ppc64le        | v3.6    | current | For the PowerPC devices with pure little-endian mode, mostly for POWER8 and POWER9                       |
 | armhf          | v3.0    | current | The newer ARM hard-float for newer, more powerful 32-bit devices alongside 64-bit. Including video games\! |
 | armv7          | v3.9    | current | The 32-bit ARM only execution state of the ARMv7 devices machines. Including video game consoles\!         |
 | aarch64        | v3.5    | current | The 64-bit ARM only execution state of the ARMv8 device machines. Like Rasberri's                          |
@@ -40,9 +40,9 @@ supported by Alpine:
 #### CPU
 
 * Intel
-    * Core i3 8121U are supported from alpine v3.6 to v3.14
+    * Core i3 8121U are supported from alpine v3.6 to v3.14 only.
 * AMD
-    * AMD Semprom are pretty slower with recent kernels, so its practically not supported
+    * AMD Semprom are pretty slower with recent kernels, so its practically not supported, use older versions of alpine or own build kernel
 
 ## Memory
 
@@ -139,21 +139,21 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases or main Download pag
 | Available for | ISO (for USB, CD/DVD) | IMG (for Netboot) | TAR (for ROOTFS, in tar.gz) | Download links recommended                                             |
 | ------------- | --------------------- | ----------------- | --------------------------- | ---------------------------------------------------------------------- |
 | x86\_64       | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/>  |
-| x86           | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.12.2/releases/x86/>     |
+| x86           | YES (best is v3.12.0) | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86/>     |
 | ppc64le       | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/ppc64le/> |
 | armhf         | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/>   |
 | armv7         | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armv7/>   |
 | aarch64       | YES                   | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/> |
-| mips64        | YES (until v3.15.0)   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.13.0/releases/mips64/>  |
-| s390x         | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.15.0/releases/s390x/>   |
+| mips64        | YES (until v3.14.0)   | YES               | N/A                         | <https://dl-cdn.alpinelinux.org/alpine/v3.13/releases/mips64/>  |
+| s390x         | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.15/releases/s390x/>   |
 
 For some architectures, those pc machines must use an older alpine linux, 
 our wiki has good recipes for such cases, like the `x86` knowed widely 
 as `i386` or `32bit pc`, its better to use the recomended download link, 
 
-Contrary to everything that stupids devs will say about using fads, fashioned 
+Contrary to everything that stupids devs will say about using up to date, fashioned 
 and latest versions, **the age of these devices will require that you do 
-not use software so modern** that it always increases the requirements 
+not use software so modern things** that it always increases the requirements 
 to do the same task as any recent version of same.
 
 ## Booting
