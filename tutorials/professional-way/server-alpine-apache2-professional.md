@@ -42,7 +42,7 @@ For testing open a browser and go to `http://<webserveripaddres>` and you will s
 
 **WARNING**: alpine packagers are a mess, the apache2 default configuration is not ordened so all the conf files under `/etc/apache2/conf.d/` will be loaded with no specific order.
 
-## Controlling Lighttpd
+### Controlling Apache2
 
 **Start apache2**: After the installation lighttpd is not running. As we made in first section was started already but if you want to start lightttpd manually use: `rc-service apache2 start`
 
@@ -54,7 +54,7 @@ You will get a feedback about the status.
 
 **Restart lighttpd**: After changing the configuration file lighttpd needs to be restarted. `rc-service lighttpd restart`
 
-## Apache2 Configuration
+### Apache2 Configuration
 
 **If you just want to serve simple HTML pages apache2 can be used out-of-box. No further configuration needed.**
 
@@ -161,11 +161,12 @@ We need to created a sefl-signed certificate, so openssl are need in any case ei
 1. install openssl and apache-ssl
 2. create the self signed certificate
 3. set proper permissions
-4. setup the port for the openssl protocol module
-5. setup the allowed negociations, by example allow TLS 1.0 (default deny sslv3 and tls1)
-6. setup the allowed protocols, by example allow also olders ones like TLS 1.0
-7. activate the mod_redirect in case of global http to https redirections
-8. restart the service to see changes
+4. setup the cert file for combined pem
+5. setup the port for the openssl protocol module
+6. setup the allowed negociations, by example allow TLS 1.0 (default deny sslv3 and tls1)
+7. setup the allowed protocols, by example allow also olders ones like TLS 1.0
+8. activate the mod_redirect in case of global http to https redirections
+9. restart the service to see changes
 
 ```
 apk add openssl apache2-ssl
@@ -177,6 +178,12 @@ openssl req -x509 -days 1460 -nodes -newkey rsa:4096 \
    -keyout /etc/ssl/certs/localhost.pem -out /etc/ssl/certs/localhost.pem
 
 chmod 640 /etc/ssl/certs/localhost.pem
+chown apache:www-data /etc/ssl/certs/localhost.pem
+
+sed -i -r 's#^SSLCertificateKeyFile.*/etc/#\#SSLCertificateKeyFile /etc/#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#^SSLCertificateFile.*/etc/#SSLCertificateFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#^SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#\#.*SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
 
 sed -i -r 's#^Listen.*#Listen 443#g' /etc/apache2/conf.d/ssl.conf
 
@@ -193,6 +200,38 @@ rc-service apache2 restart
 1. This is a permissive configuration full compatible wtith older and newer browsers.
 2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
 3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
-4. to only allow most secure negociations and a bit of compat, set proxy to
-`SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
 
+## Lest Encrypt
+
+To obtain a real certificate, use our best guide for: 
+
+Check the document [guide-only-dehydrated.md](guide-only-dehydrated.md) there's also a specific section to setup apache2.
+
+## see also
+
+- 🗯 IRC
+  - 💬 `##alpine_telegram_english`
+  - 💬 `#alpine_linux_english`
+- 📱 Telegram https://t.me/alpine_linux
+  - 🇬🇧 https://t.me/alpine_linux_english
+  - 🇷🇺 https://t.me/alpine_linux_pycckuu (dual english russian, low activity)
+  - 🇨🇴 https://t.me/alpine_linux_espanol
+  - 🇧🇬 https://t.me/alpine_linux_bulgarian (dual english bulgarian, low activity)
+  - 🇨🇳 https://t.me/alpine_linux_chinese (dual english chinese, low activity)
+  - 📡 https://t.me/opentechnologies (open languajes but english as main)
+- Matrix
+  - 👥 https://matrix.to/#/#alpine-linux-english:matrix.org
+
+# LICENSE
+
+**CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
+in any medium or format for noncommercial purposes only, and only so long as attribution is given 
+to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
+material under identical terms,  includes the following elements:
+
+* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
+* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+
+For more information check the [alpine/copyright.md](../../alpine/copyright.md)

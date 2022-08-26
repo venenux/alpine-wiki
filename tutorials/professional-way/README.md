@@ -6,7 +6,9 @@ if you do not have the level it is recommended that you read the [documents in t
 
 ## SERVICES
 
-* [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
+* How to setup apache professional at [server-alpine-apache2-professional.md](server-alpine-apache2-professional.md)
+* How to setup gitea professional at [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
+* Implementation of a certificate [guide-only-dehydrated.md](guide-only-dehydrated.md)
 
 ## Convention for naming the files:
 
