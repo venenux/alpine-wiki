@@ -186,6 +186,7 @@ sed -i -r 's#^SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/l
 sed -i -r 's#\#.*SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
 
 sed -i -r 's#^Listen.*#Listen 443#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#^<VirtualHost.*#<VirtualHost _default_:443>#g' /etc/apache2/conf.d/ssl.conf
 
 sed -i -r 's#^SSLProtocol.*#SSLProtocol all#g' /etc/apache2/conf.d/ssl.conf
 
@@ -201,6 +202,9 @@ rc-service apache2 restart
 2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
 3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
 4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+
+Best is to made a redirection inside of the document root of port 80 deifintion
+also put a `<IfModule mod_ssl.c>` conditional at the beginning of the ssl config file.
 
 ## Lest Encrypt
 
