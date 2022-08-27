@@ -150,6 +150,38 @@ rc-service lighttpd restart
 
 If you change the user dir , then you must change the directory definition at the last block.
 
+#### Apache2 alpine proxy modules setup
+
+The error of the XML file in the proxy modules are due the incomplete right made package:
+
+```
+httpd: Syntax error on line 481 of /etc/apache2/httpd.conf: Syntax error on line 13 of /etc/apache2/conf.d/proxy-html.conf: Cannot load /usr/lib/libxml2.so into server: Error loading shared library /usr/lib/libxml2.so: No such file or directory
+```
+
+The right setup of any proxy module or redirection is:
+
+1. install the proxy apache2 packages
+2. fix the configuration of the modules
+3. setup a conf file for your redirection
+4. restart the service
+
+```
+apk add apache2-proxy-html apache2-proxy
+
+sed -i -r 's#/usr/lib/libxml2.so#/usr/lib/libxml2.so.2#g' /etc/apache2/conf.d/proxy-html.conf
+
+cat >> /etc/apache2/conf.d/myproxy.conf << EOF
+    ProxyPreserveHost On
+    ProxyRequests off
+    AllowEncodedSlashes NoDecode
+    ProxyPass / http://127.0.0.1:3002/ nocanon
+EOF
+
+service apache2 restart
+```
+
+**WARNING** of course, the `myproxy.conf` is hypothetical, for didactic purposes, here it is only exemplified that the error is corrected in the step of the sed command to work.
+
 #### Apache2 SSL support
 
 The package as we said is made in a limited way, and only has a unique config file at `/etc/apache2/conf.d/ssl.conf`.
