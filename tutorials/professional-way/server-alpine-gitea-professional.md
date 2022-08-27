@@ -376,6 +376,142 @@ this means you must check in the config `app.ini` file (like the `gitea2.ini` )
 that after the póst setup procedure, the port are correct and different, if not just, 
 before or after change it with `HTTP_PORT` and `ROOT_URL` keys.
 
+## Serving web gui
+
+The gitea by itselft its also a web service, but you have three options to made this:
+
+1. **Root hijacking web server**: by configuring as the main web service, this is 
+using the port 80 instead of the default 3000 number. Of course the disadvantage 
+is that will be the only web service over the standar http port
+2. **Proxy [sub]domain web service**: by configurin as service behind another web server, 
+but using a hole domain for the service, this still is a variant of the first case, 
+cos will run behind a web server, that will reverse proxy the resquest to the gitea service, 
+this setup is only usefully if you run multiple domains in same web service, so gitea 
+dont hijack the hole web service, and only hijack one domain of the web service.
+3. **Proxy subpath of the web service**: by configuring as part of the same web service, 
+just inside a path, event a hole domain or subdomnain, this is pretty usefully cos the 
+service of gitea will coexist with others in sabe path domain. This is a variant of 
+the second case, using a web server as reverse proxy.
+
+The options 2 and 3 with usage of domain filtering is useful for multiple instances, 
+and the real reason of this mixed configuration of webserver+gitea setup.
+
+#### Root hijacking web server
+
+Just remove or stop any service over the web http port and configure the gitea service 
+over the web http standart port, by default 80 for http. The domain or any ip request 
+over the service will show the gitea service as web page.
+
+#### Proxy [sub]domain web service
+
+This will need a web server and gitea service, the web server will do those process:
+
+1. filter the domain
+2. trap the request and reverse/proxy to the backend service (gitea) port
+
+**Usin apache2**
+
+Install the apache2 server as the tutorial [server-alpine-apache2-professional.md](server-alpine-apache2-professional.md)
+no matter if have support for ssl, use the part of the [Apache2 alpine proxy modules setup](server-alpine-apache2-professional.md#apache2-alpine-proxy-modules-setup)
+then setup a proxy by addiding a new file for gitea redirections; 
+the use of domain filtering is useful for multiple instances, and the 
+real reason of this mixed configuration of webserver+gitea setup.
+
+```
+apk add apache2 apache2-utils apache2-error apache2-proxy-html apache2-proxy
+
+mkdir -p /var/www/localhost/htdocs /var/log/apache2
+
+sed -i -r 's#^Listen.*#Listen 80#g' /etc/apache2/httpd.conf
+sed -i -r 's#^ServerTokens.*#ServerTokens Minimal#g' /etc/apache2/httpd.conf
+
+chown -R apache:www-data /var/www/localhost/
+chown -R apache:wheel /var/log/apache2
+
+mkdir -p /var/www/localhost/cgi-bin
+
+sed -i -r 's#.*LoadModule.*modules/mod_cgid.so.*#LoadModule cgid_module modules/mod_cgid.so#g' /etc/apache2/httpd.conf
+sed -i -r 's#.*LoadModule.*modules/mod_cgi.so.*#LoadModule cgi_module modules/mod_cgi.so#g' /etc/apache2/httpd.conf
+sed -i -r 's#.*LoadModule.*modules/mod_alias.so.*#LoadModule alias_module modules/mod_alias.so#g' /etc/apache2/httpd.conf
+
+sed -i -r 's#/usr/lib/libxml2.so#/usr/lib/libxml2.so.2#g' /etc/apache2/conf.d/proxy-html.conf
+sed -i -r 's#.*ScriptAlias /cgi-bin/.*#    ScriptAlias /cgi-bin/ "/var/www/localhost/cgi-bin"#g' /etc/apache2/httpd.conf
+
+cat >> /etc/apache2/conf.d/gitea.conf << EOF
+<VirtualHost *:80>
+    ProxyPreserveHost On
+    ProxyRequests off
+    AllowEncodedSlashes NoDecode
+    ProxyPass / http://127.0.0.1:3000/ nocanon
+</VirtualHost>
+EOF
+
+rc-update add apache2 default
+
+rc-service apache2 restart
+```
+
+**Usin lighttpd**
+
+For this, the redirection to the gitea service port is configured, 
+it can be through the root route or it can be by filtering the domain, 
+the use of domain filtering is useful for multiple instances, and the 
+real reason of this mixed configuration of webserver+gitea setup.
+
+```
+apk add lighttpd gamin
+
+mkdir -p /var/www/localhost/htdocs /var/lib/lighttpd
+
+chown -R lighttpd:lighttpd /var/www/localhost/
+chown -R lighttpd:lighttpd /var/lib/lighttpd
+chown -R lighttpd:lighttpd /var/log/lighttpd
+
+sed -i -r 's#\#.*server.port.*=.*#server.port          = 80#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#\#.*server.event-handler = "linux-sysepoll".*#server.event-handler = "linux-sysepoll"#g' /etc/lighttpd/lighttpd.conf
+
+mkdir -p /var/www/localhost/cgi-bin
+sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
+
+sed -i -r 's#\#.*mod_accesslog.*,.*#    "mod_accesslog",#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#\#.*mod_setenv.*,.*#    "mod_setenv",#g' /etc/lighttpd/lighttpd.conf
+
+sed -i -r 's#\#.*mod_redirect.*,.*#    "mod_redirect",#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#\#.*mod_proxy.*,.*#    "mod_proxy",#g' /etc/lighttpd/lighttpd.conf
+
+cat > /etc/lighttpd/mod_gitea.conf << EOF
+\$HTTP["host"] =~ ".*" {
+  \$HTTP["url"] =~ "(^/(\$))" {   
+    proxy.server  = ( "" => ("" => ( "host" => "0.0.0.0", "port" => 3000 ))) 
+  }
+}
+EOF
+
+itawxrc="";itawxrc=$(grep 'include "mod_gitea.conf' /etc/lighttpd/lighttpd.conf);[[ "$itawxrc" != "" ]] && echo listo || sed -i -r 's#.*include "mime-types.conf".*#include "mime-types.conf"\ninclude "mod_gitea.conf"#g' /etc/lighttpd/lighttpd.conf
+
+rc-update add lighttpd default
+
+rc-service lighttpd restart
+```
+
+#### Proxy [sub]path web service
+
+**Using apache2**
+
+Just the same as the previous method but using a path, in both gitea and apache2.
+
+**Using lighttpd**
+
+Unfortunately you can't configure lighttpd for a gitea sub path, becouse the issue https://github.com/gogs/gogs/issues/4741 
+gitea becomes the drama object of a couple of developers that dont care about flexibilty.
+
+So the only way its by the combination of the previous method, using the apache2 
+for the real proxy reverse redirection and lighttpd as real frontend web service.
+
+1. setup the proxy reverse with the apache2 method but using sub path
+2. setup the proxy reverse with the lighttpd but using sub path to the apache web service
+
 ## see also
 
 - 🗯 IRC
