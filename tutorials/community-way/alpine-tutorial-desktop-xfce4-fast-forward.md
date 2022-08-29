@@ -190,6 +190,14 @@ mkdir /etc/skel
 cat /tmp/tmp.tmp > /etc/skel/.cshrc
 cat /tmp/tmp.tmp > /etc/skel/.bashrc
 
+cat > /etc/skel/.Xresources << EOF
+Xft.antialias: 0
+Xft.rgba:      rgb
+Xft.autohint:  0
+Xft.hinting:   1
+Xft.hintstyle: hintslight
+EOF
+
 cat > /etc/default/useradd << EOF
 # useradd defaults file
 HOME=/home
@@ -245,7 +253,7 @@ setup-xorg-base xinit mesa-dri-gallium linux-firmware kbd xf86-input-evdev xf86-
 
 apk add  libxinerama xrandr
 
-apk add acpi dbus dbus-x11 elogind elogind-lang polkit polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
+apk add acpi dbus dbus-x11 elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -267,15 +275,9 @@ apk add font-noto-hebrew font-noto-lao font-noto-malayalam font-noto-tamil font-
 
 setfont /usr/share/consolefonts/ter-132n.psf.gz
 
-rc-update add consolefont boot
+sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
 
-cat > /home/*/.Xresources << EOF
-Xft.antialias: 0
-Xft.rgba:      rgb
-Xft.autohint:  0
-Xft.hinting:   1
-Xft.hintstyle: hintslight
-EOF
+rc-update add consolefont boot
 
 apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf pipewire pipewire-doc pipewire-pulse pipewire-alsa sndio sndio-doc
 
@@ -348,7 +350,7 @@ apk add sakura --allow-untrusted
 cat > /etc/apk/repositories << EOF; $(echo)
 http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
 http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
-EOF                                           
+EOF
 
 apk update --allow-untrusted
 ```
@@ -384,8 +386,15 @@ rc-update add networkmanager
 
 for u in $(ls /home); do for g in plugdev; do addgroup $u $g; done;done
 
-service wpa_supplicant start
+cat > /etc/network/interfaces << EOF
+auto lo
+iface lo inet loopback
+EOF
 
-service networkmanager start
+service networking restart
+
+service wpa_supplicant restart
+
+service networkmanager restart
 
 ```
