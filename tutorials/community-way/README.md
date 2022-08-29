@@ -22,6 +22,7 @@ TODO
 
 ## DESKTOPS
 
+* [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
 * [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
 
 ## SERVERS
