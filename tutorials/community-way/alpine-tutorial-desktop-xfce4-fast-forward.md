@@ -35,6 +35,11 @@ Real machine Pentium Dual Core E5500
 ================================================
 
 * [preparation](#preparation-xfce4-aline)
+    * [instalation](#instalation)
+    * [setup OS configuration](#setup-os-configuration)
+    * [configuration programs and repositories](#configuration-programs-and-repositories)
+    * [setup system users](#setup-system-users)
+    * [setup hardware media support and xorg](#setup-hardware-media-support-and-xorg)
 * [instalation xorg](#instalacion-xorg-apine)
 * [instalacion xfce](#instalacion-xfce4-apine)
 * [Configuracion](#configuracion-xfce4-alpine)
@@ -79,7 +84,7 @@ setup-alpine
 * Confirmacion de borrado: pedira confirme borrar el disco conteste `y`
 * Confirmacion de particiones: solo sale si tiene previas, conteste `y`
 
-#### configuracion OS
+#### setup OS configuration
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
@@ -161,7 +166,7 @@ apk add man-pages nano nano-doc binutils binutils-doc coreutils coreutils-doc re
 
 apk add wget wget-doc curl curl-doc bash bash-doc bash-completion terminus-font
 
-apk add acpi 
+apk add zip p7zip xz tar cabextract cpio binutils lha acpi 
 
 export PAGER=less
 
@@ -240,7 +245,7 @@ useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,netdev,audio,video,
 for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video netdev games users; do addgroup $u $g; done;done
 ```
 
-## instalation audio and video alpine
+#### setup hardware media support and xorg
 
 ```
 apk add eudev eudev-doc eudev-rule-generator eudev-openrc
@@ -310,15 +315,13 @@ rc-update add fuse
 apk add gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
 ```
 
-
 ## instalacion Xfce4 Alpine
 
 
 ```
+apk add xfwm4-themes hicolor-icon-theme paper-gtk-theme network-manager-applet adwaita-icon-theme mate-themes
 
-apk add xfwm4-themes hicolor-icon-theme paper-gtk-theme network-manager-applet
-
-apk add xfce4 xfce4-terminal xfce4-screensaver xfce4-session xfce4-session-doc adwaita-icon-theme mate-themes
+apk add xfce4 xfce4-terminal xfce4-screensaver xfce4-session xfce4-session-doc xarchiver mousepad
 
 apk add xfce-polkit xfce4-skel xfce4-power-manager xfce4-power-manager-lang xfce4-settings xfce4-settings-lang
 
@@ -330,45 +333,23 @@ apk add xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin-lang xfce4-whiskermenu
 
 rc-update add lightdm
 
-rc-service lightdm start
+rc-service lightdm restart
 ```
 
-## sakura terminal
+## multimedia
 
-```
-cat >> /etc/apk/repositories << EOF; $(echo)
-http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
-http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
-http://dl-cdn.alpinelinux.org/alpine/edge/main
-http://dl-cdn.alpinelinux.org/alpine/edge/community
-EOF
 
-apk update --allow-untrusted
+The media in linux its per se reduced, and in alpine so then more limited, 
+with this lines you will have all the need suported, for converting and playing, 
+for editing 
 
-apk add sakura --allow-untrusted
-
-cat > /etc/apk/repositories << EOF; $(echo)
-http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
-http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
-EOF
-
-apk update --allow-untrusted
-```
-
-## office suite
-
-```
-apk add libreoffice libreoffice-gnome evince evince-lang evince-doc
-```
-
-## media and devices
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-bad-lang gst-plugins-ugly gst-plugins-ugly-lang gst-plugins-good gst-plugins-good-gtk
 
 apk add libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang
 
-apk add ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc 
+apk add mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc 
 
 apk add mpv mpv-doc deadbeef deadbeef-lang deadbeef-doc
 
@@ -397,4 +378,45 @@ service wpa_supplicant restart
 
 service networkmanager restart
 
+```
+
+## office suite
+
+In linux world there's no mayor suite or programs in such topic, 
+just we need a reader (pdf, ebooks, cbr, zbr, etc) and office 
+suite for word/calc processing (doc, xls, odt, ods, etc).
+
+
+```
+apk add libreoffice libreoffice-gnome evince evince-lang evince-doc
+```
+
+## development
+
+This is only for those that dont want to download bunch of thing 
+when install some programs from sources. In any cae, modding and plugin hacks 
+will need this for minecraft or minetest hard hacker players.
+
+#### base console only devel
+
+
+```
+apk add make cmake cmake-bash-completion gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc
+
+apk add patch patch-doc patchutils patchutils-doc diffutils diffutils-doc
+
+apk add git git-bash-completion git-zsh-completion git-cvs git-svn github-cli git-diff-highlight git-doc
+
+apk add subversion subversion-bash-completion subversion-zsh-completion subversion-yash-completion subversion-doc
+
+apk add mercurial mercurial-bash-completion mercurial-zsh-completion mercurial-doc
+```
+
+#### base gui devel
+
+
+```
+apk add geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn geany-plugins-utils geany-lang meld meld-lang
+
+apk add terminator terminator-lang
 ```
