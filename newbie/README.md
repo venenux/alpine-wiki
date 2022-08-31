@@ -18,6 +18,7 @@ Linux is just the **kernel** that handles and manages the **hardware** to the op
 
 * [Feature Differences](#feature-differences)
 * [Installation](#installation)
+    * [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)
 * [Post install and Software Packages](#post-install-and-software-packages)
     * [About the repositories of programs](#about-the-repositories-of-programs)
     * [APK and package formats](#apk-and-package-formats)
@@ -60,6 +61,7 @@ that is why we offered in newbie category the [Alpine Newbie Install](alpine-new
 
 1. [Alpine Newbie Prepare](alpine-newbie-prepare.md)
 2. [Alpine Newbie Install](alpine-newbie-install.md)
+3. [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)
 
 ## Post install and Software Packages
 

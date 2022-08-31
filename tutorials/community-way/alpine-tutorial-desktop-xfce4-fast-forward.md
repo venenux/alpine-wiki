@@ -1,26 +1,21 @@
-# Alpine XFCE4 quick FF
+# Alpine XFCE4 desktop setup: FF version
 ===========================================================
 
-Real machine Pentium Dual Core E5500
+This was using real machine Pentium Dual Core E5500.
+For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 ### hardware used
 
-| item             | minimal feature | we need more?                      |
-| ---------------- | --------------- | ---------------------------------- |
-| CPU              | intel Dual Core | Not necesary                       |
-| GPU              | intel G41       | Radeon X1200 For web browsers and modern apps will be need |
-| RAM CPU          | 2Mb (L2) 4kb/L1 |  |
-| RAM GPU          | 256Mb           | 1Gb For web browsers and modern apps will be need |
-| Sotrage          | 500Gb HDD WD    | 256Gb SSD are mandatory for speed |
-| ARCH             | 32bits (i386)   | 64bits (i386) mandatory for most modern apps unfortunatelly |
-| Audio            | AC 97           | HD audio and HDMI audio are a mess |
-
-### services
-
-| item      | port     | software | expuesto-ip                   | objetivo      |
-| --------- | -------- | -------- | ----------------------------- | ------------- |
-| vnc       | 15000    | vnc      | **SI**, to use remote desktop | unfortunatelly trhere's no anydesk for alpine working |
-| ssh       | 19226    | openssh  | **NO**, only to be used once  | for admin management only |
+| item             | minimal feature   | Extra recommendations              |
+| ---------------- | ----------------- | ---------------------------------- |
+| RAM MB           | 1Gb DDR1          | 6Gb DDR3, web browsers consumes so much |
+| CPU              | intel Dual Core   | Not necesary                       |
+| RAM CPU          | 2Mb (L2) 4kb/L1   |  |
+| GPU              | intel G41         | Radeon X1200 For web browsers and modern apps will be need |
+| RAM GPU          | 256Mb             | 1Gb For web browsers and modern apps will be need |
+| Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed |
+| ARCH             | 32bits (i386/arm6)| 64bits (i386) mandatory for most modern apps unfortunatelly |
+| Audio            | AC 97             | HD audio and HDMI audio are a mess |
 
 ### usernames
 
@@ -31,67 +26,34 @@ Real machine Pentium Dual Core E5500
 | user      | general             | general  |
 
 
-# XFCE4 over alpine linux
-================================================
-
-* [preparation](#preparation-xfce4-aline)
-    * [instalation](#instalation)
+* [Preparation](#preparation-xfce4-aline)
+* [Instalation](#instalation)
     * [setup OS configuration](#setup-os-configuration)
-    * [configuration programs and repositories](#configuration-programs-and-repositories)
     * [setup system users](#setup-system-users)
-    * [setup hardware media support and xorg](#setup-hardware-media-support-and-xorg)
-* [instalation xorg](#instalacion-xorg-apine)
-* [instalacion xfce](#instalacion-xfce4-apine)
-* [Configuracion](#configuracion-xfce4-alpine)
+    * [setup hardware support](#setup-hardware-support)
+    * [setup audio and video](#setup-audio-and-video)
+* [Instalacion XFCE4 Alpine](#instalacion-xfce4-apine)
+* [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
+* [Development](#development)
+* [How to use this guide](#how-to-use-this-guide)
+* [Licensing clarifications](#licensing-clarifications)
+* [See also](#see-also)
 
 ## preparation Xfce4 Alpine
 
-#### booting alpine
+Alpine must be already installed, check [../../newbie/alpine-newbie-install.md](../../newbie/alpine-newbie-install.md),** 
 
-1. **download the iso image**: any alpine iso from 3.9 to 3.16 are valid, for olders 3.10 are best:
-https://dl-4.alpinelinux.org/alpine/v3.10/releases/x86_64/alpine-extended-3.10.5-x86_64.iso 
-2. **burn iso to usb or DVD/CD disk** to load into the machine to boot or virtual machine, 
-you must boot the CD/DVD or USB from BIOS/UEFI or from the virtual machine
-2. **at boot the alpine will ask `login` just type `root`**, 
-this will permit to run commands to install the operatinig system
-
-#### instalation
-
-```
-export BOOT_SIZE=500
-
-export SWAP_SIZE=8182
-
-export BOOTLOADER=grub
-
-setup-alpine
-```
-
-* teclado y variante, ejemplo para latino es `es` y depues `es-winkeys`
-* hostname: escribir `venenux-desktop`, es el nombre de la computadora.
-* Opciones de red: seleccione `eth0` porque asumimos una sola interfaz
-* Opciones de red (ip): contestar `none` despues contestar `no` a manual
-* Opciones de DNS: (dominio) escriba `fusilsystem.com` y enter
-* Opciones de DNS: (nameserver) se recomienda usar `8.8.8.8`
-* Opcion de clave root, escribir "root" las dos veces, despues se mejorara!
-* Opciones de zona horaria: solo use UTC
-* Opciones de proxy: use `none` y si uso dhcp en red ya tendra internet.
-* Opciones de repo mirror: cuando pregunte escriba `done`
-* Opciones de SSH: use `openssh` el paquete que ya viene en el medio.
-* Opciones de NTP: use `chrony` el paquete que ya viene en el medio.
-* Opciones de disco: use "sda" ya que se usara todo el disco duro presente.
-* Modo: seleccione "sys" para instalar el sistema en el disco.
-* Confirmacion de borrado: pedira confirme borrar el disco conteste `y`
-* Confirmacion de particiones: solo sale si tiene previas, conteste `y`
+**If you dont have direct network connection, please use our direct VenenuX Alpine ISOS**
+[CURRENT LINK https://t.me/alpine_linux/762, but ask in telegram alpine network for newer one or other arches](https://t.me/s/alpine_linux/762)
 
 #### setup OS configuration
+
+For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
 
-service sshd restart
-
-rc-update add sshd default
+rc-service sshd restart;rc-update add sshd default
 
 hostname venenux-desktop
 echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
@@ -113,9 +75,7 @@ iface eth0 inet6 dhcp
     pre-up echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_ra
 EOF
 
-rc-service networking restart
-
-rc-update add networking boot
+rc-service networking restart;rc-update add networking boot
 
 cat > /root/.cshrc << EOF
 unsetenv DISPLAY || true
@@ -135,9 +95,7 @@ adduser -D -g "" -u 998 -h /opt/daru -s /bin/csh daru
  echo "daru:daru" | chpasswd
 
 rm -f /opt/daru/*
-
 mkdir /opt/daru
-
 cat > /opt/daru/.cshrc << EOF
 unsetenv DISPLAY
 set autologout = 6
@@ -146,13 +104,8 @@ set history = 0
 set ignoreeof
 EOF
 cp /opt/daru/.cshrc /opt/daru/.bashrc
+chown -R daru:daru /opt/daru
 
-```
-
-#### configuration programs and repositories
-
-
-``` bash
 cat > /etc/apk/repositories << EOF
 http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
 http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
@@ -160,40 +113,27 @@ EOF
 
 apk update
 
-apk add sed sed-doc attr attr-doc dialog dialog-doc lsof less less-doc groff groff-doc
-
-apk add man-pages nano nano-doc binutils binutils-doc coreutils coreutils-doc readline readline-doc
-
-apk add wget wget-doc curl curl-doc bash bash-doc bash-completion terminus-font
-
-apk add zip p7zip xz tar cabextract cpio binutils lha acpi 
+apk add man-db man-pages nano binutils coreutils readline \
+ sed attr dialog lsof less groff wget curl terminus-font \
+ zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang
 
 export PAGER=less
-
-apk add musl-locales musl-locales-lang man-db
 
 ```
 
 #### setup system users
 
-
 ```
-apk add shadow shadow-doc shadow-uidmap bash bash-doc bash-completion bash-dev doas doas-doc
+apk add shadow shadow-uidmap doas musl-locales musl-locales-lang
 
-cat > /tmp/tmp.tmp << EOF
+cat > /tmp/tmpcs.tmp << EOF
 set history = 10000
-if (\$?prompt) then
-    set prompt = "$ "
-    set history = 10000
-endif
+set prompt = "$ "
 EOF
 
-for i in $(ls /home);do cat /tmp/tmp.tmp > /home/$i/.cshrc;done
-for i in $(ls /home);do cat /tmp/tmp.tmp > /home/$i/.bashrc;done
-
 mkdir /etc/skel
-cat /tmp/tmp.tmp > /etc/skel/.cshrc
-cat /tmp/tmp.tmp > /etc/skel/.bashrc
+cat /tmp/tmpcs.tmp > /etc/skel/.cshrc
+cat /tmp/tmpbs.tmp > /etc/skel/.bashrc
 
 cat > /etc/skel/.Xresources << EOF
 Xft.antialias: 0
@@ -215,78 +155,79 @@ EOF
 
 cat > /etc/login.defs << EOF
 USERGROUPS_ENAB yes
-#MAIL_DIR        /var/mail
-#MAIL_FILE      .mail
-#FAILLOG_ENAB		yes
-LOG_OK_LOGINS		no
 SYSLOG_SU_ENAB		yes
 SYSLOG_SG_ENAB		yes
 SULOG_FILE	/var/log/sulog
 SU_NAME		su
-ENV_SUPATH	PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV_PATH	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
-UMASK		022
-UID_MIN			 1000
-UID_MAX			60000
-SYS_UID_MIN		  100
-SYS_UID_MAX		  999
-GID_MIN			 1000
-GID_MAX			60000
-SYS_GID_MIN		  100
-SYS_GID_MAX		  999
-LOGIN_RETRIES		3
-LOGIN_TIMEOUT		60
-CONSOLE_GROUPS		floppy:audio:cdrom:users
 EOF
 
+useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users,ping general
 
-useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,netdev,audio,video,lp,usb,users,ping general
-
-for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video netdev games users; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
 ```
 
-#### setup hardware media support and xorg
+**WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
+
+For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-system-users)
+
+#### setup hardware support
 
 ```
-apk add eudev eudev-doc eudev-rule-generator eudev-openrc
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware \
+ fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
+ wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils \
+ networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
 
 rc-update add udev
-
 rc-update add acpid
+rc-update add cpufreqd
+rc-update add fuse
+rc-update add bluetooth
+rc-update add chrony
+rc-update add wpa_supplicant
+rc-update add networkmanager
 
-setup-xorg-base xinit mesa-dri-gallium linux-firmware kbd xf86-input-evdev xf86-input-synaptics setxkbmap
+rc-service networking restart
 
-apk add  libxinerama xrandr
+rc-service wpa_supplicant restart
 
-apk add acpi dbus dbus-x11 elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
+rc-service bluetooth restart
+
+rc-service udev restart 
+
+rc-service fuse restart
+
+rc-service cpufreqd restart
+
+```
+
+For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-software-graphical-fonts-and-languajes)
+
+#### setup audio and video
+
+```
+setup-xorg-base xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa
+
+apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
+ dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+ polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
+ gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
+ networkmanager-elogind networkmanager-elogind-lang networkmanager-elogind-openrc
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 rc-update add dbus
-
 rc-update add elogind
-
 rc-update add polkit
+rc-update add lightdm
 
-apk add ttf-dejavu font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi
+apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
+ font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi \
+ font-adobe-utopia-type1 font-adobe-utopia-75dpi font-adobe-utopia-100dpi \
+ font-isas-misc
 
-apk add terminus-font font-noto font-noto-extra font-arabic-misc ttf-liberation ttf-linux-libertine 
-
-apk add font-misc-cyrillic font-mutt-misc font-screen-cyrillic font-winitzki-cyrillic font-cronyx-cyrillic
-
-apk add font-noto-arabic font-noto-armenian font-noto-cherokee font-noto-devanagari font-noto-ethiopic font-noto-georgian
-
-apk add font-noto-hebrew font-noto-lao font-noto-malayalam font-noto-tamil font-noto-thaana font-noto-thai
-
-setfont /usr/share/consolefonts/ter-132n.psf.gz
-
-sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
-
-rc-update add consolefont boot
-
-apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf pipewire pipewire-doc pipewire-pulse pipewire-alsa sndio sndio-doc
-
-rc-service dbus start
+apk add alsa-utils alsa-plugins alsa-tools alsaconf \
+ pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - memlock 256
@@ -294,129 +235,103 @@ cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - rtprio 88
 EOF
 
-apk add bluez bluez-openrc pipewire-spa-bluez
+rc-service dbus restart
 
-rc-update add bluetooth
+rc-service elogind restart
 
-rc-service bluetooth start
+rc-service polkit restart
 
-apk add cpufreqd
+rc-service lightdm restart
 
-rc-update add cpufreqd
-
-apk add gtk-update-icon-cache vte3 pcre2 udisks2 udisks2-lang udisks2-doc
-
-apk add fuse fuse-exfat-utils archivemount fuse-exfat avfs
-
-rc-service fuse start
-
-rc-update add fuse
-
-apk add gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
 ```
+
+For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-software-graphical-fonts-and-languajes)
 
 ## instalacion Xfce4 Alpine
 
+Since Alpine 3.13 the XFCE4 desktop its GTK3 for 32bit devices its better to use alpine 3.10 
+or 3.12 that uses GTK2 for almost all the programs.
 
 ```
-apk add xfwm4-themes hicolor-icon-theme paper-gtk-theme network-manager-applet adwaita-icon-theme mate-themes
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme
 
-apk add xfce4 xfce4-terminal xfce4-screensaver xfce4-session xfce4-session-doc xarchiver mousepad
+apk add xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad \
+ xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \
+ xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager \
+ xfce4-panel-lang xfce4-clipman-plugin-lang xfce4-xkb-plugin-lang xfce4-screenshooter-lang \
+ xfce4-taskmanager-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang \
+ gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
+ network-manager-applet network-manager-applet-lang vte3 \
+ libreoffice libreoffice-gnome evince evince-lang evince-doc
 
-apk add xfce-polkit xfce4-skel xfce4-power-manager xfce4-power-manager-lang xfce4-settings xfce4-settings-lang
+rc-service networking restart
 
-apk add xfce4-panel xfce4-panel-doc xfce4-panel-lang xfce4-clipman-plugin xfce4-clipman-plugin-lang xfce4-xkb-plugin xfce4-xkb-plugin-lang xfce4-xkb-plugin-doc
+rc-service wpa_supplicant restart
 
-apk add xfce4-screenshooter xfce4-screenshooter-doc xfce4-screenshooter-lang xfce4-taskmanager xfce4-taskmanager-lang
-
-apk add xfce4-whiskermenu-plugin xfce4-whiskermenu-plugin-lang xfce4-whiskermenu-plugin-doc xfce4-battery-plugin xfce4-battery-plugin-lang
-
-rc-update add lightdm
+rc-service networkmanager restart
 
 rc-service lightdm restart
-```
-
-## multimedia
-
-
-The media in linux its per se reduced, and in alpine so then more limited, 
-with this lines you will have all the need suported, for converting and playing, 
-for editing 
-
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-bad-lang gst-plugins-ugly gst-plugins-ugly-lang gst-plugins-good gst-plugins-good-gtk
 
-apk add libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang
+## Desktop multimedia and media devices
 
-apk add mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc 
+```
+apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk \
+ libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
+ mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
+ mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 
 
-apk add mpv mpv-doc deadbeef deadbeef-lang deadbeef-doc
-
-apk add gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp
-
-apk add libxinerama xrandr wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils
-
-apk add network-manager-applet network-manager-applet-lang networkmanager networkmanager-lang networkmanager-elogind networkmanager-elogind-lang networkmanager-elogind-openrc networkmanager-openvpn networkmanager-openvpn-lang
-
-rc-update add chrony
-
-rc-update add wpa_supplicant
-
-rc-update add networkmanager
-
-for u in $(ls /home); do for g in plugdev; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in plugdev audio cdrom dialout video netdev; do addgroup $u $g; done;done
 
 cat > /etc/network/interfaces << EOF
 auto lo
 iface lo inet loopback
 EOF
 
-service networking restart
-
-service wpa_supplicant restart
-
-service networkmanager restart
-
-```
-
-## office suite
-
-In linux world there's no mayor suite or programs in such topic, 
-just we need a reader (pdf, ebooks, cbr, zbr, etc) and office 
-suite for word/calc processing (doc, xls, odt, ods, etc).
-
-
-```
-apk add libreoffice libreoffice-gnome evince evince-lang evince-doc
 ```
 
 ## development
 
-This is only for those that dont want to download bunch of thing 
-when install some programs from sources. In any cae, modding and plugin hacks 
-will need this for minecraft or minetest hard hacker players.
-
-#### base console only devel
-
-
 ```
-apk add make cmake cmake-bash-completion gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc
-
-apk add patch patch-doc patchutils patchutils-doc diffutils diffutils-doc
-
-apk add git git-bash-completion git-zsh-completion git-cvs git-svn github-cli git-diff-highlight git-doc
-
-apk add subversion subversion-bash-completion subversion-zsh-completion subversion-yash-completion subversion-doc
-
-apk add mercurial mercurial-bash-completion mercurial-zsh-completion mercurial-doc
+apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
+ patch patch-doc patchutils patchutils-doc diffutils diffutils-doc \
+ git git-cvs git-svn github-cli git-diff-highlight git-doc \
+ subversion subversion-doc mercurial mercurial-doc \
+ geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel \
+ geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser \
+ geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn \
+ geany-plugins-utils geany-lang \
+ terminator terminator-lang tmux screen meld meld-lang
 ```
 
-#### base gui devel
+## How to use this guide
 
+Just install alpine, and try to login as root using that command:
 
-```
-apk add geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn geany-plugins-utils geany-lang meld meld-lang
+1. at the Alpine installation: `sed -i 's|.*PermitRootLogin.*|PermitRootLogin yes|g' /etc/ssh/sshd_config;service sshd restart`
+2. at the other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
+3. copy each separated by empty line, block of command, copy only blocks separate by empty line
+4. and paste each separated by empty line block in the remnote (ssh), do not paste all the blocks at same time!
 
-apk add terminator terminator-lang
-```
+**CAUTION** Some Linux or/and Mac terminals have security cut/paste locks, so 
+if you paste, the first line will be preceded by garbage, check always the first char of your paste.
+
+**WARNING** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
+and restart ssh `service sshd restart` becouse security implications.
+
+## Licensing clarifications
+
+**CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
+in any medium or format for noncommercial purposes only, and only so long as attribution is given 
+to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
+material under identical terms,  includes the following elements:
+
+* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
+* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+
+## See also
+
+* [README.md](README.md)
+* [alpine-newbie-install.md](alpine-newbie-install.md)
