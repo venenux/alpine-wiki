@@ -111,6 +111,10 @@ set ignoreeof
 EOF
 cp /opt/daru/.cshrc /opt/daru/.bashrc
 
+apk add e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc
+
+apk add testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
+
 ```
 
 #### configuration programs and repositories
@@ -280,7 +284,7 @@ configure the graphical environment to property setup any desktop.
 17. install software backend for usage of abstract device filesystem representation using FUSE user space
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux zram-init
 
 rc-update add udev
 rc-update add acpid

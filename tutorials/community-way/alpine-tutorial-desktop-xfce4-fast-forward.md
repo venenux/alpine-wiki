@@ -111,7 +111,10 @@ apk update
 
 apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
- zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang
+ zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
+ e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
+ f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
+ testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
 
 sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
 setfont /usr/share/consolefonts/ter-132n.psf.gz
@@ -173,9 +176,9 @@ For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbi
 #### setup hardware support
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware pciutils util-linux \
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc pciutils util-linux zram-init \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
- wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils \
+ wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
 
 rc-update add udev
