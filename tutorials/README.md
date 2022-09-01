@@ -1,4 +1,4 @@
-Alpine Linux tutorias and how tos
+Alpine Linux tutorias and howtos
 =================================
 
 The **tutorials are hands-on docs** expected to try and achieve the goals described 
@@ -8,13 +8,16 @@ is the starting point for the following steps.
 The **Howtos are smaller articles** explaining how to perform a particular task 
 with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
 
-## TUTORIALS AND HOW TOS
+The **Guides are fast documents** with only direct ways to do a particular task
+with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
+
+## TUTORIALS AND HOWTOS
 
 We divided the guides, tutorials and howtos in 3 main sections (directories):
 
-1. [newbies](../newbies) (formal ways of doing things but with explanations, mostly for begginers)
-2. [community-way](community-way) (informal ways of doing things, with minimal or no explanations)
-3. [professional-way](professional-way) (informal ways but with more explanations and implicit security)
+1. [newbies](../newbies/README.md) (formal ways of doing things but with explanations, mostly for begginers)
+2. [community-way](community-way/README.md) (quick, fast and forward ways of doing things, mostly for impatients)
+3. [professional-way](professional-way/README.md) (informal ways but with more explanations and implicit security)
 
 ## Acknowledges
 

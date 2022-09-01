@@ -113,6 +113,10 @@ apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang
 
+sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
+setfont /usr/share/consolefonts/ter-132n.psf.gz
+
+rc-update add consolefont boot
 ```
 
 For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
@@ -202,7 +206,8 @@ For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbi
 #### setup audio and video
 
 ```
-setup-xorg-base xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa
+apk add xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
+ mesa xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa xf86-input-libinput
 
 apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
  dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
@@ -285,6 +290,12 @@ cat > /etc/network/interfaces << EOF
 auto lo
 iface lo inet loopback
 EOF
+
+service networking restart
+
+service wpa_supplicant restart
+
+service networkmanager restart
 
 ```
 

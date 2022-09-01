@@ -263,32 +263,40 @@ configure the graphical environment to property setup any desktop.
 
 1. install programs to manage devices dinamically by the OS and not admin user
 2. setup service for dynamic device manager at boot, energy management and cpu frecuency management
-3. install and configure the graphical subsystem and modesetting multi GPU video card support
-4. install set of need modules for 2D/3D specific GPU or video card first generation support
-5. install set of need modules for 2D/3D common GPU or video card almost modern still supported
-6. install support for multi resolution and keyboard language configuration over GUI programs
-7. install the bus communitacion support, policy management and login backend and frontend
-8. generate the machine id identification hack for stupid shistemd linux standards
-9. activate the service of the bus cominucations, the policy rules and graphical login backend
-10. start the service of the bus cominucations, the policy rules and graphical login backend
-11. activate the service of the graphical frontend login manager
-12. start the service of the graphical frontend login manager
-13. install support for abstract device filesystem representation using FUSE user space
-14. activate the service of abstract device filesystem representation using FUSE user space
-15. install software backend for usage of abstract device filesystem representation using FUSE user space
+3. install the graphical subsystem and modesetting multi GPU video card support
+4. install the programs that manages the 3D backend for graphics
+5. install set of need modules for basic GPU and dummy ones like virtual machines, avoid if not need.
+6. install set of need modules for 2D/3D specific GPU or video card not so older generation supported
+7. install set of need modules for 2D/3D common GPU or video card almost modern still supported
+8. install support for multi resolution and keyboard language configuration over GUI programs
+9. install the bus communitacion support, policy management and login backend and frontend
+10. generate the machine id identification hack for stupid shistemd linux standards
+11. activate the service of the bus cominucations, the policy rules and graphical login backend
+12. start the service of the bus cominucations, the policy rules and graphical login backend
+13. activate the service of the graphical frontend login manager
+14. start the service of the graphical frontend login manager
+15. install support for abstract device filesystem representation using FUSE user space
+16. activate the service of abstract device filesystem representation using FUSE user space
+17. install software backend for usage of abstract device filesystem representation using FUSE user space
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils pciutil-doc util-linux util-linux-doc
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux
 
 rc-update add udev
 rc-update add acpid
 rc-update add cpufreqd
 
-setup-xorg-base xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-qxl xf86-video-vmware xf86-input-evdev xf86-input-synaptics
+apk add xorg-server xorg-server-xnest xorg-server-xephyr xorg-server-doc xorg-server-doc xf86-video-dummy xf86-video-modesetting xf86-input-libinput
+
+apk add mesa xinit mesa-dri-gallium mesa-osmesa mesa-egl mesa-gl mesa-gles freeglut glew glu
+
+apk add xf86-video-vesa  xf86-video-modesetting xf86-video-qxl xf86-video-vmware xf86-input-evdev xf86-input-synaptics
 
 apk add xf86-video-r128 xf86-video-s3virge xf86-video-apm xf86-video-i128 xf86-video-glint xf86-video-tdfx xf86-video-openchrome
 
 apk add xf86-video-intel xf86-video-amdgpu xf86-video-ati xf86-video-nouveau xf86-video-nv xf86-video-vesa
+
+setup-devd udev
 
 apk add libxinerama xrandr kbd setxkbmap
 
