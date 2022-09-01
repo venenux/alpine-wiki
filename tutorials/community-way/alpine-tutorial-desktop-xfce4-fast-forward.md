@@ -1,7 +1,6 @@
 # Alpine XFCE4 desktop setup: FF version
 ===========================================================
 
-This was using real machine Pentium Dual Core E5500.
 For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 ### hardware used
@@ -14,7 +13,7 @@ For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../
 | GPU              | intel G41         | Radeon X1200 For web browsers and modern apps will be need |
 | RAM GPU          | 256Mb             | 1Gb For web browsers and modern apps will be need |
 | Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed |
-| ARCH             | 32bits (i386/arm6)| 64bits (i386) mandatory for most modern apps unfortunatelly |
+| ARCH             | 32bits (i386/arm6)| 64bits (amd64) mandatory for most modern apps unfortunatelly |
 | Audio            | AC 97             | HD audio and HDMI audio are a mess |
 
 ### usernames
@@ -27,14 +26,13 @@ For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../
 
 
 * [Preparation](#preparation-xfce4-aline)
-* [Instalation](#instalation)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
 * [Instalacion XFCE4 Alpine](#instalacion-xfce4-apine)
-* [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
-* [Development](#development)
+    * [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
+    * [Development](#development)
 * [How to use this guide](#how-to-use-this-guide)
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
@@ -43,12 +41,9 @@ For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../
 
 Alpine must be already installed, check [../../newbie/alpine-newbie-install.md](../../newbie/alpine-newbie-install.md),** 
 
-**If you dont have direct network connection, please use our direct VenenuX Alpine ISOS**
-[CURRENT LINK https://t.me/alpine_linux/762, but ask in telegram alpine network for newer one or other arches](https://t.me/s/alpine_linux/762)
+**YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
 
 #### setup OS configuration
-
-For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
@@ -82,7 +77,7 @@ unsetenv DISPLAY || true
 HISTCONTROL=ignoreboth
 EOF
 
-cp /root/.cshrc  /root/.bashrc  /root/.profile
+cp /root/.cshrc  /root/.bashrc
 
  echo "root:toor" | chpasswd
 
@@ -98,6 +93,7 @@ rm -f /opt/daru/*
 mkdir /opt/daru
 cat > /opt/daru/.cshrc << EOF
 unsetenv DISPLAY
+export PAGER=less
 set autologout = 6
 set prompt = "$ "
 set history = 0
@@ -117,23 +113,23 @@ apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang
 
-export PAGER=less
-
 ```
+
+For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
 
 #### setup system users
 
 ```
 apk add shadow shadow-uidmap doas musl-locales musl-locales-lang
 
-cat > /tmp/tmpcs.tmp << EOF
+cat > /tmp/tmp.tmp << EOF
 set history = 10000
 set prompt = "$ "
 EOF
 
 mkdir /etc/skel
-cat /tmp/tmpcs.tmp > /etc/skel/.cshrc
-cat /tmp/tmpbs.tmp > /etc/skel/.bashrc
+cat /tmp/tmp.tmp > /etc/skel/.cshrc
+cat /tmp/tmp.tmp > /etc/skel/.bashrc
 
 cat > /etc/skel/.Xresources << EOF
 Xft.antialias: 0
@@ -173,7 +169,7 @@ For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbi
 #### setup hardware support
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware \
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware pciutils util-linux \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
@@ -245,7 +241,8 @@ rc-service lightdm restart
 
 ```
 
-For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-software-graphical-fonts-and-languajes)
+**WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
+**HINT** check for some xf86-video packages like `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
 
 ## instalacion Xfce4 Alpine
 
@@ -274,7 +271,7 @@ rc-service lightdm restart
 
 ```
 
-## Desktop multimedia and media devices
+#### Desktop multimedia and media devices
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk \
@@ -291,7 +288,7 @@ EOF
 
 ```
 
-## development
+#### development
 
 ```
 apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \

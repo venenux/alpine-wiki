@@ -278,7 +278,7 @@ configure the graphical environment to property setup any desktop.
 15. install software backend for usage of abstract device filesystem representation using FUSE user space
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd
+apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils pciutil-doc util-linux util-linux-doc
 
 rc-update add udev
 rc-update add acpid
