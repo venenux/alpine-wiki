@@ -1,30 +1,9 @@
 # Alpine XFCE4 desktop setup: FF version
 ===========================================================
 
-For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
+Alpine must be previously installed. For more extended verson of this document check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
-### hardware used
-
-| item             | minimal feature   | Extra recommendations              |
-| ---------------- | ----------------- | ---------------------------------- |
-| RAM MB           | 1Gb DDR1          | 6Gb DDR3, web browsers consumes so much |
-| CPU              | intel Dual Core   | Not necesary                       |
-| RAM CPU          | 2Mb (L2) 4kb/L1   |  |
-| GPU              | intel G41         | Radeon X1200 For web browsers and modern apps will be need |
-| RAM GPU          | 256Mb             | 1Gb For web browsers and modern apps will be need |
-| Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed |
-| ARCH             | 32bits (i386/arm6)| 64bits (amd64) mandatory for most modern apps unfortunatelly |
-| Audio            | AC 97             | HD audio and HDMI audio are a mess |
-
-### usernames
-
-| item      | name                | password |
-| --------- | ------------------- | -------- |
-| remote    | daru                | daru     |
-| admin     | root                | toor     |
-| user      | general             | general  |
-
-
+* [How to use this guide](#how-to-use-this-guide)
 * [Preparation](#preparation-xfce4-aline)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
@@ -33,17 +12,17 @@ For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../
 * [Instalacion XFCE4 Alpine](#instalacion-xfce4-apine)
     * [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
     * [Development](#development)
-* [How to use this guide](#how-to-use-this-guide)
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
 
 ## preparation Xfce4 Alpine
 
-Alpine must be already installed, check [../../newbie/alpine-newbie-install.md](../../newbie/alpine-newbie-install.md),** 
-
 **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
 
 #### setup OS configuration
+
+Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
+
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
@@ -318,7 +297,12 @@ apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
 
 ## How to use this guide
 
-Just install alpine, and try to login as root using that command:
+This guide **structure all the commands in blocks, each block its separated by a line spaced**, 
+so you must **type each line as is.. and hit enter**, so you noted that then you 
+typed each separated clocks of commands, copy/type only blocks separated by an empty line, 
+all new(next) lines are made by just enter. the terminal will detect if must execute or not.
+
+**If you have another computer or gui**, try to use SSH client like putty or just in terminal (MAC or Linux) do:
 
 1. at the Alpine installation: `sed -i 's|.*PermitRootLogin.*|PermitRootLogin yes|g' /etc/ssh/sshd_config;service sshd restart`
 2. at the other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
@@ -331,6 +315,28 @@ if you paste, the first line will be preceded by garbage, check always the first
 **WARNING** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
 and restart ssh `service sshd restart` becouse security implications.
 
+#### hardware used
+
+| item             | minimal feature   | Extra recommendations              |
+| ---------------- | ----------------- | ---------------------------------- |
+| RAM MB           | 1Gb DDR1          | 6Gb DDR3, web browsers consumes so much |
+| CPU              | intel Dual Core   | Not necesary                       |
+| RAM CPU          | 2Mb (L2) 4kb/L1   |  |
+| GPU              | intel G41         | Radeon X1200 For web browsers and modern apps will be need |
+| RAM GPU          | 256Mb             | 1Gb For web browsers and modern apps will be need |
+| Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed |
+| ARCH             | 32bits (i386/arm6)| 64bits (amd64) mandatory for most modern apps unfortunatelly |
+| Audio            | AC 97             | HD audio and HDMI audio are a mess |
+
+#### usernames
+
+| item      | name                | password |
+| --------- | ------------------- | -------- |
+| remote    | daru                | daru     |
+| admin     | root                | toor     |
+| user      | general             | general  |
+
+
 ## Licensing clarifications
 
 **CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
@@ -341,6 +347,8 @@ material under identical terms,  includes the following elements:
 * **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
 * **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
 * **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+
+https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
 
 ## See also
 

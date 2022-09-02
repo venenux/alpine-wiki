@@ -1,6 +1,15 @@
 # Alpine XFCE4 desktop setup
 ===========================================================
 
+This is a single only full article for first users, 
+targeted for mid-impatient that just want the way to see the desktoip in some hours:
+
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+
+* [How to use this guide](#how-to-use-this-guide)
+* [Installation of alpine](#installation-of-alpine)
+    * [Fast explanations, just 5 lines](#explanations)
+    * [how to install in single disc only](#how-to-install-in-single-disc-only)
 * [preparation](#preparation-xfce4-aline)
     * [instalation](#instalation)
     * [setup OS configuration](#setup-os-configuration)
@@ -18,25 +27,74 @@
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
 
+## How to use this guide
+
+This guide **structure all the commands in blocks, each block its separated by a line spaced**, 
+so you must **tipe each line as is.. and hit enter**, but if you are in gui or remotelly just do:
+
+1. copy each separated by empty line, block of command, copy only blocks separate by empty line
+2. and paste each separated by empty line block in the remnote (ssh), do not paste all the blocks at same time!
+
+**If you have another computer or gui**, try to use SSH client like putty or just in terminal (MAC or Linux) do:
+
+1. at the Alpine installation: `sed -i 's|.*PermitRootLogin.*|PermitRootLogin yes|g' /etc/ssh/sshd_config;service sshd restart`
+2. at the other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
+3  after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config;service sshd restart`
+
+**CAUTION** Some Linux or/and Mac terminals have security cut/paste locks, so 
+if you paste, the first line will be preceded by garbage, check always the first char of your paste.
+
+## Installation of alpine
+
+This guide will assume all the hard disk storage for the installation 
+otherwise check the best option at [alpine-newbie-install.md](alpine-newbie-install.md)
+
+Ok but if you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+
+#### Explanations
+
+Alpine is the OS (Operating System), that runs on your machine. 
+Programs such as a web browser runs on the OS, and web pages like 
+this are handled by the web browser.
+
+About desktop? alpine is the Program combo that really runs in dockers, 
+becouse of that, the desktop part its not so targeted and focused.. 
+Linux is just the kernel that handles and manages the hardware to the operating system
+
+#### how to install in single disc only
+
+* **1** download the image of the alpine ISO
+    * i386 older 32bit use : http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-extended-3.12.0_rc1-x86.iso
+    * amd64 newer 64bit use : http://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-extended-3.16.0_rc1-x86_64.iso
+    * amrv7 64bit modern use : http://dl-cdn.alpinelinux.org/alpine/v3.16/releases/armv7/alpine-standard-3.16.0_rc1-armv7.iso
+* **2** dump into usb stick.. check the process to do here: [alpine-newbie-how-to-dumb-easyle-with-gui-to-usb.md](alpine-newbie-how-to-dumb-easyle-with-gui-to-usb.md)
+* **3** boot the usb stick from your computer.. this will depend of your vendor
+* **4** after boot, just login.. using "root" word
+* **5** type "setup-disk" and start to answer the first two questions, keyboard type and layout
+* **6** Keyboard Layout (Local keyboard language and usage mode, e.g. us and variant of us-nodeadkeys.)
+* **7** Hostname (The name for the computer.) Please here dont put symbols, and use a 8 chars only name.
+* **8** Network (For example, automatic IP address discovery with the "DHCP" protocol.) for hoe just use "dhcp"
+* **9** DNS Servers (Domain Name Servers to query. just use google's 8.8.8.8 .)
+* **10** Timezone, becouse this is a single install just use UTC
+* **11** Proxy (Use "none" for direct connections to the internet.)
+* **12** Mirror (From where to download packages. Here put 1 and later we will tune up)
+* **13** SSH (Secure SHell remote access server, mandatory, "Openssh" is part of the default install image)
+* **14** NTP (Network Time Protocol client used for keeping the system clock in sync with a time server. "chrony")
+* **15** Disk Mode here just select the sys mode, we are installing to use as desktop in single disc, so all the data will be wiped and erased.
+
+If you must tune up we recommended to use virtual machine or check the best option at [alpine-newbie-install.md](alpine-newbie-install.md)
+
 ## preparation Xfce4 Alpine
 
 To have a usable desktop without having to wonder why it doesn't sound, 
 or why the video file doesn't display, **you should avoid minimalisms if 
 you don't already have advanced knowledge** of alpine and even more so of linux.
 
-For desktop you should have at least 100G of space on the ROOT disk, 
-and at least 2G of memory on the RAM.
+#### Internet required or offile iso
 
-The document **assumes that you already have Alpine Linux installed 
-otherwise check the best option at [alpine-newbie-install.md](alpine-newbie-install.md),** 
-we recommend 3.10 to 3.12 for 32bit PC and 3.12 for older RPi, 
-for modern machines we recommend 3.16 64bit versions.
+If you dont have wired internet connection, check [lack of wireless setup](#lack-of-wireless-setup) section of this document.
 
-#### Internet required
-
-This document will work only if you have direct wired connection to internet.
-
-**If you dont have direct network connection, please use our direct VenenuX Alpine ISOS**
+**Or just please use our direct VenenuX Alpine ISOS**
 [CURRENT LINK https://t.me/alpine_linux/762, but ask in telegram alpine network for newer one](https://t.me/s/alpine_linux/762)
 
 #### setup OS configuration
@@ -45,9 +103,9 @@ This document will work only if you have direct wired connection to internet.
 2. setup and start the ssh service, this always be present in Alpine installs
 3. set the name of the computer, here we used `venenux-desktop`, please avoid symbols
 4. hardcoded and set the network connection, to first wired network device
-5. setup services of network to init at boot
+5. setup services of network to init at boot check [differences of hard coded setup](#differences-of-hard-coded-setup) section of this document
 6. configure root account
-7. create a remote connection limited account `daru`
+7. create a remote connection limited account `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
 8. configure a default remote connection account `daru` as standard
 
 ```
@@ -117,6 +175,15 @@ apk add testdisk testdisk-doc partimage partimage-doc parted parted-doc util-lin
 
 ```
 
+Those command put your alpine in "non minimalist mode" so means
+* manpages will be available, so you can check the operating system and gnu documetation
+* commands will work exactly as another linxu or mac, google results of your doubs will work
+* will reduce the environment of the system users and minimize the confortability of root account
+* will provide all the system tools to the devices management
+for more info of `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
+
+NExt section will cover the suser management and programs support:
+
 #### configuration programs and repositories
 
 1. Setup main and community repositories of sources of programs
@@ -155,6 +222,8 @@ The packages that have a "-doc" part handles the manpages.. you can
 avoid those packages, if Alpine usage will be for GUI only.
 
 The packages of locales will be need as base for multi-lang enviroment.
+
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 #### setup system users
 
@@ -332,6 +401,8 @@ apk add gvfs udisks2 udisks2-lang udisks2-doc gvfs-fuse gvfs-archive gvfs-dav gv
 
 ```
 
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+
 #### setup software graphical fonts and languajes
 
 Now we have support for graphics in the operating system, 
@@ -453,6 +524,12 @@ apk add xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshoo
 apk add xfce4-panel-lang xfce4-clipman-plugin-lang xfce4-xkb-plugin-lang xfce4-screenshooter-lang xfce4-taskmanager-lang xfce4-whiskermenu-plugin-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang
  
 ```
+
+The XFCE4 desktop is the most complete in Alpine, MATE and others have almost complete packages, 
+with minor fails or missing. The newers LXQT and CoreCube desktops are made in QT technology 
+so are more heavyweith for older devices, specially 32bit systems.
+
+the LXDE desktop is not completed in alpine due the stupid mantainers policy of GTK3 targeted.
 
 ## Desktop multimedia and media devices
 
@@ -586,6 +663,28 @@ apk add geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrase
 apk add terminator terminator-lang
 ```
 
+##### differences of hard coded setup
+
+Disk paths, Networks and WIFI in linux have two scopes, the system and the user, 
+alpine uses a scope that is overwritten and superset if others apps are installed, 
+like networkmanager or desktops is installed, therefore, the network configuration 
+we make is temporary, and we assumed then wired one cos is easy to setup.
+
+##### lack of wireless setup
+
+WIFI networks are a little more complicated, that's why a wired network is assumed, 
+if you don't have the possibility of having an internet network, simply use our 
+complete iso that already has everything, and there you can use the wifi directly 
+from the graphical desktop check [Internet required or offile iso](#internet-required-or-offile-iso) section.
+
+##### the daru user explanation
+
+The meaning of **"daru"** user is to **able to login to you from another computer by restrictions**.. 
+so no one can login with other user.. daru have a restricted shell and restricted commands.
+
+The **right way its to use SSH Key Pair, but that is so complicated for readers right now**, 
+so using a restricted user for connections its enought untill that point.
+
 ## Licensing clarifications
 
 **CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
@@ -597,7 +696,10 @@ material under identical terms,  includes the following elements:
 * **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
 * **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
 
+https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
+
 ## See also
 
 * [README.md](README.md)
 * [alpine-newbie-install.md](alpine-newbie-install.md)
+* [Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
