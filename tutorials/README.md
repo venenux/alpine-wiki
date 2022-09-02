@@ -1,6 +1,14 @@
 Alpine Linux tutorias and howtos
 =================================
 
+**Where to start?** Check the next section. Ok but **if you are impatient and 
+want an Alpine ready touse in 4 hours**, use [.. this link...alpine XFCE](../newbie/alpine-newbie-xfce-desktop.md) 
+a single explanatory article that installs a complete desktop
+or [this one more minimal version](community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) 
+if you want to avoid the explanations and just go all the way.
+
+## TUTORIALS AND HOWTOS
+
 The **tutorials are hands-on docs** expected to try and achieve the goals described 
 in each step, possibly with the help of a good example. The output in one step 
 is the starting point for the following steps.
@@ -10,8 +18,6 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 The **Guides are fast documents** with only direct ways to do a particular task
 with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
-
-## TUTORIALS AND HOWTOS
 
 We divided the guides, tutorials and howtos in 3 main sections (directories):
 

@@ -13,7 +13,7 @@ with option to change that!
 **Where to start? Check the next section.** Ok but if you are impatient and 
 want an Alpine ready touse in 4 hours, you have two options:
 
-1. [.. this link...](newbies/alpine-newbie-xfce-desktop.md) a single explanatory article that installs a complete desktop, too much text, then;
+1. [.. this link...](newbie/alpine-newbie-xfce-desktop.md) a single explanatory article that installs a complete desktop, too much text, then;
 2. [.. use this link...](tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) but if you want to avoid the explanations and just go all the way... use this other one that is multilanguage
 
 ### Tutorials and Docs
