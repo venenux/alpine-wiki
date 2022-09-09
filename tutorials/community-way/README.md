@@ -17,24 +17,19 @@ TODO
 
 ## PHONES
 
-* [alpine-tutorial-in-phones.md](alpine-tutorial-in-phones.md)
+* Alpine in your phone: [alpine-tutorial-in-phones.md](alpine-tutorial-in-phones.md)
     * [phones-androit-allow-external-apps-install.md](phones-androit-allow-external-apps-install.md)
 
 ## DESKTOPS
 
-* [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
-* [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
+* XFCE4 desktop (quick guide): [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
+* WAYLAND desktop: [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
+* Openbox by compile way: [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
 
 ## SERVERS
 
 * [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
 * [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
-
-## DESKTOP
-
-TODO
-
-NOTE: in this directory (we will called category spaces) each member or contributor will or can put their own tutorial or guides
 
 ## Convention for naming the files:
 

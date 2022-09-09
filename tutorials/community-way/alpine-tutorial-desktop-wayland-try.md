@@ -1,22 +1,24 @@
-# Alpine XFCE4 desktop setup: FF version
+# Alpine WAYLAND desktop setup: FF version
 ===========================================================
 
-Alpine must be previously installed. For a WAYLAND desktop check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md). 
-For more extended verson of this document check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
+Alpine must be previously installed. This will install a new fashioned desktop, for more traditional check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 * [How to use this guide](#how-to-use-this-guide)
-* [Preparation](#preparation-xfce4-aline)
+* [Preparation](#preparation-alpine)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
-* [Instalacion XFCE4 Alpine](#instalacion-xfce4-apine)
-    * [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
-    * [Development](#development)
+* [Instalacion WAYLAND Alpine](#instalacion-wayland-apine)
+    * [wayland sway console login](#wayland-sway-console-login)
+    * [wayland gui login manager](#wayland-gui-login-manager)
+    * [multimedia and device enhanced](#multimedia-and-device-enhanced)
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
 
-## preparation Xfce4 Alpine
+## preparation Alpine
+
+You must have already installed alpine, and wayland only works well in alpine 3.14 and up
 
 **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
 
@@ -92,7 +94,7 @@ apk update
 apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
- e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
+ e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils \
  f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
  testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
 
@@ -151,7 +153,7 @@ for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp ne
 
 **WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
 
-For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-system-users)
+For more details check  [../../newbie/alpine-newbie-configuration.md](../../newbie/alpine-newbie-configuration.md#setup-system-users)
 
 #### setup hardware support
 
@@ -166,7 +168,7 @@ rc-update add acpid
 rc-update add cpufreqd
 rc-update add fuse
 rc-update add bluetooth
-rc-update add chrony
+rc-update add chronyd
 rc-update add wpa_supplicant
 rc-update add networkmanager
 
@@ -184,26 +186,26 @@ rc-service cpufreqd restart
 
 ```
 
-For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-software-graphical-fonts-and-languajes)
+For more details check  [../../newbie/alpine-newbie-configuration.md](../../newbie/alpine-newbie-configuration.md#setup-software-graphical-fonts-and-languajes)
 
-#### setup audio and video
+#### setup audio and video for wayland
+
+**HINT** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
 
 ```
-apk add xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc  xf86-input-evdev libxinerama xrandr kbd setxkbmap \
- mesa xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa xf86-input-libinput
+apk add xf86-input-evdev cairo pango pixman \
+ mesa xinit mesa-dri-gallium xf86-video-modesetting xf86-input-libinput libxinerama xrandr kbd setxkbmap
 
-apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
- dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
- polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
+apk add bluez bluez-openrc polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
+ dbus dbus-x11 elogind elogind-openrc \
  gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind
+ networkmanager-elogind 
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 rc-update add dbus
 rc-update add elogind
 rc-update add polkit
-rc-update add lightdm
 
 apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi \
@@ -225,54 +227,97 @@ rc-service elogind restart
 
 rc-service polkit restart
 
-rc-service lightdm restart
-
+rc-update del lightdm
 ```
 
 **WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
-**HINT** check for some xf86-video packages like `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
+**ADVERTISE** pure wayland will work only in modern gpu, otherwise will use xwayland if you need some modules like xf86-video packages as `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
 
-## instalacion Xfce4 Alpine
-
-Since Alpine 3.13 the XFCE4 desktop its GTK3 for 32bit devices its better to use alpine 3.10 
-or 3.12 that uses GTK2 for almost all the programs.
+## Instalacion WAYLAND Alpine
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme
+apk add wayland wlroots foot sway sway-doc bemenu swaylock swaylockd swaybg swayidle \
+ weston weston-backend-wayland weston-backend-x11 weston-backend-drm weston-backend-wayland weston-backend-headless \
+ weston-doc weston-shell-desktop weston-desktop-x11 weston-clients weston-terminal \
+ weston-xwayland weston-shell-desktop weston-shell-fullscreen weston-cms-static
+```
 
-apk add numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
+At this point you already has a waylan environment and can choose beetween weston and sway, 
+just login into and start your desktop, weston is just the first implementation, can be run 
+inside and X11 or another wayland session, sway is a window manager and compositor.
 
-apk add xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad \
- xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \
- xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager \
- xfce4-panel-lang xfce4-clipman-plugin-lang xfce4-xkb-plugin-lang xfce4-screenshooter-lang \
- xfce4-taskmanager-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang \
- gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
- network-manager-applet network-manager-applet-lang vte3 \
- libreoffice libreoffice-gnome evince evince-lang evince-doc
+#### configurations
 
-rc-service networking restart
+```
+for u in $(ls /home); do mkdir -p /home/$u/.config/sway/ && cp /etc/sway/config /home/$u/.config/sway/config ;done
 
-rc-service wpa_supplicant restart
+for u in $(ls /home); touch /home/$u/.config/weston.ini;done
+```
 
-rc-service networkmanager restart
+The wayland weston and sway configurations depens on your preferences, 
+the above commands just provide defaults to made those compositors able to run for users.
+
+#### wayland sway console login
+
+If want autologin with TTY use this script to your system users:
+
+```
+mkdir /home/general/
+
+cat > /etc/skel/.profile << EOF
+    if test -z "\${XDG_RUNTIME_DIR}"; then
+      export XDG_RUNTIME_DIR=/tmp/\$(id -u)-runtime-dir
+      if ! test -d "\${XDG_RUNTIME_DIR}"; then
+        mkdir "\${XDG_RUNTIME_DIR}"
+        chmod 0700 "\${XDG_RUNTIME_DIR}"
+      fi
+    fi
+EOF
+for u in $(ls /home); do cp /etc/skel/.profile /home/$u/ ;done
+
+cat > /home/general/.xinitrc << EOF
+
+if [ -z "\${DISPLAY}" ] && [ "\${XDG_VTNR}" -eq 1 ]; then
+  if [ "\$(fgconsole 2>/dev/null || echo -1)" -eq 1 ]; then
+    dbus-run-session -- sway
+    export SWAYSOCK=/run/user/$(id -u)/sway-ipc.$(id -u).$(pgrep -x sway).sock
+  fi
+fi
+EOF
+
+```
+
+#### wayland gui login manager
+
+
+Wayland its on early stages.. so there is no login manager compatible, 
+this is cos wayland per ser its another way to run GUI, and 
+all the sesion and login GUI managers runs over Xorg.
+
+```
+apk add lightdm elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind \
+ lightdm-lang lightdm-gtk-greeter 
+
+rc-update add lightdm
 
 rc-service lightdm restart
-
 ```
 
+**WARNING**: for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
+result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
+
 #### desktop integration and device media
+
 
 ```
 apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
-
-#### Desktop multimedia and media devices
+#### multimedia and device enhanced
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk \
- libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
+apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good \
+ libcanberra-gstreamer wxgtk-media \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 
 
@@ -289,20 +334,6 @@ service wpa_supplicant restart
 
 service networkmanager restart
 
-```
-
-#### development
-
-```
-apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
- patch patch-doc patchutils patchutils-doc diffutils diffutils-doc \
- git git-cvs git-svn github-cli git-diff-highlight git-doc \
- subversion subversion-doc mercurial mercurial-doc \
- geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel \
- geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser \
- geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn \
- geany-plugins-utils geany-lang \
- terminator terminator-lang tmux screen meld meld-lang
 ```
 
 ## How to use this guide
@@ -325,6 +356,8 @@ if you paste, the first line will be preceded by garbage, check always the first
 **WARNING** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
 and restart ssh `service sshd restart` becouse security implications.
 
+Done? return to [Preparation](#preparation-alpine) section of this document.
+
 #### hardware used
 
 | item             | minimal feature   | Extra recommendations              |
@@ -346,6 +379,7 @@ and restart ssh `service sshd restart` becouse security implications.
 | admin     | root                | toor     |
 | user      | general             | general  |
 
+Done? return to [Preparation](#preparation-alpine) section of this document.
 
 ## Licensing clarifications
 
@@ -364,4 +398,4 @@ https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
 
 * [README.md](README.md)
 * [alpine-newbie-install.md](../../newbie/alpine-newbie-install.md)
-* [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
+* [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)

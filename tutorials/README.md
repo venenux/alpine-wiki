@@ -2,10 +2,11 @@ Alpine Linux tutorias and howtos
 =================================
 
 **Where to start?** Check the next section. Ok but **if you are impatient and 
-want an Alpine ready touse in 4 hours**, use [.. this link...alpine XFCE](../newbie/alpine-newbie-xfce-desktop.md) 
+want an Alpine ready touse in 1 hour**, use [.. this link...alpine XFCE desktop](../newbie/alpine-newbie-xfce-desktop.md) 
 a single explanatory article that installs a complete desktop
-or [this one more minimal version](community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) 
-if you want to avoid the explanations and just go all the way.
+or [this minimal version](community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) 
+if you want to avoid the explanations and just go all the way. For the wayland fashioned 
+desktop try the guide [alpine tutorial desktop wayland try](community-way/alpine-tutorial-desktop-wayland-try.md) .
 
 ## TUTORIALS AND HOWTOS
 
