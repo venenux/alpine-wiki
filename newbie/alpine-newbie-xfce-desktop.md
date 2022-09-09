@@ -371,7 +371,7 @@ apk add xf86-video-intel xf86-video-amdgpu xf86-video-ati xf86-video-nouveau xf8
 
 setup-devd udev
 
-apk add libxinerama xrandr kbd setxkbmap
+apk add libxinerama xrandr kbd setxkbmap xf86-input-evdev
 
 apk add dbus dbus-x11 elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
 

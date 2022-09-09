@@ -188,14 +188,14 @@ For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbi
 #### setup audio and video
 
 ```
-apk add xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
+apk add xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc  xf86-input-evdev libxinerama xrandr kbd setxkbmap \
  mesa xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa xf86-input-libinput
 
 apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
  dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
  polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
  gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind networkmanager-elogind-lang networkmanager-elogind-openrc
+ networkmanager-elogind
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -239,6 +239,8 @@ or 3.12 that uses GTK2 for almost all the programs.
 ```
 apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme
 
+apk add numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
+
 apk add xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad \
  xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \
  xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager \
@@ -257,6 +259,13 @@ rc-service networkmanager restart
 rc-service lightdm restart
 
 ```
+
+#### desktop integration and device media
+
+```
+apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
+```
+
 
 #### Desktop multimedia and media devices
 
