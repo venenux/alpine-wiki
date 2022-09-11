@@ -10,7 +10,8 @@ For XFCE4 check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
-* [Instalacion XFCE4 Alpine](#instalacion-openbox-apine)
+* [Instalacion OPENBOX Alpine](#instalacion-openbox-apine)
+    * [Session, Menu and Desktop configuration](#openbox-session-menu-and-desktop-configuration)
     * [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
     * [Development](#development)
 * [Licensing clarifications](#licensing-clarifications)
@@ -232,10 +233,10 @@ rc-service lightdm restart
 **WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
 **HINT** check for some xf86-video packages like `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
 
-## instalacion Xfce4 Alpine
+## instalacion OpenBox Alpine
 
-Since Alpine 3.13 the XFCE4 desktop its GTK3 for 32bit devices its better to use alpine 3.10 
-or 3.12 that uses GTK2 for almost all the programs.
+Since Alpine 3.13 the mayor KGT apps desktop builds GTK3 for 32bit devices its better 
+to use alpine 3.10 or 3.12 that uses GTK2 for almost all the programs.
 
 ```
 apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme
@@ -261,7 +262,7 @@ rc-service lightdm restart
 
 ```
 
-#### openbox session menu and desktop configure
+#### openbox session menu and desktop configuration
 
 **WARNING** the `openbox-doc` package must be installed
 
