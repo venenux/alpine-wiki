@@ -1,7 +1,7 @@
 # Alpine XFCE4 desktop setup: FF version
 ===========================================================
 
-Alpine must be previously installed. For a WAYLAND desktop check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md). 
+Alpine must be previously installed. For a WAYLAND crap desktop check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md). 
 For more extended verson of this document check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 * [How to use this guide](#how-to-use-this-guide)

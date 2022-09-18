@@ -4,7 +4,8 @@
 This is a single only full article for first users, 
 targeted for mid-impatient that just want the way to see the desktoip in some hours:
 
-If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)
+If you want wayland crap: [.. use this guide named Fast Forward Wayland desktop](../tutorials/alpine-tutorial-desktop-wayland-try.md)
 
 * [How to use this guide](#how-to-use-this-guide)
 * [Installation of alpine](#installation-of-alpine)
@@ -49,7 +50,7 @@ if you paste, the first line will be preceded by garbage, check always the first
 This guide will assume all the hard disk storage for the installation 
 otherwise check the best option at [alpine-newbie-install.md](alpine-newbie-install.md)
 
-Ok but if you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+Ok but if you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 #### Explanations
 
@@ -223,7 +224,7 @@ avoid those packages, if Alpine usage will be for GUI only.
 
 The packages of locales will be need as base for multi-lang enviroment.
 
-If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 #### setup system users
 
@@ -401,7 +402,7 @@ apk add gvfs udisks2 udisks2-lang udisks2-doc gvfs-fuse gvfs-archive gvfs-dav gv
 
 ```
 
-If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 #### setup software graphical fonts and languajes
 
@@ -702,4 +703,4 @@ https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
 
 * [README.md](README.md)
 * [alpine-newbie-install.md](alpine-newbie-install.md)
-* [Fast Forward XFCE desktop](../tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md)
+* [Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)

@@ -145,12 +145,19 @@ All the Development process are detailed for newbie users in the Alpine newbie d
 2. [Alpine newbie Desktop](alpine-newbie-desktop.md)
 3. [Alpine newbie Develop](alpine-newbie-develop.md)
 4. [Alpine newbie developer: full stack web](alpine-newbie-develop-full-stack-web.md)
-5. [Alpine newbie developer: gitea](alpine-newbie-develop-gitea.md)
+5. [Alpine newbie developer: backend devel](alpine-newbie-develop-backend-developer.md)
 
 ##### Servers: deploy in production
 
 1. [Alpine newbie Console](alpine-newbie-console.md)
 2. [Alpine production deploy](alpine-production-deploy.md)
+
+* Special documentation:
+    * How to setup apache professional at [server-alpine-apache2-professional.md](server-alpine-apache2-professional.md)
+    * How to setup gitea professional at [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
+    * Implementation of a certificate [guide-only-dehydrated.md](guide-only-dehydrated.md)
+* Specific doucmentation cases:
+    * ARM tvbox TODO
 
 ## Community
 

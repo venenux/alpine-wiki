@@ -14,11 +14,11 @@ with option to change that!
 want an Alpine ready touse in 4 hours, you have two options:
 
 1. [.. this link...](newbie/alpine-newbie-xfce-desktop.md) a single explanatory article that installs a complete desktop, too much text, then;
-2. [.. use this link...](tutorials/community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) but if you want to avoid the explanations and just go all the way... use this other one that is multilanguage
+2. [.. use this link...](tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md) but if you want to avoid the explanations and just go all the way... use this other one that is multilanguage
 
 ### Tutorials and Docs
 
-1. [Newbies](newbie/README.md), not mandatory but recommended you start to read the [Newbies](newbie/README.md).
+1. [Newbies](documents/README.md), not mandatory but recommended you start to read the [Newbies documentation](documents/README.md).
 2. [Tutorials](tutorials/README.md), for impatients if you have computer or only a phone, read the [Tutorials](tutorials/README.md)
 
 ### About alpine

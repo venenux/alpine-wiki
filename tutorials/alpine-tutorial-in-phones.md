@@ -8,7 +8,7 @@ the operating system and use a parallel operating system
 **What happened then?** you can boot inside yor phone (whitout remove the phone's OS), 
 the Alpine operating system, just like a kind of virtual machine but its not!
 
-If you want more help directly [ask for help here](../README.md#help-online-directly).
+If you want more help directly [ask for help here](README.md#help-online-directly).
 
 ## Introduction
 
@@ -102,5 +102,5 @@ material under identical terms,  includes the following elements:
 * **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
 * **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
 
-For more information check the [../../alpine/copyright.md](../../alpine/copyright.md)
+For more information check the [../alpine/copyright.md](../alpine/copyright.md)
 

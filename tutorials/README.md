@@ -1,12 +1,11 @@
 Alpine Linux tutorias and howtos
 =================================
 
-**Where to start?** Check the next section. Ok but **if you are impatient and 
-want an Alpine ready touse in 1 hour**, use [.. this link...alpine XFCE desktop](../newbie/alpine-newbie-xfce-desktop.md) 
-a single explanatory article that installs a complete desktop
-or [this minimal version](community-way/alpine-tutorial-desktop-xfce4-fast-forward.md) 
+**Where to start?** you will need check if you have enought Linux terminology knowledge, but 
+_**if you are impatient and want an Alpine ready touse in 1 hour check **_ [.. this link: alpine XFCE desktop](alpine-tutorial-desktop-xfce4-fast-forward.md) 
 if you want to avoid the explanations and just go all the way. For the wayland fashioned 
-desktop try the guide [alpine tutorial desktop wayland try](community-way/alpine-tutorial-desktop-wayland-try.md) .
+desktop try the guide [alpine tutorial desktop wayland](alpine-tutorial-desktop-wayland-try.md) 
+but **Wayland is not recommended due several issues and X11 its more widelly working**.
 
 ## TUTORIALS AND HOWTOS
 
@@ -20,15 +19,45 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 The **Guides are fast documents** with only direct ways to do a particular task
 with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
 
-We divided the guides, tutorials and howtos in 3 main sections (directories):
+## INSTALL
 
-1. [newbies](../newbies/README.md) (formal ways of doing things but with explanations, mostly for begginers)
-2. [community-way](community-way/README.md) (quick, fast and forward ways of doing things, mostly for impatients)
-3. [professional-way](professional-way/README.md) (informal ways but with more explanations and implicit security)
+TODO
+
+## PHONES
+
+* Alpine in your phone: [alpine-tutorial-in-phones.md](alpine-tutorial-in-phones.md)
+    * [phones-androit-allow-external-apps-install.md](phones-androit-allow-external-apps-install.md)
+
+## DESKTOPS
+
+* Complete desktops, means the programs are integrated and sync using XDG desktop compliant environment:
+    * XFCE4 desktop guide: [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
+    * WAYLAND desktop guide: [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
+* Window managers means the desktop its not integrated, each program has their own environment but can tuned:
+    * Openbox desktop guide: [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
+* Issues:
+    * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
+    * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
+
+## SERVERS
+
+* [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
+* [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
+
+## Convention for naming the files:
+
+1. each one must started with the word "alpine" unless are just a extra document like the androit external apps
+2. must be followed "tutorial" or "guide" or "howto" 
+3. rest of the name can be whatever and do not have spaces.. each word must be separated with "-"
+4. the name must not contains any simbol or space, only numbers and letters and "-" are allowed
+5. the extension of the file must be ".md"
+6. you can upload extra support files like scripts shell or photos
+7. the name of each extra files must be same as the document and extra word to idetify
+
 
 ## Acknowledges
 
-**CONSIDERATIONS**: Please check the [Feature Differences OF ALPINE LINUX](../newbies/README.md#feature-differences) 
+**CONSIDERATIONS**: Please check the [Feature Differences OF ALPINE LINUX](../documents/README.md#feature-differences) 
 but those are the main ones you should considering before usage of Alpine linux:
 
 1. Alpine Linux **is designed for power users, with security and simplicity in mind**.
@@ -36,7 +65,7 @@ but those are the main ones you should considering before usage of Alpine linux:
 3. It is built around musl libc, not glibc, which means there might be incompatibilites with some packages
 4. Its main utilities (coreutils) are derived from busybox and suckless, so all commands are pretty simplistic
 
-**PREREQUISITES**: Please check the [newbie alpine preparation requirements for you](../newbie/alpine-newbie-prepare.md) 
+**PREREQUISITES**: Please check the [alpine preparation requirements for you](alpine-newbie-prepare.md) 
 but you can use linux using [termux](tutorial-alpine-in-phone.md) or [ish](tutorial-alpine-in-phone.md) on your phone.
 
 * **Manners**, you will must have a vocation for reading and analysis.

@@ -1,7 +1,7 @@
 # Alpine OPENBOX desktop setup: FF version
 ===========================================================
 
-Alpine must be previously installed. For a WAYLAND desktop check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md). 
+Alpine must be previously installed. For a WAYLAND crap desktop check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md). 
 For XFCE4 check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 * [How to use this guide](#how-to-use-this-guide)
