@@ -42,6 +42,7 @@ TODO
 ## SERVERS
 
 * [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
+* [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md) (this one includes apache2+ssl+php+odbc+postgres+mysql)
 * [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
 
 ## Convention for naming the files:
