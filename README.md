@@ -4,7 +4,7 @@
 
 # alpine_wiki
 
-This is a markdown based effor to provide non-minimalist documentation 
+This is a markdown based effort to provide non-minimalist documentation 
 for a minimalist operating system named [Alpine Linux](alpine/about.md), 
 a Linux distribution [with base on musl libc](alpine/base-with-muslc-and-busybox.md#base-with-muslc) 
 and [defaults commands to Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox), 
