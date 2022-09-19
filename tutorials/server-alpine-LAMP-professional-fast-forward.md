@@ -4,6 +4,20 @@ The recommendation its to use apache2 behind a reverse proxy setup, such like
 lighttpd or hiawatta servers. This version will only use Apache2 but we already has a better 
 implementation using lighttpd, much more complete.
 
+* [1 - Apache2](#1-apache2)
+    * [Apache2 Status special page](#apache2-status-special-page)
+    * [Apache2 CGI bin directory support](#apache2-cgi-bin-directory-support)
+    * [Apache2 SSL support](#apache2-ssl-support)
+* [2 - Php](#2-php)
+    * [php install](#php-install)
+    * [configuration of php](#configuration-of-php)
+    * [configuration of apache2 and php-fpm](#configuration-of-apache2-and-php-fpm)
+* [3 - Databases: Sqlite, Postgres, Mysql, ODBC](#3-databases-mysql-postgresql-sqlite-odbc)
+    * [Mysql Instalation and configuration](#mysql-instalation-and-configuration)
+    * [PostgreSQL instalation and configuration](#postgresql-instalation-and-configuration)
+    * [ODBC instalation and configuration](#odbc-instalation-and-configuration)
+* [4 - Extra needs](#extra-needs)
+
 ## 1 - apache2
 
 Due to the minimalism of alpine linux, unfortunately the apache2 packaging is the worst ever seen, its configuration file makes it impossible to configure with only single line commands so the commands for quick configuration with cares of overwriting are very dedicated.
@@ -200,10 +214,10 @@ rc-service apache2 restart
 
 ## 2 - PHP
 
-The php package in alpine are only one version at time.
-This is the way you should do since alpine 3.8 until alpine 3.15, for alpine 3.16 and go check next section
+The php packages in alpine are only one version at time.
+Those instructions are for **php7 for alpine 3.8 until alpine 3.15, for alpine 3.16 and go just change "7" to "8" in name packages**
 
-#### apache2 and php7
+#### php install
 
 1. Install php base packages for php runtime features
 2. Install php internationalization and languaje support
@@ -245,7 +259,7 @@ apk add php7-apache2
 **WARNING** all of these are due alpine 3.10 to 3.15 uses php7, alpine 3.16 start to use php8, 
 so in such case just change the "7" by "8" exam ple change "php7-apache2" by "php8-apache2".
 
-#### configuration of php package
+#### configuration of php
 
 1. Use fix.pathinfo
 2. Set safe mode off
@@ -326,7 +340,8 @@ rc-service apache2 start
 
 ## 3 - Databases - MySQL postgreSQL SQLite ODBC
 
-In alpine the only option is using Mariadb.
+In alpine the only option is using Mariadb or Postgresql, ODBC only provides TDS and Postgresql, 
+rest of options are only in edge or using other linuxes
 
 #### Mysql Instalation and configuration
 
