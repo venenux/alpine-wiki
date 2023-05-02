@@ -169,6 +169,21 @@ will try to send to "localhost", to fix that, just go to the config file
 at the key value of `ROOT_URL` and check not contains "localhost" in it, change 
 to the web url of the server in this case document is `http://giteahost.mydomain.com:3000`
 
+## ANNEXES
+
+#### Setup Gitea hook for Telegram
+
+1. **Create a empty bot with botfather** visit https://t.me/BotFather and create or reuse a bot from list
+    * Copy the **bot ID** (that must end in `_bot` ) and ..
+    * Copy the **bot token** (a `number:string` separated format )..
+2. **Chat or Add the bot to the desired group or channel** to be able to receive the results of the events of the hooks.
+3. **Get the chat/group ID** for that use the https://t.me/myidbot inside of your group or channel, to get the working thing.. if you plan to receive individualy , get the chat id after chat it with the bot.
+4. **Create the hook** go to `http://<url>/admin/hooks` (for global hook) or `https://<url>/org/<group>/settings/hooks` and create a new telegram hook
+    * Setup the bot token you copied at the firts step
+    * Setup the chat id you get it at the thirth step
+    * Setup the desired events to be delivered to the chat/telegram
+5. You can update and test the hook since version 1.12 of gitea.. this process work also for public deploys like forgetto or codeberg.
+
 ## see also
 
 * [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
