@@ -2,8 +2,8 @@
 This page will tell you what requirements you will need to use the
 [Alpine Linux](about.md) operating system.
 
-* Hardware requirements
-* Software requirements
+* [Hardware requirements](#hardware-requirements)
+* [Software requirements](#software-requirements)
 
 # Hardware requirements
 
@@ -93,12 +93,12 @@ are manager by MESA project:
     support. Recent devs wants to deprecated intel support on mesa.
 - ATI/AMD, only radeon series with exception of recent two last years
     respect Alpine release, Rage r128/match64 series has limited
-    support. Recently AMD brings now open source code for last chips.
+    support. Recently AMD "Next" gen are only basic supported.
 - Nvidia: limited; only few are complete supported\! not all features
-    are allowed\! Needs 5.15 ad up kernels due to the bribery of the 
-    anonymous community that forced the sources to be released.
-- Matrox: not all features are supported, just cos are shipped on most
-    servers. Those GPU has 3D support but in recent kernels due the 
+    are allowed\! Needs 5.10 ad up kernels and have issues with 
+    power management. Recommended to disable Display power management.
+- Matrox: not all features are supported, this is shipped on most
+    servers. Those GPU has 3D support, but with newer kernels due the 
     increment of requirementes that is practically not usefully.
 - Sis: limited features are supported, since code are not updated on
     Xorg and Linux kernel
@@ -136,16 +136,16 @@ Realtek Semiconductor only if your device are so so recent.
 the target install** machine, of course downloaded from
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases or main Download page.
 
-| Available for | ISO (for USB, CD/DVD) | IMG (for Netboot) | TAR (for ROOTFS, in tar.gz) | Download links recommended                                             |
-| ------------- | --------------------- | ----------------- | --------------------------- | ---------------------------------------------------------------------- |
-| x86\_64       | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/>  |
-| x86           | YES (best is v3.12.0) | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86/>     |
-| ppc64le       | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/ppc64le/> |
-| armhf         | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/>   |
-| armv7         | NO                    | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armv7/>   |
-| aarch64       | YES                   | YES               | YES                         | <http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/> |
-| mips64        | YES (until v3.14.0)   | YES               | N/A                         | <https://dl-cdn.alpinelinux.org/alpine/v3.13/releases/mips64/>  |
-| s390x         | YES                   | YES               | N/A                         | <http://dl-cdn.alpinelinux.org/alpine/v3.15/releases/s390x/>   |
+| Available for | ISO (for USB, CD/DVD) | IMG (for Netboot) | TAR (for ROOTFS img) | Download links recommended                                             |
+| ------------- | --------------------- | ----------------- | -------------------- | ---------------------------------------------------------------------- |
+| x86\_64       | YES                   | YES               | N/A                  | http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/  |
+| x86           | YES (best is v3.12.0) | YES               | N/A                  | http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86/     |
+| ppc64le       | NO                    | YES               | YES                  | http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/ppc64le/ |
+| armhf         | NO                    | YES               | YES                  | http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/   |
+| armv7         | NO                    | YES               | YES                  | http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armv7/   |
+| aarch64       | YES                   | YES               | YES                  | http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/ |
+| mips64        | YES (until v3.14.0)   | YES               | N/A                  | https://dl-cdn.alpinelinux.org/alpine/v3.13/releases/mips64/  |
+| s390x         | YES                   | YES               | N/A                  | http://dl-cdn.alpinelinux.org/alpine/v3.15/releases/s390x/   |
 
 For some architectures, those pc machines must use an older alpine linux, 
 our wiki has good recipes for such cases, like the `x86` knowed widely 
@@ -191,11 +191,24 @@ desired install, this are the recommended sizes but depends of the
 
 | Minimum sizes   | Partition for BOOT (`/boot`) | Partition for ROOT (`/`) | Partition for HOME (`/home`) | Partition for SWAP (`N/A`) |
 | --------------- | ---------------------------- | ------------------------ | ---------------------------- | -------------------------- |
-| base only       | 100 Megs                     | 500 Megs                 | 1 Gigs                       | Optional                   |
+| base only       | 100 Megs                     | 500 Megs                 | 1+ Gigs                      | Optional                   |
 | default server  | 200 Megs                     | 2 Gigs                   | 2 Gigs                       | 4 Gigs                     |
-| default desktop | 250 Megs                     | 80 Gigs                  | 320 Gigs                     | 8 Gigs                     |
-| mail server     | 200 Megs                     | 80 Gigs                  | 20+ Gigs                     | 8 Gigs                     |
+| default desktop | 250 Megs                     | 120 Gigs                 | 320 Gigs                     | 8 Gigs                     |
+| mail server     | 200 Megs                     | 80 Gigs                  | 120+ Gigs                    | 8 Gigs                     |
 | web server      | 200 Megs                     | 10 Gigs                  | 20+ Gigs                     | 8 Gigs                     |
+
+## LICENSE
+
+**CC BY-NC-SA**: the project allows users to distribute, remix, adapt, and build upon the material 
+in any medium or format for noncommercial purposes only, and only so long as attribution is given 
+to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
+material under identical terms,  includes the following elements:
+
+* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
+* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+
+For more information check the [alpine/copyright.md](copyright.md)
 
 # See Also
 
@@ -203,4 +216,15 @@ desired install, this are the recommended sizes but depends of the
 * [contribution.md](contribution.md)
 * [README (index)](README.md)
 * [README (main)](../README.md)
+
+* [Hardware requirements](#hardware-requirements)
+    - [Architecture](#architecture)
+    - [Memory](#memory)
+    - [Storage](#storage)
+    - [Peripherals](#peripherals)
+* [Software requirements](#software-requirements)
+    - [Media](#media)
+    - [Booting](#booting)
+    - [Storage](#storage)
+    - [Firmware](#firmware)
 
