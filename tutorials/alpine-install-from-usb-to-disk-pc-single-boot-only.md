@@ -1,7 +1,7 @@
 # Alpine Install: from a disc to any computer single only boot
 
-**Overall description:** Alpine Installation from a official disc/iso
-burned into DVD/CD to a new computer with or without
+**Overall description:** Alpine Installation from a official iso(usb)
+write to USBstick to a new computer with or without
 [UEFI](Alpine_and_UEFI.md) and will be single only boot, 
 means that any thing in the computer and their disc will be erased to
 put Alpine Linux as main system
@@ -11,13 +11,11 @@ just fresh PC or Laptop hardware computer, use if you have a [BIOS or
 UEFI based hardware](Alpine_and_UEFI.md) and only wants Alpine**
 Linux into it.
 
-> **Warning** This method is in disuse today in favor of [usbstiks and imgs](alpine-install-from-usb-to-disk-pc-single-boot-only.md).
-
-Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
+> **Warning** This method only works for most modern pc since 2013 and recents, mostly 64bit only.
 
 ## Terminology
 
--   **[UEFI](Alpine_and_UEFI.md)**: it\'s a new system included
+-   **[UEFI and BIOS](Alpine_and_UEFI.md)**: it\'s the default boot for cp, 
     in every new hardware machine laptop or desktops, that will manage
     the early boot process as a little operating system, see more in the
     [Alpine and UEFI](Alpine_and_UEFI.md) page.
@@ -25,10 +23,9 @@ Feels lost here? check [How to use this guide](#how-to-use-this-guide) section o
     install your new Alpine operating system, with a installed CD/DVD
     Rom optical drive where to put the burned downloaded disc media
     installation.
--   **Optical drive**: will be your hardware drive input to put the
-    burned downloaded iso media with the operating system Alpine to
-    install as source media; this drive are commonly named [DVD/CD
-    Rom](https://en.wikipedia.org/wiki/CD-ROM) unit.
+-   **USB ports**: will be your hardware input source to boot, where
+    you wirte downloaded iso media with the operating system Alpine to
+    install as source media; this drive are commonly named Pend-Drive.
 -   **Source media**: will be the just burned/ disc from the downloaded
     iso file of Alpine operating system. Will be put into the optical
     drive or named [DVD/CD Rom](https://en.wikipedia.org/wiki/CD-ROM) to
@@ -41,9 +38,9 @@ Feels lost here? check [How to use this guide](#how-to-use-this-guide) section o
 
 ## Requirements
 
--   A blank disc (CD blank or DVD blank or BR blank) to just burn/record
-    the source media file downloaded
--   In the new machine we need optical drive as input source media
+-   A usb stick to write the ISO source media file downloaded
+-   In the new machine we need an USB port free and able to boot
+-   In the new machine we need and BIOS or UEFI able to boot USBsticks
 -   In the new machine we need at least 512Mb of RAM, but required 2Gb
     of RAM for desktop/graphical applications
 -   In the new machine we need target media with at least 2G of hard
@@ -71,10 +68,6 @@ where `ARCH` and `VERSION` could be:
         computer are too older use this only.
     -   **x86_64**: The popular AMD64 compatible 64-bit x86 based
         machines, i386 are not recommended for newer/lasted hardware.
-    -   **s390x**: For the Super powered IBM mainframes, especially IBM
-        Z and IBM LinuxONE servers.
-    -   **ppc64le**: For the PowerPC devices with pure little-endian
-        mode, mostly for POWER8 and POWER9
 -   `<VERSION>` could be one of:
     -   **latest-stable** for a more up to date without taking care of
         numbered
@@ -86,8 +79,6 @@ EXAMPLE if you plan **to using 3.17 version the available links to download will
     `http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`
 -   for **x86** older BIOS computers we recommend:
     `http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/ppc64le/alpine-standard-3.12.1-x86.iso`
--   for **ppc64le** machines
-    `http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/ppc64le/alpine-standard-3.10.1-ppc64le.iso`
 
 **Usin Graphical download way**: Just point the web browser to that url and the
 download of the iso file will start. A file with **.iso** extension
@@ -99,11 +90,11 @@ commonly into the Download directory of your home documents filesystem.
 `wget -c -t8 --no-check-certificate http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`,
 and where you run the command, in that place/dir will be downloaded the file.
 
-## Burning the source medium to install
+## Writing the source medium to install
 
 After downloading the source media file from [Alpine download page](https://alpinelinux.org/downloads/) 
-**put the blank disc into the input optical drive** named [DVD/CD Rom](https://en.wikipedia.org/wiki/CD-ROM) 
-and **open your CD/DVD recording program, choose to "burn from iso file"** and wait the
+**put the USB stick into the input USB port** named and **open your terminal program, 
+move to the place directory where ISO downloaded fiel are and `cp` to the USB device"** and wait the
 process will end.
 
 In detail if you downloaded with **Graphical download** (using a web
@@ -112,21 +103,37 @@ you downloaded with **Command line method** your source file probably
 will be in your root document home (or just `$HOME` of your Linux
 install or MAC install filesystem).
 
-In Linux, assuming the blank disc is in the optical drive, the command
+In Linux, assuming the USB stick is in the only free USB port (as `/dev/sdb`), the command
 to record/burn the downloaded source media file is :
 
-`$ umount /dev/sr0;cdrecord -v -sao dev=/dev/sr0 alpine-standard-3.10.0-x86_64.iso`
+`$ umount /dev/sdb*;cp alpine-standard-3.17.0-x86_64.iso /dev/sdb`
 
-If your blank media is a DVD or BD disc the command will be then :
+> **Note** this method only works on recent MacOs 10.12+ or recent Linux 4.9+ installations
 
-`$ umount /dev/sr0;growisofs -dvd-compat -Z /dev/sr0=alpine-standard-3.10.0-x86_64.iso`
+## Writing the source medium using ValenaEtcher
 
-> **Note** `growisofs` has a small bug with blank BD-R media. It issues an error message after the burning is complete. Programs like k3b then believe the whole burn run failed.}}
+For all users, no matter the OS or architecture, We recommend using 
+[balena-etcher-electron](https://www.balena.io/etcher/) to flash the USB drive 
+from any system, of course it must be run as or from root user or administrator 
+of your operating system.
+
+* download the iso file of the multimedia image, for UEFI 3.11 minimum
+* download the program balena-etcher-electronyou may need to install..
+* Run the program balena-etcher-electronas root in the graphical session
+* Click “select image” icon, open the downloaded image file
+* Plug the USB drive into the computer, it will automatically show as sdb or similar
+* After it balena-etcher-electronshows the USB as “sdb”, clickflash
+* Wait a while and when finished, close the program
+* Take out the USB and place it on the installation target computer in a port
+
+> **Warning** It is recommended that you only have a single unique usb stick connected.
+
+![](https://venenux.github.io/alpine-espanol/instalar/instalar-desde-usb-a-discoreal-alpinesolo-computadora-00.png)
 
 ## Booting the Alpine ISO disc
 
-When the machine start, you must be sure to choose the optical drive
-(commonly named CD/DVD Rom drive), so the disc/iso will boot and after a
+When the machine start, you must be sure to choose the right booting drive
+(commonly named USB boot drive or USB hard disk), so the disc/iso will boot and after a
 while a command line shell will show you:
 
 > **Note** When starting Alpine it will ask for the login, just typing root and pressing enter allows you to start:

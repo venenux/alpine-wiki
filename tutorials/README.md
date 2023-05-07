@@ -21,8 +21,14 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 ## INSTALL
 
-* Networking setup
+* Common methods for computers:
+    * [Install from CD to HDD/SDD PC single boot only](alpine-install-from-cd-to-disk-pc-single-boot-only.md)
+    * [Install from USB to HDD/SDD PC single boot only](alpine-install-from-usb-to-disk-pc-single-boot-only.md)
+* Serial console and sepcial devices:
+    * [Install from USB to Serial PCENGINE APU single boot](alpine-install-from-cd-to-pcengine-apu-single-boot.md)
+* Networking setup, wifi or PXE boots:
     * [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
+    * [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
 
 ## PHONES
 
