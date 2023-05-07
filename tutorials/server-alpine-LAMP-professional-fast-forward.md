@@ -133,7 +133,7 @@ sed -i -r 's#^UserDir .*#UserDir public_html#g' /etc/apache2/conf.d/userdir.conf
 rc-service lighttpd restart
 ```
 
-**WARNING** as we said.. alpine policy is to be most upstream equal possible, almost like packagers are lazy? NO! just dont put any thing about root user access, but well, you must know what are you doing, by the addition of `UserDir disabled root postmaster` you will denied specific users due security.
+> **Warning**  as we said.. alpine policy is to be most upstream equal possible, almost like packagers are lazy? NO! just dont put any thing about root user access, but well, you must know what are you doing, by the addition of `UserDir disabled root postmaster` you will denied specific users due security.
 
 #### Apache2 alpine proxy modules setup
 
@@ -163,7 +163,7 @@ EOF
 service apache2 restart
 ```
 
-**WARNING** of course, the `myproxy.conf` is hypothetical, for didactic purposes, here it is only exemplified that the error is corrected in the step of the sed command to work.
+> **Warning**  of course, the `myproxy.conf` is hypothetical, for didactic purposes, here it is only exemplified that the error is corrected in the step of the sed command to work.
 
 #### Apache2 SSL support
 
@@ -206,10 +206,10 @@ rc-service apache2 restart
 ```
 
 > **Warning** this configuration:
-1. This is a permissive configuration full compatible wtith older and newer browsers.
-2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
-3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
-4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+> 1. This is a permissive configuration full compatible wtith older and newer browsers.
+> 2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
+> 3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+> 4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
 
 ## 2 - PHP
 
@@ -255,7 +255,7 @@ apk add php7-pdo php7-pdo_dblib php7-pdo_mysql php7-pdo_odbc php7-pdo_pgsql php7
 apk add php7-apache2
 ```
 
-**WARNING** all of these are due alpine 3.10 to 3.15 uses php7, alpine 3.16 start to use php8, 
+> **Warning**  all of these are due alpine 3.10 to 3.15 uses php7, alpine 3.16 start to use php8, 
 so in such case just change the "7" by "8" exam ple change "php7-apache2" by "php8-apache2".
 
 #### configuration of php
@@ -443,7 +443,7 @@ CPReuse		=
 odbcinst -u -d -f /tmp/tmpmdb.tmp
 ```
 
-**WARNING** the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
+> **Warning**  the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
 
 ## Extra needs
 

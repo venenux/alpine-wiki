@@ -40,7 +40,7 @@ echo "it works" > /var/www/localhost/htdocs/index.html
 
 For testing open a browser and go to `http://<webserveripaddres>` and you will see "it works". The "webserveripaddres" are the ip address of your setup/server machine.
 
-**WARNING**: alpine packagers are a mess, the apache2 default configuration is not ordened so all the conf files under `/etc/apache2/conf.d/` will be loaded with no specific order.
+> **Warning** : alpine packagers are a mess, the apache2 default configuration is not ordened so all the conf files under `/etc/apache2/conf.d/` will be loaded with no specific order.
 
 ### Controlling Apache2
 
@@ -146,7 +146,7 @@ sed -i -r 's#^UserDir .*#UserDir public_html#g' /etc/apache2/conf.d/userdir.conf
 rc-service lighttpd restart
 ```
 
-**WARNING** as we said.. alpine policy is to be most upstream equal possible, almost like packagers are lazy? NO! just dont put any thing about root user access, but well, you must know what are you doing, by the addition of `UserDir disabled root postmaster` you will denied specific users due security.
+> **Warning**  as we said.. alpine policy is to be most upstream equal possible, almost like packagers are lazy? NO! just dont put any thing about root user access, but well, you must know what are you doing, by the addition of `UserDir disabled root postmaster` you will denied specific users due security.
 
 If you change the user dir , then you must change the directory definition at the last block.
 
@@ -180,7 +180,7 @@ EOF
 service apache2 restart
 ```
 
-**WARNING** of course, the `myproxy.conf` is hypothetical, for didactic purposes, here it is only exemplified that the error is corrected in the step of the sed command to work.
+> **Warning**  of course, the `myproxy.conf` is hypothetical, for didactic purposes, here it is only exemplified that the error is corrected in the step of the sed command to work.
 
 #### Apache2 SSL support
 
@@ -229,10 +229,10 @@ rc-service apache2 restart
 ```
 
 > **WARNING** this configuration:
-1. This is a permissive configuration full compatible wtith older and newer browsers.
-2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
-3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
-4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+> 1. This is a permissive configuration full compatible wtith older and newer browsers.
+> 2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
+> 3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
+> 4. to only allow most secure negociations and a bit of compat, set proxy to `SSLProxyCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
 
 Best is to made a redirection inside of the document root of port 80 deifintion
 also put a `<IfModule mod_ssl.c>` conditional at the beginning of the ssl config file.

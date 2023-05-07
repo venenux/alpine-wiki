@@ -11,7 +11,7 @@ just fresh PC or Laptop hardware computer, use if you have a [BIOS or
 UEFI based hardware](Alpine_and_UEFI.md) and only wants Alpine**
 Linux into it.
 
-**HINT**: This method is in disuse today in favor of [usbstiks and imgs](alpine-install-from-usb-to-disk-pc-single-boot-only.md).
+> **Warning** This method is in disuse today in favor of [usbstiks and imgs](alpine-install-from-usb-to-disk-pc-single-boot-only.md).
 
 ## Terminology
 

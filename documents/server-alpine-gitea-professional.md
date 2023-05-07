@@ -124,7 +124,7 @@ EOF
 apk update --allow-untrusted
 ```
 
-**WARNING** if your version of alpine are more ancient like 3.6 or 3.8, do not use 
+> **Warning**  if your version of alpine are more ancient like 3.6 or 3.8, do not use 
 the edge version, it need upgrading almost to alpine 3.10 to use it, so if you 
 are using a older hardware not supported by recent linux kernel, upgrade to alpine 3.10 
 and then you can follow this manual. Otherwise just avoit the edge swicht and 
@@ -371,7 +371,7 @@ rc service gitea2 start
 rc-update add gitea2 default
 ```
 
-**CAUTION** if you runs multiple instances, each one must have different port, 
+> **Warning** if you runs multiple instances, each one must have different port, 
 this means you must check in the config `app.ini` file (like the `gitea2.ini` )
 that after the póst setup procedure, the port are correct and different, if not just, 
 before or after change it with `HTTP_PORT` and `ROOT_URL` keys.
@@ -516,7 +516,7 @@ for the real proxy reverse redirection and lighttpd as real frontend web service
 
 - 🗯 IRC
   - 💬 `##alpine_telegram_english`
-  - 💬 `#alpine_linux_english`
+  - 💬 `##alpine_linux_english`
 - 📱 Telegram https://t.me/alpine_linux
   - 🇬🇧 https://t.me/alpine_linux_english
   - 🇷🇺 https://t.me/alpine_linux_pycckuu (dual english russian, low activity)

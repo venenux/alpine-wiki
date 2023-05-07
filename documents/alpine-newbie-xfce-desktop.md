@@ -42,7 +42,7 @@ so you must **tipe each line as is.. and hit enter**, but if you are in gui or r
 2. at the other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
 3  after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config;service sshd restart`
 
-**CAUTION** Some Linux or/and Mac terminals have security cut/paste locks, so 
+> **Warning** Some Linux or/and Mac terminals have security cut/paste locks, so 
 if you paste, the first line will be preceded by garbage, check always the first char of your paste.
 
 ## Installation of alpine
@@ -183,7 +183,7 @@ Those command put your alpine in "non minimalist mode" so means
 * will provide all the system tools to the devices management
 for more info of `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
 
-NExt section will cover the suser management and programs support:
+Next section will cover the suser management and programs support:
 
 #### configuration programs and repositories
 

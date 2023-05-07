@@ -20,7 +20,8 @@ Alpine must be previously installed. This will install a new fashioned desktop, 
 
 You must have already installed alpine, and wayland only works well in alpine 3.14 and up
 
-**YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
+> **Warning** **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
+or configure a network connection check [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
 
 #### setup OS configuration
 
@@ -151,7 +152,7 @@ useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netd
 for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
 ```
 
-**WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
+> **Warning**  your user name must be `general`, you can put a "human name" as you wish, later.
 
 For more details check  [../../newbie/alpine-newbie-configuration.md](../../newbie/alpine-newbie-configuration.md#setup-system-users)
 
@@ -190,7 +191,7 @@ For more details check  [../../newbie/alpine-newbie-configuration.md](../../newb
 
 #### setup audio and video for wayland
 
-**HINT** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
+> **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
 
 ```
 apk add xf86-input-evdev cairo pango pixman \
@@ -230,8 +231,9 @@ rc-service polkit restart
 rc-update del lightdm
 ```
 
-**WARNING** your user name must be `general`, you can put a "human name" as you wish, later.
-**ADVERTISE** pure wayland will work only in modern gpu, otherwise will use xwayland if you need some modules like xf86-video packages as `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
+> **Warning**  your user name must be `general`, you can put a "human name" as you wish, later.
+
+> **Note** pure wayland will work only in modern gpu, otherwise will use xwayland if you need some modules like xf86-video packages as `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
 
 ## Instalacion WAYLAND Alpine
 
@@ -303,7 +305,7 @@ rc-update add lightdm
 rc-service lightdm restart
 ```
 
-**WARNING**: for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
+> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
 result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
 
 #### desktop integration and device media
@@ -350,10 +352,10 @@ all new(next) lines are made by just enter. the terminal will detect if must exe
 3. copy each separated by empty line, block of command, copy only blocks separate by empty line
 4. and paste each separated by empty line block in the remnote (ssh), do not paste all the blocks at same time!
 
-**CAUTION** Some Linux or/and Mac terminals have security cut/paste locks, so 
+> **Warning** Some Linux or/and Mac terminals have security cut/paste locks, so 
 if you paste, the first line will be preceded by garbage, check always the first char of your paste.
 
-**WARNING** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
+> **Warning** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
 and restart ssh `service sshd restart` becouse security implications.
 
 Done? return to [Preparation](#preparation-alpine) section of this document.
