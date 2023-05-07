@@ -21,7 +21,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 ## INSTALL
 
-TODO
+* Networking setup
+    * [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
 
 ## PHONES
 
