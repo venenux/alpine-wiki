@@ -13,9 +13,9 @@ as the most moderns.. (in the past there are others like IR, etc).
 
 The wifi devices are from two kind, the only pure network ones and the hybrid ones, 
 this means that a pure network device just are a device to use linked to a network, 
-but currently bluetooth is a network device but for paired devices, just like point to point, 
-so nomadays curerntly almost any laptop wifi is also a bluetooth device too, we called 
-those for convenience hybrid ones.
+but currently bluetooth is a network device but for paired devices, just like 
+point to point, so nomadays curerntly almost any laptop wifi is also a bluetooth 
+device too, we called those for convenience hybrid ones.
 
 Also important, many laptops and special computers, have a hardware button (or switch) 
 to turn off wireless card, however, sometimes this are a software switch by the vendor, 
@@ -25,13 +25,13 @@ if the module of the device is currently well and complete supported hardware.
 
 ## Wifi status on Alpine linux
 
-As any tech piece, we have hardware and software, so then a "wifi setup" is made by two parts:
+As any tech piece, we have hardware and software, so then a "wifi" is made by two parts:
 
-* hardware as the module manager from kernel .. (like compiling rtl8192eu-linux or r8169)
-* and the software interface.. (like installing wpa_supplicant or iwd programs)
+* The hardware as the module manager from kernel .. (like compiling `rtl8192eu-linux` or `r8169`)
+* The software interface.. (like installing `wpa_supplicant` or `iwd` programs)
 
-Most linux setup just configure `network-manager` package that oversimplified the things, 
-console setup it bit complicated but easyle covered, currently there is two options for, 
+Most linux distros just configures `network-manager` package that oversimplified the things, 
+console setup is bit complicated but easyle covered, currently there is two options for, 
 the `wpa_supplicant` and the newer `iwd` from Intel, this last with less usage cases.
 
 | Software       | UI      | WEXT  | nl80211 | WEP  | WPA/2/3 | WORKING apk |
@@ -48,20 +48,14 @@ autentications protocols. The package `networkmanager` and his applet are since 
 only working applet was noted since Alpine 3.12 due right setup of permissions.
 
 > **Note** the `networkmanager` and `connman` packages has wifi management but 
-are only fronend interfaces and will relies over the `iwd` or `wpa_supplicant`.
+are only frontend interfaces and relies heavily over the `iwd` or `wpa_supplicant`.
 
-Curently `iwd` aims to be the future of linux wireless, but such package needs dbus, 
-ironcally so how stupid is development, such pacakge is not in all install isos when 
-release it, if you in such stage dont have connection, so, how you can grab a complex set 
-of packages due dbus dependencies that apart still have a short (almost married) 
-relation with shitstemd?.
-
-Also a key: `iwd` its pretty **still BAD for general purposes, its pretyy great 
-for normal common desktops and laptops, but bad for vaste rest of use cases, 
-just check https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
+The `iwd` claims to be the future of wireless networking on linux, but even this 
+has unfinished issues, it **still doesn't cover the vast amount of configurations 
+and has only been tested on common computers just check https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
 the mayor feature of alpine is the mayor problem, minimalist and simplicity.
 
-# Configuration of the wifi
+# Configuration of alpine wifi
 
 Due the huge problem that represent the hardware, we only will covert software interface, 
 and we will assume you already have the modules already compiled into the kernel, 
@@ -141,7 +135,7 @@ just install all the need packages as:
 apk add wireless-tools wpa_supplicant dbus-libs libnl3 pcsc-lite-libs linux-firmware util-linux
 ```
 
-**Warning** since 3.15 the `rfkill` program is at `util-linux-misc` package, and not 
+> **Warning** since Alpine 3.15 the `rfkill` program is at `util-linux-misc` package, and not 
 in the `util-linux` package cos was splited so you must install it in recent alpine versions.
 
 ### 3 - configure wireless devices
