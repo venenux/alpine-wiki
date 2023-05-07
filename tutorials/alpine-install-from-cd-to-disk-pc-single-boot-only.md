@@ -119,18 +119,17 @@ If your blank media is a DVD or BD disc the command will be then :
 
 `$ umount /dev/sr0;growisofs -dvd-compat -Z /dev/sr0=alpine-standard-3.10.0-x86_64.iso`
 
-```{=mediawiki}
-{{Note|growisofs has a small bug with blank BD-R media. It issues an error message after the burning is complete. Programs like k3b then believe the whole burn run failed.}}
-```
+> **Note** `growisofs` has a small bug with blank BD-R media. It issues an error message after the burning is complete. Programs like k3b then believe the whole burn run failed.}}
+
 ## Booting the Alpine ISO disc
 
 When the machine start, you must be sure to choose the optical drive
 (commonly named CD/DVD Rom drive), so the disc/iso will boot and after a
 while a command line shell will show you:
 
-```{=mediawiki}
-{{Tip|If your system is not configured to boot from a CD/DVD drive, it must be configured in the BIOS, '''ask/search to your vendor or technical support''', Toshiba computers need to hit F1 to choose boot medium, DELL must hit F11 to choose medium for example, and so and so}}
-```
+
+> **Warning** Tip: If your system is not configured to boot from a CD/DVD drive, it must be configured in the BIOS, '''ask/search to your vendor or technical support''', Toshiba computers need to hit F1 to choose boot medium, DELL must hit F11 to choose medium for example, and so and so}}
+
 TODO put the same foto here
 
 TODO: restore the template about normal script steps for common pages

@@ -75,8 +75,7 @@ Sometimes you will receive an error `error relocating ... symbol not found` when
 This is because you installed some alpine packages too fresh but not upgraded dependences. 
 A simple `apk upgrade -a` will fix it.
 
-**IMPORTANT** to know:
-
+> **Warning** **IMPORTANT** to know:
 * For `Androit` and `Termux` you must read: https://wiki.termux.com/wiki/Differences_from_Linux
 * For `iOS` and `iSH` you must read: https://github.com/ish-app/ish/wiki/What-works%3F
 

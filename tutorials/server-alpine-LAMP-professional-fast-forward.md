@@ -205,8 +205,7 @@ sed -i -r 's#^SSLProxyCipherSuite.*#SSLProxyCipherSuite HIGH:MEDIUM:ALL:!MD5:!RC
 rc-service apache2 restart
 ```
 
-**WARNING NOTES**
-
+> **Warning** this configuration:
 1. This is a permissive configuration full compatible wtith older and newer browsers.
 2. to only allow most secure protocols and a bit of compatibilty, set to `SSLProtocol all -TLSv1 -SSLv3`
 3. to only allow most secure negociations and a bit of compat, set to `SSLCipherSuite HIGH:MEDIUM:ECDHE:!MD5:!RC4:!3DES:!ADH`
@@ -334,9 +333,9 @@ EOF
 rc-service apache2 start
 ```
 
-**WARNING** the two last steps are mutualy exclusive, only one way of php handle can be made.
+> **WARNING** the two last steps are mutualy exclusive, only one way of php handle can be made.
 
-**IMPORTANT** here we use **sockets, so its more faster rather fcgi** steps made by oficial wiki.
+> **Note** here we use **sockets, so its more faster rather fcgi** steps made by oficial wiki.
 
 ## 3 - Databases - MySQL postgreSQL SQLite ODBC
 

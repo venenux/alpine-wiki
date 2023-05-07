@@ -30,8 +30,8 @@ want an Alpine ready touse in 4 hours, you have two options:
 ### Social network and contact
 
 - 🗯 IRC
-  - 💬 `##alpine_telegram_english`
-  - 💬 `#alpine_linux_english`
+  -  `##alpine_telegram_english`
+  -  `##alpine_telegram_espanol`
 - 📱 Telegram https://t.me/alpine_linux
   - 🇬🇧 https://t.me/alpine_linux_english
   - 🇷🇺 https://t.me/alpine_linux_pycckuu (dual english russian, low activity)
@@ -41,6 +41,7 @@ want an Alpine ready touse in 4 hours, you have two options:
   - 📡 https://t.me/opentechnologies (open languajes but english as main)
 - Matrix
   - 👥 https://matrix.to/#/#alpine-linux-english:matrix.org
+  - 👥 https://matrix.to/#/#alpine-linux-eespanol:matrix.org
 
 ### How to contribute
 
