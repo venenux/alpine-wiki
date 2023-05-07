@@ -1,6 +1,9 @@
 # AlpineLinux with wlan settings.
 
-The alpine wiki is a crap .. information is "less" so much people is just losing the patiente..
+The alpine wiki is a crap .. information is "less" so much people is just losing 
+the patiente.. 
+
+Before taking any copy from this document check [Licensing clarifications](#licensing-clarifications) at the end.
 
 ## Introduction to Wireless devices
 
@@ -20,26 +23,61 @@ so we can also be blocked by kernel if the card its well supported. This is only
 by the two important requirements, first by using `rfkill` (util-linux) and also 
 if the module of the device is currently well and complete supported hardware.
 
-## Setup wireless on alpine Alpine Linux
+## Wifi status on Alpine linux
 
-AS any tech piece, we have hardware and software, this document only will cover 
-the software part, cos hardware support depends of the available modules and 
-reverse ingeniering that the linux community can made to the hardware.
+As any tech piece, we have hardware and software, so then a "wifi setup" is made by two parts:
 
-So then a "wifi setup" is made by two parts:
-
-* the module manager from kernel .. (like compiling rtl8192eu-linux or r8169)
+* hardware as the module manager from kernel .. (like compiling rtl8192eu-linux or r8169)
 * and the software interface.. (like installing wpa_supplicant or iwd programs)
 
+Most linux setup just configure `network-manager` package that oversimplified the things, 
+console setup it bit complicated but easyle covered, currently there is two options for, 
+the `wpa_supplicant` and the newer `iwd` from Intel, this last with less usage cases.
+
+| Software       | UI      | WEXT  | nl80211 | WEP  | WPA/2/3 | WORKING apk |
+| -------------- | ------- | ----- | ------- | ---- | ------- | ---------- |
+| wireless_tools | Console | Yes   | No      | Yes  | No      | [since 3.5](https://pkgs.alpinelinux.org/packages?name=wireless-tools&branch=v3.4) |
+| iw             | Console | No    | Yes     | Yes  | Yes     | [since 3.5](https://pkgs.alpinelinux.org/packages?name=iw&branch=v3.5) |
+| wpa_supplicant | Console | Yes   | Yes     | Yes  | Yes     | [since 3.0](https://pkgs.alpinelinux.org/packages?name=wpa_supplicant&branch=v3.3) |
+| iwd            | Console | Yes   | Yes     | No   | Yes     | [since 3.15](https://pkgs.alpinelinux.org/packages?name=iwd&branch=v3.15) |
+| network-manager | Con+Gui | Yes | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.4) |
+| connman        | Console | No    | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.4) |
+
+The `iwd` packages exits since 3.10 but only since 3.15 has support for right 
+autentications protocols. The package `networkmanager` and his applet are since 3.6 but 
+only working applet was noted since Alpine 3.12 due right setup of permissions.
+
+> **Note** the `networkmanager` and `connman` packages has wifi management but 
+are only fronend interfaces and will relies over the `iwd` or `wpa_supplicant`.
+
+Curently `iwd` aims to be the future of linux wireless, but such package needs dbus, 
+ironcally so how stupid is development, such pacakge is not in all install isos when 
+release it, if you in such stage dont have connection, so, how you can grab a complex set 
+of packages due dbus dependencies that apart still have a short (almost married) 
+relation with shitstemd?.
+
+Also a key: `iwd` its pretty **still BAD for general purposes, its pretyy great 
+for normal common desktops and laptops, but bad for vaste rest of use cases, 
+just check https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
+the mayor feature of alpine is the mayor problem, minimalist and simplicity.
+
+# Configuration of the wifi
+
 Due the huge problem that represent the hardware, we only will covert software interface, 
-and we will assume you already have the modules already compiled into the kernel.
+and we will assume you already have the modules already compiled into the kernel, 
+nowadays this is easily handled by installing the firmware packages and only few devices too 
+recents represents minor problems, such instalation is partialy covered as necesary.
 
-**IMPORTANT** if in our telegram channel you called "driver" to a module kernel, you 
-will be punished.. **a driver is a person that drive a car! and a folder it to put papers in it, not a directory, ok?**
+> **Warning** if in our telegram channel you called "driver" to a module kernel, you 
+will be punished.. **a driver is a person that drive a car! ok?**
 
-### 1 - you dont have networking
+### 1 - software requirements and network lack
 
-If you dont have network how you can grab the packages?
+You will need the packages, but if you dont have network how you can grab the packages?
+
+**Then you will be offered the possible cases where you will need to configure 
+the Wi-Fi**, first, when you do not have cable or telephone internet, second when 
+you have at least external internet and third when you have cable internet:
 
 #### Option 1 grab the packages manually
 
@@ -86,14 +124,9 @@ easyle install the necesary packages to perform the wifi setup.
 
 Wireless need a special packages, the pacakge `iwd` is available since 3.10 but 
 ther are two problems: 
-1. first! that crap package needs dbus, so how stupid is the linux community, 
-if you in such stage dont have connection, so, how you can grab a complex set 
-of packages due dbus dependencies that apart still have a short (almost married) 
-relation with shitstemd?, yeah.. thanks for being stupids!
-2. second! `iwd` its pretty **still BAD for general purposes, its pretyy great 
-for normal common desktops and laptops, but bad for vaste rest of use cases, 
-just check https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
-the mayor feature of alpine is the mayor problem, minimalist and simplicity.
+
+1. It depends on dbus the is not included in all ISOS/IMG install images.
+2. Work only on common laptops/desktops: https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
 
 So yeah.. we will use the old and fiable methods, **later we will provide another tutorial with iwd**:
 
@@ -108,7 +141,7 @@ just install all the need packages as:
 apk add wireless-tools wpa_supplicant dbus-libs libnl3 pcsc-lite-libs linux-firmware util-linux
 ```
 
-**IMPORTANT** since 3.15 the `rfkill` program is at `util-linux-misc` package, and not 
+**Warning** since 3.15 the `rfkill` program is at `util-linux-misc` package, and not 
 in the `util-linux` package cos was splited so you must install it in recent alpine versions.
 
 ### 3 - configure wireless devices
@@ -297,12 +330,12 @@ ifconfig wlan0 down
 rc-update add wpa_supplicant boot
 ```
 
-> __Note__: If this errors with `ioctl 0x8914 failed: No error information`, 
+> **Note** : If this errors with `ioctl 0x8914 failed: No error information`, 
 that's `busybox ip`'s way of saying your wireless radio is rfkill'd, for information 
 on how to unblock your wireless radio; the base installation should 
 have `busybox rfkill` available, check the section [check the devices availables](#check-the-devices-availables).
 
-**IMPORTANT** Hardware buttons to toggle wireless cards are handled by vendor specific 
+> **Warning** Hardware buttons to toggle wireless cards are handled by vendor specific 
 kernel modules. Frequently, these are [WMI](https://lwn.net/Articles/391230/) modules. 
 Particularly for very new hardware models, it happens that the model is not fully supported 
 in the latest stable kernel yet. In this case, it often helps to search the kernel bug 
