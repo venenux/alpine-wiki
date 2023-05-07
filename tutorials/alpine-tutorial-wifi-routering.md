@@ -90,11 +90,10 @@ ther are two problems:
 if you in such stage dont have connection, so, how you can grab a complex set 
 of packages due dbus dependencies that apart still have a short (almost married) 
 relation with shitstemd?, yeah.. thanks for being stupids!
-2. second! `iwd` its pretty BAD very bad packaged in alpine linux, due the simplicity 
-itselft, the mayor feature of alpine is the mayor problem, minimalist and simplicity 
-make the package almost unusuable, apart of the fact that such package just dont work 
-without the need dependences that are not present without setup a network repository, 
-like the dbus+glib interfaces libraries, yeah!!! thanks again!.
+2. second! `iwd` its pretty **still BAD for general purposes, its pretyy great 
+for normal common desktops and laptops, but bad for vaste rest of use cases, 
+just check https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
+the mayor feature of alpine is the mayor problem, minimalist and simplicity.
 
 So yeah.. we will use the old and fiable methods, **later we will provide another tutorial with iwd**:
 
