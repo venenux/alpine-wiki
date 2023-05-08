@@ -2,12 +2,33 @@
 
 This script is the main install program for Alpine linux, only can run as root.
 
+## Table of Contents
+
+- [Script setup-alpine](#script-setup-alpine)
+    - [Environment variables before run](#environment-variables-before-run)
+    - [Running setup alpine script](#running-setup-alpine-script)
+        - [Select keyboard layout](#select-keyboard-layout)
+        - [Select keyboard variant](#select-keyboard-variant)
+        - [Enter system hostname](#enter-system-hostname)
+        - [Initialize network cards](#initialize-network-cards)
+        - [Initialize network DNS](#initialize-network-dns)
+        - [Changing the root password](#changing-the-root-password)
+        - [Which timezone to choose?](#which-timezone-to-choose)
+        - [Proxy chooser](#proxy-chooser)
+        - [Enter mirror number](#enter-mirror-number)
+        - [Which ssh server?](#which-ssh-server)
+        - [Which NTP client to run?](#which-ntp-client-to-run)
+    - [Script setup-disk choose the target device](#script-setup-disk-choose-the-target-device)
+- [Setup scripts](#setup-scripts)
+- [Licensing clarifications](#licensing-clarifications)
+- [See also](#see-also)
+
 **Log in** as **root** and press enter. No password will be asked for if
 you're running from the boot image.
 
 ![](https://wiki.alpinelinux.org/images/4/4f/Installation-alpine-alpine-setup-3-root-login.png)
 
-#### Environemnt variables before run
+#### Environment variables before run
 
 At the bash prompt you can export those environment variables that the scripts 
 will handle it automatically:
