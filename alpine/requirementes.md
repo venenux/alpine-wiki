@@ -114,7 +114,7 @@ Note that bluetooth adapter, while on the same card as your wifi will
 have a seperate hardware ID but both will be reconiced always as USB devices.
 
 Mostly mayor of those are not well suported unless you use kernel 5.10 and up, 
-so the recommendations for recent hybrits devices are Alpine v3.15 and up. 
+so the recommendations for recent hybrits devices are Alpine v3.16 and up. 
 the only problem are few modules like Broadcom (that some not matter if 
 are older or newer will require compilation and firmware) and the 
 Realtek Semiconductor only if your device are so so recent.
@@ -158,19 +158,27 @@ to do the same task as any recent version of same.
 
 ## Booting
 
-**Means support for kind of BIOS setup of machine, and where can be
-media downloaded will be boot**, please for more info check [Alpine and UEFI](alpine-and-uefi.md)) wiki page
+**Means support for kind of BIOS/UEFI/OEM setup of machine, and where can be
+media downloaded will be boot**.
 
 | Supported Arch | Supported BIOS         | Supported Types | Media Boot Recommended       |
 | -------------- | ---------------------- | --------------- | ---------------------------- |
 | x86\_64        | Coreboot, Vendor/OEM   | BIOS, UEFI      | **USB**, CD/DVD (ISO)        |
 | x86            | Coreboot, Vendor/OEM   | BIOS, UEFI      | **USB**, CD/DVD (ISO)        |
 | ppc64le        | Coreboot, Vendor/OEM   | BIOS, UEFI      | **USB**, CD/DVD (ISO)        |
-| armhf          | Uboot, Vendor/OEM      | BIOS, UEFI      | **NET**, MINIROOTFS (TAR.GZ) |
+| armhf          | Uboot, Vendor/OEM      | BIOS            | **NET**, MINIROOTFS (TAR.GZ) |
 | armv7          | Uboot, Vendor/OEM      | BIOS, UEFI      | **NET**, MINIROOTFS (TAR.GZ) |
 | aarch64        | ?Coreboot?, Vendor/OEM | BIOS, ?UEFI?    | **USB**, CD/DVD (ISO)        |
 | mips64         | Vendor/OEM             | ?               | v3.14.0 end of support       |
 | s390x          | Vendor/OEM             | BIOS, ?UEFI?    | **USB**, CD/DVD              |
+
+#### Boot process
+
+The boot process for most common computer are described at 
+the [alpine-boot-uefi-bios.md](alpine-boot-uefi-bios.md) document.
+
+The Uboot process for most common devices are described at 
+the [apine-boot-uboot.md](alpine-boot-uboot.md) except for Odroid-C2 devices..
 
 If the computer does not automatically boot from the desired device, one
 needs to bring up the boot menu selection for choosing the media to boot

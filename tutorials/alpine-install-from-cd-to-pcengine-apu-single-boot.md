@@ -120,6 +120,8 @@ This will start some questions, these are in the following order:
 * NTP Options: Use chronythe packet already in the middle.
 * Mode: Select `sys` to install the system on disk.
 
+![](https://venenux.github.io/alpine-espanol/instalar/install-alpine-alpine-setup-3-setup-scripts.png)
+
 ## After reboot
 
 1.  **Before** rebooting, edit /boot/extlinux.conf.

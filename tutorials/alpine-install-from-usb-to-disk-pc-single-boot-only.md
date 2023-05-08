@@ -198,6 +198,8 @@ your hard drive as follows:
 
 In a few minutes everything will be ready to use ofering a console when boot new system.
 
+![](https://venenux.github.io/alpine-espanol/instalar/install-alpine-alpine-setup-3-setup-scripts.png)
+
 #### custom setup boot loader
 
 If the new local system was configured to run in `diskless` or `data` mode, or if you 
