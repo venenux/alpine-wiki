@@ -8,6 +8,22 @@ The recommendation its to use apache2 behind a reverse proxy setup, such like
 lighttpd or hiawatta servers.
 Currently the most lazy and slow server .. just for windosers that wants to learn.. 
 
+## Table of Contents
+
+- [Apache2](#apache2)
+    - [Apache2 Installation](#apache2-installation)
+    - [Controlling Apache2](#controlling-apache2)
+- [Apache2 Configuration](#apache2-configuration)
+    - [Status special page](#status-special-page)
+    - [CGI bin directory support](#cgi-bin-directory-support)
+    - [Descriptive error or special pages](#descriptive-error-or-special-pages)
+    - [Userdir public_html support](#userdir-public_html-support)
+    - [Apache2 alpine proxy modules setup](#apache2-alpine-proxy-modules-setup)
+    - [Apache2 SSL support](#apache2-ssl-support)
+- [Lest Encrypt](#lest-encrypt)
+- [see also](#see-also)
+- [LICENSE](#license)
+
 ### Apache2 Installation
 
 1. run apk for need pacakges

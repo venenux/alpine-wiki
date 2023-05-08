@@ -3,6 +3,31 @@
 Gitea is a community managed lightweight code hosting solution written in Go. 
 It is a fork of Gogs. For a more simple guide use the [alpine-howto-gitea-package.md](../tutorials/alpine-howto-gitea-package.md)
 
+## Table of Contents
+
+- [alpine server gitea](#alpine-server-gitea)
+    - [Clarifications](#clarifications)
+    - [Requirements](#requirements)
+    - [Preparations](#preparations)
+    - [Installation](#installation)
+    - [Configurations](#configurations)
+    - [Initialization](#initialization)
+    - [Post install](#post-install)
+        - [Post installation with sqlite](#post-installation-with-sqlite)
+        - [Post installation with mysql](#post-installation-with-mysql)
+        - [Post installation with postgresql](#post-installation-with-postgresql)
+        - [Post install process](#post-install-process)
+    - [Tunning instances](#tunning-instances)
+        - [System running](#system-running)
+        - [Standard running](#standard-running)
+        - [Multiple instances](#multiple-instances)
+- [Serving web gui](#serving-web-gui)
+    - [Root hijacking web server](#root-hijacking-web-server)
+    - [Proxy [sub]domain web service](#proxy-subdomain-web-service)
+    - [Proxy [sub]path web service](#proxy-subpath-web-service)
+- [see also](#see-also)
+- [LICENSE](#license)
+
 ## Clarifications
 
 1. Gitea was created by a group of users and contributors of the self-hosted Git service Gogs, 
@@ -185,6 +210,16 @@ service gitea status
 After check that is "running" you must setup graphically using a web browser, 
 poiting to `http://localhost:3000`, in the case of this document should be 
 pointing to `http://giteahost.mydomain.com:3000` and a web landing will show.
+
+- [Post install](#post-install)
+    - [Post installation with sqlite](#post-installation-with-sqlite)
+    - [Post installation with mysql](#post-installation-with-mysql)
+    - [Post installation with postgresql](#post-installation-with-postgresql)
+    - [Post install process](#post-install-process)
+- [Tunning instances](#tunning-instances)
+    - [System running](#system-running)
+    - [Standard running](#standard-running)
+    - [Multiple instances](#multiple-instances)
 
 ## Post install
 
