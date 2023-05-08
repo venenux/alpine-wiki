@@ -178,6 +178,6 @@ https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
 ## See also
 
 * [README.md](README.md)
-* [alpine-newbie-install.md](../../newbie/alpine-newbie-install.md)
+* [alpine-setup-install-script.md](../alpine/alpine-setup-install-script.md)
 * [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
 * [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)

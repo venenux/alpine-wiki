@@ -288,4 +288,4 @@ Original started at: https://wiki.alpinelinux.org/w/index.php?title=Alpine_and_U
 ## See also
 
 * [README.md](README.md)
-
+* [alpine-setup-install-script.md](alpine-setup-install-script.md)

@@ -117,5 +117,5 @@ Original started at: https://wiki.alpinelinux.org/w/index.php?title=Alpine_and_U
 ## See also
 
 * [README.md](README.md)
-* [alpine-newbie-install.md](../../newbie/alpine-newbie-install.md)
+* [alpine-setup-install-script.md](../alpine/alpine-setup-install-script.md)
 * [alpine/alpine-boot-uefi-bios.md](../alpine/alpine-boot-uefi-bios.md)
