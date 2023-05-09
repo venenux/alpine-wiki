@@ -24,6 +24,24 @@ into the vendor hardware.
 
 > **Note** Consult more at [../alpine/alpine-boot-uefi-bios.md](../alpine/alpine-boot-uefi-bios.md)
 
+## Where i will find BIOS based devices
+
+Any computer until 2010 or older will only have a BIOS system to boot. Any IBM pc 
+computer wil have also BIOS and any coputer until 2014 will have almost UEFI legacy 
+support to boot like BIOS.
+
+On those system marked as older harware you will need a MBR based partition 
+table only, and cannot use GTP partitions.
+
+## Where i will find UEFI based devices
+
+Any computer since 2014 will have UEFI for sure, but 2013/2014 ones wil have 
+buggy UEFI implementations. Its recommended to avoid any computer from 2013 
+or 2014, and if you have a BIOS+UEFI then enabled the legacy mode.
+
+Also any Vendor marked computer bqased on x86 or 64bit, or any 64bit 
+computer will have UEFI, specially those that are parnership with Mocosoft.
+
 # Alpine UEFI support
 
 Currently are enought for boot most systems, not all the architectures are complete
