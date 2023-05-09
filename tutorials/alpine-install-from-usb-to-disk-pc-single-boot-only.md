@@ -1,46 +1,19 @@
-# Alpine Install: from a disc to any computer single only boot
+# Alpine Install: from a USB to any computer single disc and only alpine boot
 
-**Overall description:** Alpine Installation from a official iso(usb)
-write to USBstick to a new computer with or without
-[UEFI](Alpine_and_UEFI.md) and will be single only boot, 
-means that any thing in the computer and their disc will be erased to
-put Alpine Linux as main system
+**Overall description:** Alpine Installation from a official iso, 
+dumpet to a usb source device media, and installed to a bare metal computer
+no matter if include [UEFI](Alpine_and_UEFI.md) and will be the only OS 
+installed to boot.
 
-This document will guide you to **install Alpine into a new empty or
-just fresh PC or Laptop hardware computer, use if you have a [BIOS or
-UEFI based hardware](Alpine_and_UEFI.md) and only wants Alpine**
-Linux into it.
+Means you will **install Alpine as the only OS in a PC computer from USB** media.
 
 > **Warning** This method only works for most modern pc since 2013 and recents, mostly 64bit only.
-
-## Terminology
-
--   **[UEFI and BIOS](Alpine_and_UEFI.md)**: it\'s the default boot for cp, 
-    in every new hardware machine laptop or desktops, that will manage
-    the early boot process as a little operating system, see more in the
-    [Alpine and UEFI](Alpine_and_UEFI.md) page.
--   **New machine**: will be your real machine fresh and ready to
-    install your new Alpine operating system, with a installed CD/DVD
-    Rom optical drive where to put the burned downloaded disc media
-    installation.
--   **USB ports**: will be your hardware input source to boot, where
-    you wirte downloaded iso media with the operating system Alpine to
-    install as source media; this drive are commonly named Pend-Drive.
--   **Source media**: will be the just burned/ disc from the downloaded
-    iso file of Alpine operating system. Will be put into the optical
-    drive or named [DVD/CD Rom](https://en.wikipedia.org/wiki/CD-ROM) to
-    property boot the source disc as media installation.
--   **Target media**: will be the storage medium device into the new
-    computer target where the Alpine files for operating system will be
-    installed, its one partition from the
-    [HardDisk](https://en.wikipedia.org/wiki/Hard_disk_drive) of the new
-    computer.
 
 ## Requirements
 
 -   A usb stick to write the ISO source media file downloaded
 -   In the new machine we need an USB port free and able to boot
--   In the new machine we need and BIOS or UEFI able to boot USBsticks
+-   In the new machine we need support for booting from USB devices
 -   In the new machine we need at least 512Mb of RAM, but required 2Gb
     of RAM for desktop/graphical applications
 -   In the new machine we need target media with at least 2G of hard
@@ -48,69 +21,25 @@ Linux into it.
 -   Will need to previously downloaded and burned the Source media ISO
     file from <https://alpinelinux.org/downloads/>
 
-## Preparing the source medium to install
+## Downloading the source medium to install
 
-Download the source medium to install and put into your home documents
-in a modern computer. There are more hardware medium sources to
-download, like the arm and i386, but ISO CD/DVD images are only to
-PC/Laptops that are i386 and amd64, so by downloading the x86 (32bit)
-flavor will be same for both cases, but UEFI need 64bit, so change to
-the x86_64 (amd64) if your computer is the most modern and lasted
-hardware today.
+In this case, **your PC or device will have [UEFI or any modern hardware beyond 2016](Alpine_and_UEFI.md#where-i-will-find-bios-based-devices)** 
+you will need **64-bit iso**, the download URL will be:
 
-The source medium to install for [UEFI or modern hardware](Alpine_and_UEFI.md) 
-**are just 64-bit only**, the download URL will be as following format:
-`http://dl-cdn.alpinelinux.org/alpine/v<VERSION>/releases/<ARCH>/alpine-standard-<VERSION>.0-<ARCH>.iso`
-where `ARCH` and `VERSION` could be:
+`http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`
 
--   `<ARCH>` could be one of:
-    -   **x86**: the most used i386 32-bit x86 based machines, if your
-        computer are too older use this only.
-    -   **x86_64**: The popular AMD64 compatible 64-bit x86 based
-        machines, i386 are not recommended for newer/lasted hardware.
--   `<VERSION>` could be one of:
-    -   **latest-stable** for a more up to date without taking care of
-        numbered
-    -   **3.12** the most recommended for machines between 2016 to 2018
+Otherwise, **for older PCs and [BIOS only hardware until 2014](Alpine_and_UEFI.md#where-i-will-find-bios-based-devices)** 
+you must **read another guide, this [alpine-install-from-usb-to-disk-pcold-single-boot-only.md](alpine-install-from-usb-to-disk-pcold-single-boot-only.md)**.
 
-EXAMPLE if you plan **to using 3.17 version the available links to download will be:**
+**How to download usin Graphical browser**: point the web browser to 
+that url and the download of the iso file will start. A file with **.iso** 
+extension type, will be downloaded commonly into the Download directory.
 
--   for **x86_64** computers:
-    `http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`
--   for **x86** older BIOS computers we recommend:
-    `http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/ppc64le/alpine-standard-3.12.1-x86.iso`
+**How to download usin Command line method**: in unix-like terminal (MAC/Linux) execute:
+`cd $HOME;wget -c -t8 --no-check-certificate http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`,
+and unless the case of GUI, your **.iso** file wil be direclty in your home directory.
 
-**Usin Graphical download way**: Just point the web browser to that url and the
-download of the iso file will start. A file with **.iso** extension
-type, with name like `"alpine-standard-3.17.0-x86_64.iso"` (if amd64) or
-like `alpine-standard-3.12.1-x86.iso` (if i386); will be downloaded
-commonly into the Download directory of your home documents filesystem.
-
-**Usin Command line method way**: in unix-like terminal execute:
-`wget -c -t8 --no-check-certificate http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`,
-and where you run the command, in that place/dir will be downloaded the file.
-
-## Writing the source medium to install
-
-After downloading the source media file from [Alpine download page](https://alpinelinux.org/downloads/) 
-**put the USB stick into the input USB port** named and **open your terminal program, 
-move to the place directory where ISO downloaded fiel are and `cp` to the USB device"** and wait the
-process will end.
-
-In detail if you downloaded with **Graphical download** (using a web
-browser), the source media file will be into the Download directory. If
-you downloaded with **Command line method** your source file probably
-will be in your root document home (or just `$HOME` of your Linux
-install or MAC install filesystem).
-
-In Linux, assuming the USB stick is in the only free USB port (as `/dev/sdb`), the command
-to record/burn the downloaded source media file is :
-
-`$ umount /dev/sdb*;cp alpine-standard-3.17.0-x86_64.iso /dev/sdb`
-
-> **Note** this method only works on recent MacOs 10.12+ or recent Linux 4.9+ installations
-
-## Writing the source medium using ValenaEtcher
+## Writing the source medium to your USB
 
 For all users, no matter the OS or architecture, We recommend using 
 [balena-etcher-electron](https://www.balena.io/etcher/) to flash the USB drive 
@@ -126,9 +55,16 @@ of your operating system.
 * Wait a while and when finished, close the program
 * Take out the USB and place it on the installation target computer in a port
 
-> **Warning** It is recommended that you only have a single unique usb stick connected.
+> ***Warning** we assume only one hard drive exits as `/dev/sda` and only one USB as `/dev/sdb`
+
+> **Note** this method only works on recent MacOs 10.12+ or recent Linux 4.9+ installations
 
 ![](https://venenux.github.io/alpine-espanol/instalar/instalar-desde-usb-a-discoreal-alpinesolo-computadora-00.png)
+
+You can also made it manually, open your terminal program, move to the place 
+directory where ISO downloaded are placed and `cp` to the USB device:
+
+> umount /dev/sdb; cp alpine-standard-3.17.0-x86_64.iso /dev/sdb
 
 ## Booting the Alpine ISO disc
 
@@ -140,18 +76,12 @@ while a command line shell will show you:
 
 ![](https://venenux.github.io/alpine-espanol/instalar/instalar-desde-virtualbox-a-discoreal-dualboot-screenshot-01.png)
 
-> **Warning** Tip: If your system is not configured to boot from a USB drive, it must be configured in the BIOS, '''ask/search to your vendor or technical support''', Toshiba computers need to hit F1 to choose boot medium, DELL must hit F11 to choose medium for example, and so and so}}
+> **Warning** Tip: If your system is not configured to boot from a USB drive, it must be 
+configured in the BIOS/UEFI, **ask/search to your vendor or technical support**, Toshiba 
+computers need to hit F1 to choose boot medium, DELL must hit F11 to choose medium for 
+example, and so and so
 
-#### after start to setup the script
-
-For this use case, unlike other installation systems, Alpine's is automatic on the disk, 
-and mounts several partitions depending on the case, as in this document the procedure 
-is automatic, at least four partitons will be created by the installer and these will be 
-configured as needed, if it is UEFI or BIOS, always the automatic setup will do that.
-
-> **Warning** The drive will be assumed to be fully used since alpine setup in this guide 
-will be on its own and single setup only, it will not be necessary to partition or format 
-as the installer will do it. Assumes a minimum 4 gig disk where swap will be 2 gigs in sizes.
+## Installing after boot up
 
 > **Warning** if you do not download the extended ISO it may require internet.!!!
 
@@ -200,21 +130,6 @@ In a few minutes everything will be ready to use ofering a console when boot new
 
 ![](https://venenux.github.io/alpine-espanol/instalar/install-alpine-alpine-setup-3-setup-scripts.png)
 
-#### custom setup boot loader
-
-If the new local system was configured to run in `diskless` or `data` mode, or if you 
-choose do not install boot loader, and you do not want keep booting from the initial 
-(and possibly read-only) installation media, the boot system needs to be copied to 
-another device or partition or setup manually.
-
-The target partition may be identified using lsblk (after installing it with apk add lsblk) 
-and/or blkid, similar to previously identifying the initial installation media device.
-
-The procedure to copy the boot system is using setup-bootable
-
-Once everything is in place, but is you use `diskless` or `data` save your customized 
-configuration with `lbu commit` before rebooting.
-
 ## Finishing the installation
 
 After all of the scripts in the setup end, a "reboot" will be offered,
@@ -227,11 +142,6 @@ need a desktop.. user can install a desktop**
 
 
 ## How to use this guide
-
-This guide **structure all the commands in blocks, each block its separated by a line spaced**, 
-so you must **type each line as is.. and hit enter**, so you noted that then you 
-typed each separated clocks of commands, copy/type only blocks separated by an empty line, 
-all new(next) lines are made by just enter. the terminal will detect if must execute or not.
 
 This guide is for install process, many parts will need you understand minimal 
 knowledge of linux.
@@ -249,9 +159,9 @@ in any medium or format for noncommercial purposes only, and only so long as att
 to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
 material under identical terms,  includes the following elements:
 
-* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
-* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
-* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+* **BY**  Credit must be given to the creator of each content respectivelly, starting at the first contributor.
+* **NC**  Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA**  Adaptations must be shared under the same terms, you must obey this terms and do not change it.
 
 https://codeberg.org/alpine/alpine-wiki/src/branch/main#license
 
