@@ -114,6 +114,34 @@ package taken from it manually.
 The most easy option is to first use a wired connetion that provides internet, so you can 
 easyle install the necesary packages to perform the wifi setup.
 
+#### Option 3 using the USB ISO file as media repository
+
+This means you already have the source instalation media as a ISO file in 
+a phisical medium like USBstick or USBdrive, and can you put it on the 
+installed Alpine linux to later mount and use as source media repository:
+
+1. You of course must have already installed Alpine linux
+2. Put the already USB in to a port and try to mount in `/media/cdrom`
+    * You must guess witch device is your USB sctick, use `blkid` command to identify then
+    * The output of the command will show some string, your usb **label** will appears
+    * Note the path device of your indentification USB, its the first one like `/dev/sdg`
+3. Now mount the USB media as the iso, like `mount /dev/sdg /media/cdrom`
+4. Now run command `echo "/media/cdrom/apk" > /etc/apk/repositories` as root
+5. After run such command you can now foward to the next section "install the packages"
+
+#### Option 4 using the burned CDROM media from the iso file
+
+This means you already have the source instalation media recorded as a CDROM/DVDROM 
+as phisical medium, and can you put it on the optical drive of your computer, **this 
+media source ISO CDROM/DVDROM must be the EXTENDED ISO image**, and you wil use it as 
+source repository:
+
+1. You of course must have already installed Alpine linux
+2. Put the already burned CD/DVD source media of Alpine in the optincal drive
+3. Now mount the source disc media as `mount /dev/cdrom /media/cdrom -t iso9660`
+4. Now run command `echo "/media/cdrom/apk" > /etc/apk/repositories` as root
+5. After run such command you can now foward to the next section "install the packages"
+
 ### 2 - Install the packages
 
 Wireless need a special packages, the pacakge `iwd` is available since 3.10 but 
