@@ -7,7 +7,7 @@ installed to boot.
 
 Means you will **install Alpine as the only OS in a PC computer from USB** media.
 
-> **Warning** This method only works for most modern pc since 2013 and recents, mostly 64bit only.
+> **Warning** This method only works for most modern pc vbeyond 2016 and recents.
 
 ## Requirements
 
@@ -23,13 +23,10 @@ Means you will **install Alpine as the only OS in a PC computer from USB** media
 
 ## Downloading the source medium to install
 
-In this case, **your PC or device will have [UEFI or any modern hardware beyond 2016](Alpine_and_UEFI.md#where-i-will-find-bios-based-devices)** 
+In this case, **your PC wil have [UEFI or must be beyond 2016's](Alpine_and_UEFI.md#where-i-will-find-bios-based-devices)** 
 you will need **64-bit iso**, the download URL will be:
 
 `http://dl-cdn.alpinelinux.org/alpine/v3.17/releases/x86_64/alpine-standard-3.17.0-x86_64.iso`
-
-Otherwise, **for older PCs and [BIOS only hardware until 2014](Alpine_and_UEFI.md#where-i-will-find-bios-based-devices)** 
-you must **read another guide, this [alpine-install-from-usb-to-disk-pcold-single-boot-only.md](alpine-install-from-usb-to-disk-pcold-single-boot-only.md)**.
 
 **How to download usin Graphical browser**: point the web browser to 
 that url and the download of the iso file will start. A file with **.iso** 
@@ -41,21 +38,18 @@ and unless the case of GUI, your **.iso** file wil be direclty in your home dire
 
 ## Writing the source medium to your USB
 
-For all users, no matter the OS or architecture, We recommend using 
-[balena-etcher-electron](https://www.balena.io/etcher/) to flash the USB drive 
-from any system, of course it must be run as or from root user or administrator 
-of your operating system.
+Using [balena-etcher-electron](https://www.balena.io/etcher/) to flash the USB 
+drive from any system, its easy, simple and available for all OSs.
 
-* download the iso file of the multimedia image, for UEFI 3.11 minimum
-* download the program balena-etcher-electronyou may need to install..
-* Run the program balena-etcher-electronas root in the graphical session
-* Click “select image” icon, open the downloaded image file
-* Plug the USB drive into the computer, it will automatically show as sdb or similar
+> ***Warning** this guide assume only one hard drive as `/dev/sda` and only one USB as `/dev/sdb`
+
+* download the `program balena-etcher-electron` (there are portable versions)
+* Run the program `balena-etcher-electron` as root in the graphical session
+* Click "select image" icon, open the downloaded image file
+* Plug the USB drive into the computer, it will automatically show as `sdb`
 * After it balena-etcher-electronshows the USB as “sdb”, clickflash
 * Wait a while and when finished, close the program
 * Take out the USB and place it on the installation target computer in a port
-
-> ***Warning** we assume only one hard drive exits as `/dev/sda` and only one USB as `/dev/sdb`
 
 > **Note** this method only works on recent MacOs 10.12+ or recent Linux 4.9+ installations
 
