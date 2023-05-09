@@ -114,22 +114,40 @@ package taken from it manually.
 The most easy option is to first use a wired connetion that provides internet, so you can 
 easyle install the necesary packages to perform the wifi setup.
 
-#### Option 3 using the USB ISO file as media repository
+#### Option 4 using the USB ISO file as media repository
 
-This means you already have the source instalation media as a ISO file in 
-a phisical medium like USBstick or USBdrive, and can you put it on the 
-installed Alpine linux to later mount and use as source media repository:
+This means you already have the source instalation media as a USB boot 
+phisical medium like USBstick or USBdrive, and can you put it on the 
+installed Alpine linux to later mount and use as source media CDROM repository:
 
 1. You of course must have already installed Alpine linux
 2. Put the already USB in to a port and try to mount in `/media/cdrom`
     * You must guess witch device is your USB sctick, use `blkid` command to identify then
     * The output of the command will show some string, your usb **label** will appears
     * Note the path device of your indentification USB, its the first one like `/dev/sdg`
-3. Now mount the USB media as the iso, like `mount /dev/sdg /media/cdrom`
+3. Now mount the USB media as the iso, like `mount /dev/sdg1 /media/cdrom -t vfat` if not then try `/dev/sdg1`
 4. Now run command `echo "/media/cdrom/apk" > /etc/apk/repositories` as root
 5. After run such command you can now foward to the next section "install the packages"
 
-#### Option 4 using the burned CDROM media from the iso file
+#### Option 5 using the USB VENTOY with the ISO as media repository
+
+This means you already have the source instalation media as a ISO file in 
+a phisical medium like USBstick or USBdrive, and can you put it on the 
+installed Alpine linux to later mount the ISO and use as source media repository:
+
+1. You of course must have already installed Alpine linux
+2. Put the already USB in to a port and try to mount in `/mnt`
+    * You must guess witch device is your USB sctick, use `blkid` command to identify then
+    * The output of the command will show some string, your usb **label** will appears
+    * Note the path device of your indentification USB, its the first one like `/dev/sdg`
+3. Now mount the USB media as the iso, like `mount /dev/sdg1 /mnt -t vfat`
+4. The USB is ventoy so copy the iso file as `cp /mnt/alpine*.iso /`
+5. When copy complete, umount the USB with `umount /mnt`
+6. Now you have the ISO file, mount it as CDROM `mount /alpine*.iso /media/cdrom -t iso9660`
+7. Now run command `echo "/media/cdrom/apk" > /etc/apk/repositories` as root
+8. After run such command you can now foward to the next section "install the packages"
+
+#### Option 6 using the burned CDROM media from the iso file
 
 This means you already have the source instalation media recorded as a CDROM/DVDROM 
 as phisical medium, and can you put it on the optical drive of your computer, **this 
