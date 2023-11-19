@@ -48,9 +48,13 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 ## SERVERS
 
-* [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
-* [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md) (this one includes apache2+ssl+php+odbc+postgres+mysql)
-* [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
+* Boot services
+    * [servers-howto-setup-PXE-service-for-others-linuxes-ES.md](servers-howto-setup-PXE-service-for-others-linuxes-ES.md)
+* WEB services
+    * LAMP setup [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md) (this one includes apache2+ssl+php+odbc+postgres+mysql)
+    * Deploy gitea [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
+    * Rails app [alpine-how-to-rails.md (WIP)](tutorials/alpine-how-to-rails.md)
+    * Filebrowser [alpine-howto-filebrowser-service.md](tutorials/alpine-howto-filebrowser-service.md)
 
 ## Convention for naming the files:
 
