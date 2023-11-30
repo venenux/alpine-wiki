@@ -46,7 +46,7 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
     * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
 * Power management
-    * APC UPS configuration [alpine-howto-acpupsd-service.md](alpine-howto-acpupsd-service.md)
+    * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 
 ## SERVERS
 
@@ -58,7 +58,7 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * Rails app [alpine-how-to-rails.md (WIP)](tutorials/alpine-how-to-rails.md)
     * Filebrowser [alpine-howto-filebrowser-service.md](tutorials/alpine-howto-filebrowser-service.md)
 * Power management
-    * APC UPS configuration [alpine-howto-acpupsd-service.md](alpine-howto-acpupsd-service.md)
+    * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 
 ## Convention for naming the files:
 
