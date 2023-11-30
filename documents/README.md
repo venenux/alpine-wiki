@@ -61,6 +61,7 @@ that is why we offered in newbie category the [Alpine Newbie Install](alpine-new
 
 1. [Alpine Newbie Prepare](alpine-newbie-prepare.md)
 2. [Alpine Newbie Install](alpine-newbie-install.md)
+    * [alpine-newbie-shells.md](alpine-newbie-shells.md)
 3. [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)
 
 ## Post install and Software Packages
@@ -142,6 +143,7 @@ All the Development process are detailed for newbie users in the Alpine newbie d
 ##### Developers: compilers, IDE's and tools
 
 1. [Alpine newbie Console](alpine-newbie-console.md)
+    * [alpine-newbie-shells.md](alpine-newbie-shells.md)
 2. [Alpine newbie Desktop](alpine-newbie-desktop.md)
 3. [Alpine newbie Develop](alpine-newbie-develop.md)
 4. [Alpine newbie developer: full stack web](alpine-newbie-develop-full-stack-web.md)

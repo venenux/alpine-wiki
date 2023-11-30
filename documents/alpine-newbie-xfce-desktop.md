@@ -185,6 +185,8 @@ for more info of `daru`, check [the daru user explanation](#the-daru-user-explan
 
 Next section will cover the suser management and programs support:
 
+include(alpine-newbie-shells.md)
+
 #### configuration programs and repositories
 
 1. Setup main and community repositories of sources of programs

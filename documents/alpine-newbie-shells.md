@@ -1,5 +1,15 @@
+## alpine shell and terminal
 
-you must have already alpine installed:
+> **Note**: You must have alpine already installed [alpine-newbie-install.md](alpine-newbie-install.md)
+
+Short answer:
+
+* **terminal** = text input/output environment, your computer is at same time a terminal
+* **console** = physical terminal, anything you use as terminal but that does not means a complete computer
+* **shell** = command line interpreter, is the software displayed inside a console terminal
+
+In alpine the default terminal always will give you `ash` throught `busybox` pretty limited but functional enought.
+
 
 ## Default console shell
 
@@ -14,10 +24,12 @@ a console one or graphical one.
 | zsh        | zsh           | 3.4   | `/bin/zsh`, `/usr/lib/zsh/` |
 | fish       | fish          | 3.10  | `/usr/bin/fish`, `/etc/fish/config.fish`, `/usr/share/fish/` |
 
-### change manually the default console shell
+#### change manually the default console shell
 
-* Install the dessird shell
-* Check dessired shell is present
+> **Note**: no shell id installed by default, only busybox for `ash`
+
+* Install the dessired shell
+* Check dessired shell is system valid
 * seds file definition to Change default shell of user `general` to `bash`
 
 
@@ -29,19 +41,19 @@ grep bash /etc/shells
 sed -e '/general/ s#\:[^\:]*$#\:/bin/bash#g' /etc/passwd
 ```
 
-> Warning: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
+> **Warning**: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
 
 This can be executed in one command 
 as `apk add bash sed && sed -e '/general/ s#\:[^\:]*$#\:"$(grep bash /etc/shells)"#g' /etc/passwd`
 
-### Change managed the default shell with libuser
+#### Change managed the default shell with libuser
 
-> Warning: `libuser` in only since alpine v3.14
+> **Note**: `libuser` is only since alpine v3.14
 
 * Install the dessired shell
 * Install the manager shell program
 * Create need files
-* Check dessired shell is present
+* Check dessired shell is system valid
 * Change default shell of user `general` to `bash`
 
 ```
@@ -57,20 +69,20 @@ grep bash /etc/shells
 lchsh general
 ```
 
-> Warning: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
+> **Warning**: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
 
 This program is interactive, will ask for the full path to the 
 executable shell, and can be executed in one command 
 as `apk add bash grep libuser && lchsh general`
 
-### Change managed the default shell with shadow
+#### Change managed the default shell with shadow
 
-> Warning: `shadow` in not installed by default, only busybox
+> **Note**: `shadow` in not installed by default, only busybox
 
 * Install the dessired shell
 * Install the manager shell program
 * Create need files
-* Check dessired shell is present
+* Check dessired shell is system valid
 * Change default shell of user `general` to `bash`
 
 ```
@@ -86,20 +98,23 @@ grep bash /etc/shells
 chsh -s /bin/bash general
 ```
 
-> Warning: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
+> **Warning**: if the thirth step does not show something, you cannot use such shell (in this example `bash`)
 
 This can be executed in one command 
 as `apk add bash grep shadow && chsh -s $(grep bash /etc/shells) general`
 
-### error of not valid shel or the shell program does not exist
+#### error of not valid shel or the shell program does not exist
 
-This was a bg in older alpine versions: https://gitlab.alpinelinux.org/alpine/aports/-/issues/11164
+This **was a big bug in alpine versions: https://gitlab.alpinelinux.org/alpine/aports/-/issues/11164**
+
+In each of the options of this document whe put a stepp that said: "Check dessired shell is system valid", 
+well each shell must be present in the file `/etc/shells` before apply.
+
+> **Note**: If the shell is compiled manually and is not packaged, you can add into the file!
 
 ### About copyright material
 
-**CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
-in any medium or format for noncommercial purposes only, and only so long as attribution is given 
-to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
+**CC BY-NC-SA**: If you remix, adapt, or build upon the material, you must license the modified 
 material under identical terms,  includes the following elements:
 
 * **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
