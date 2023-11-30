@@ -16,13 +16,14 @@ In alpine the default terminal always will give you `ash` throught `busybox` pre
 The operation system do not have a oficial interface, could be 
 a console one or graphical one.
 
-| Shell name | package name  | since | main program(S) |
-| ---------- | ------------- | ----- | --------------- |
-| bash       | bash          | 3.0   | `/bin/bash`, `/usr/lib/bash/` |
-| dash       | dash          | 3.17  | `/bin/dash` |
-| csh        | tcsh          | 3.4   | `/bin/csh`, `/bin/tcsh`, `/etc/tcsh.cshrc` |
-| zsh        | zsh           | 3.4   | `/bin/zsh`, `/usr/lib/zsh/` |
-| fish       | fish          | 3.10  | `/usr/bin/fish`, `/etc/fish/config.fish`, `/usr/share/fish/` |
+| Shell name | package(s) name                     | since | main program(S) |
+| ---------- | ----------------------------------- | ----- | --------------- |
+| bash       | bash bash-doc                       | 3.0   | `/bin/bash`, `/usr/lib/bash/` |
+| dash       | dash dash-doc                       | 3.17  | `/bin/dash` |
+| csh        | tcsh tcsh-doc                       | 3.4   | `/bin/csh`, `/bin/tcsh`, `/etc/tcsh.cshrc` |
+| zsh        | zsh zsh-vcs zsh-zftp zsh-doc        | 3.4   | `/bin/zsh`, `/usr/lib/zsh/` |
+| fish       | fish fish-tools fish-dev fish-doc   | 3.10  | `/usr/bin/fish`, `/etc/fish/config.fish`, `/usr/share/fish/` |
+| nushell    | nushell nushell-plugins nushell-doc | edge  | `/usr/bin/nushell` |
 
 #### change manually the default console shell
 
@@ -111,6 +112,57 @@ In each of the options of this document whe put a stepp that said: "Check dessir
 well each shell must be present in the file `/etc/shells` before apply.
 
 > **Note**: If the shell is compiled manually and is not packaged, you can add into the file!
+
+#### how to add a more recent version
+
+This depends, check various examples:
+
+* if you are using Alpine 3.8 and wants a more recent shell like `fish`, **you can!**
+* if you are using Alpine 3.8 and wants a more recent shell like `nushell`: **you cannot cos is so far away from 3.8**
+* if you are using Alpine 3.12 and wants a more recent shell like `fish`: **you can!**
+* if you are using Alpine 3.17 or 3.18 and wants a more recent shell like `nushell`: **you can!**
+
+This means you will:
+
+* update current version repositories
+* install required dependencies (check the pacakge name in pkgs.alpinelinux.org
+* add the inmediate next version repository
+* install the new version more up to date
+* check for the required files
+* change the shell for the desired user
+* remove the inmediate extra repository, by setting the normal ones again
+* test if work, if not you will need to upgrade to next alpine or use apk static files to repair world db
+
+By example this show you how to install nushell into alpine 3.17 or 3.18 that is close to edge (as 2023):
+
+```
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update && apk add shadow shadow-doc grep busybox-binsh libcrypto3 libgcc libssl3 sqlite-libs
+
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+http://dl-cdn.alpinelinux.org/alpine/edge/main
+http://dl-cdn.alpinelinux.org/alpine/edge/community
+EOF
+
+apk update && apk add nushell nushell-plugins nushell-doc
+
+touch /etc/login.defs && mkdir /etc/default/ && touch /etc/default/useradd
+
+chsh -s $(grep nushell /etc/shells) general
+
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update
+```
 
 ### About copyright material
 
