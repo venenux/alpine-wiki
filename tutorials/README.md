@@ -45,6 +45,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 * Issues:
     * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
     * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
+* Power management
+    * APC UPS configuration [alpine-howto-acpupsd-service.md](alpine-howto-acpupsd-service.md)
 
 ## SERVERS
 
@@ -55,6 +57,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * Deploy gitea [alpine-howto-gitea-package.md](alpine-howto-gitea-package.md)
     * Rails app [alpine-how-to-rails.md (WIP)](tutorials/alpine-how-to-rails.md)
     * Filebrowser [alpine-howto-filebrowser-service.md](tutorials/alpine-howto-filebrowser-service.md)
+* Power management
+    * APC UPS configuration [alpine-howto-acpupsd-service.md](alpine-howto-acpupsd-service.md)
 
 ## Convention for naming the files:
 
