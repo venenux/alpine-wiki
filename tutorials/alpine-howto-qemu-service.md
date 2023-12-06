@@ -69,7 +69,6 @@ sed -i 's|^.user =.*|user = "general"|g' /etc/libvirt/qemu.conf
 sed -i 's|^.group =.*|group = "kvm"|g' /etc/libvirt/qemu.conf
 sed -i 's|.*dynamic_ownership =.*|dynamic_ownership = 1|g' /etc/libvirt/qemu.conf
 
-sed -i 's|.*hugetlbs_mount =.*|hugetlbs_mount = "/dev/hugepages"|g' /etc/libvirt/qemu.conf
 sed -i 's|.*bridge-helper =.*|bridge-helper = "/usr/lib/qemu/qemu-bridge-helper"|g' /etc/libvirt/qemu.conf
 
 sed -i 's|.*vnc_allow_host_audio.*=.*|vnc_allow_host_audio = 1|g' /etc/libvirt/qemu.conf
@@ -112,34 +111,22 @@ rc-update add libvirt-guests
 
 > Warning: here we previously configure the program, 
 
-##### Configure the hugepages
+##### Auto Configure the hugepages for qemu and libvirt-qemu
 
-**Option 1 : 2Megs of huge pages**
-
-```
-cat > /etc/default/grub  << EOF
-GRUB_TIMEOUT=2
-GRUB_DISABLE_SUBMENU=y
-GRUB_DISABLE_RECOVERY=true
-GRUB_CMDLINE_LINUX_DEFAULT="modules=sd-mod,usb-storage,ext4,nvme rootfstype=ext4 default_hugepagesz=2M hugepagesz=1G hugepages=8 hugepagesz=2M hugepages=4096 "
-EOF
-
-mount -t hugetlbfs -o rw,pagesize=2M,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) none /dev/hugepages
-```
-
-**Option 2 : 1Gigs of huge pages**
+* create the directory for mounting the hugepages if not exists
+* mounting the hugepages with hugelgfs type into such directory
+* configure the mount directory for libvirt daemon module of qemu
+* restart the service
 
 ```
-cat > /etc/default/grub  << EOF
-GRUB_TIMEOUT=2
-GRUB_DISABLE_SUBMENU=y
-GRUB_DISABLE_RECOVERY=true
-GRUB_CMDLINE_LINUX_DEFAULT="modules=sd-mod,usb-storage,ext4,nvme rootfstype=ext4 default_hugepagesz=1G hugepagesz=1G hugepages=8 hugepagesz=2M hugepages=4096 "
-EOF
+mkdir /dev/hugepages
 
-mount -t hugetlbfs -o rw,pagesize=1024M,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) none /dev/hugepages
+mount -t hugetlbfs -o rw,pagesize=$(grep Hugepagesize /proc/meminfo|tr -s ' '|cut -d' ' -f 2)k,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) none /dev/hugepages
+
+sed -i 's|.*hugetlbs_mount =.*|hugetlbs_mount = "/dev/hugepages"|g' /etc/libvirt/qemu.conf
+
+service libvirt-guests restart
 ```
-
 
 ## see also
 
