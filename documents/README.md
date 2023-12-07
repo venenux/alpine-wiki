@@ -153,11 +153,13 @@ All the Development process are detailed for newbie users in the Alpine newbie d
 
 1. [Alpine newbie Console](alpine-newbie-console.md)
 2. [Alpine production deploy](alpine-production-deploy.md)
+3. [Alpine advanced hugepages](alpine-newbie-hugepages.md)
 
 * Special documentation:
     * How to setup apache professional at [server-alpine-apache2-professional.md](server-alpine-apache2-professional.md)
     * How to setup gitea professional at [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
     * Implementation of a certificate [guide-only-dehydrated.md](guide-only-dehydrated.md)
+    * Configuring the hugepage sizes at [alpine-newbie-hugepages.md](alpine-newbie-hugepages.md)
 * Specific doucmentation cases:
     * ARM tvbox TODO
 
