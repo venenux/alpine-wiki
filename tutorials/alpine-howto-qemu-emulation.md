@@ -126,6 +126,24 @@ improved performance, becouse will use direc hardware of the host machine.
 
 > Warning: here we previously configure the program, 
 
+#### running the qemu without the kvm support
+
+If your computer that will act as host does not support the KVM 
+infraestructure you can deactivate it explicit in command line:
+
+```
+/usr/bin/qemu-system-$(uname -m) \
+  -m 256 \
+  -net none 
+  -name "alpinebootqemu1"
+  -no-kvm
+```
+
+Obviously you will not need to confiugure any KVM or qemu group or user, 
+the qemu system will just interpreted all the things but will runs more slow also.
+
+This time we parsed `-no-kvm` but you can also add `-machine accel=tcg` to try 
+others ways of optimization.
 
 ## QEMU with HugePages memory
 
@@ -139,14 +157,14 @@ section described.
 ##### Auto Configure the hugepages for qemu
 
 If you will have a VM with 4096 Mb of RAM (only one)so then (4096/2)+1024 where 
-the 2048 will be the amount of pages for.. this number will be the amouh of huges pages 
-if your hugepagez configured is 2M, this will leave almost a quarter for other vm of hugepages, 
-so the need hugepages with 2M hugepagez will be 3092
+the 1024 will be the amount of pages for.. this number will be the amouh of huges pages 
+if your huge pages size configured is 2M, this will leave almost a quarter for other vm of hugepages, 
+so the need hugepages with 2M "hugepagez" will be 3092
 
-If you will have a VM with 4096 Mb of RAM (only one)so then (4096/1024)+8 where 
+If you will have a VM with 4096 Mb of RAM (only one)so then (4096/2)+8 where 
 the 8 will be the amount of pages for.. this number will be the amouh of huges pages 
-if your hugepagez configured is 1G, this will leave almost a quarter for other vm of hugepages, 
-so the need hugepages for 1G hugepagez will be 16
+if your huge pages size configured is 1G, this will leave almost a quarter for other vm of hugepages, 
+so the need hugepages for 1G "hugepagez" will be 16
 
 * allow some more regions rather than 8 ony for mem workaround bug on qemu limits
 * mount and setup the virtual host modules, specially for networking
@@ -161,17 +179,23 @@ echo "options vhost max_mem_regions=16" > /etc/modprobe.d/vhost.conf
 rmmod tun && rmmod vhost_net && rmmod vhost && modprobe vhost_net && modprobe tun
 
 mount -t hugetlbfs -o rw,pagesize=$(grep Hugepagesize /proc/meminfo|tr -s ' '|cut -d' ' -f 2)k,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) hugetlbfs /dev/hugepages
-
-sed -i 's|.*hugetlbs_mount =.*|hugetlbs_mount = "/dev/hugepages"|g' /etc/libvirt/qemu.conf
 ```
 
-The mode 17770 will allow to users modify only their own resources
+The mode 17770 will allow to users modify only their own resources, 
+the mount of the **hugetlbfs can be automatized by added this to fstab** with:
+
+```
+echo \
+"hugetlbfs /dev/hugepages hugetlbfs rw,pagesize=$(grep Hugepagesize /proc/meminfo|tr -s ' '|cut -d' ' -f 2)k,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) 0 0" \
+ >> /etc/fstab
+```
 
 #### running qemu with hugepages memory support
 
 * setup the user to run the machines
 * add to the groups with privilegies
 * load the tun and vhost_net modules
+* download and iso to boot
 
 
 ```
@@ -183,24 +207,165 @@ adduser qemuvirt kvm
 
 modprobe tun && modprobe vhost_net
 
+wget https://dl-cdn.alpinelinux.org/alpine/v3.12/releases/$(uname -m)/alpine-standard-3.12.0-$(uname -m).iso
+
 /usr/bin/qemu-system-$(uname -m) \
   -m 256 \
   -boot once=d -cdrom alpine-standard-3.12.0-$(uname -m).iso 
   -net none 
   -name "alpinebootqemu1"
   -enable-kvm
-  
+  -mem-path /dev/hugepages
 ```
 
 This will boot the alpine iso of the same architecture of the host machine, so 
 you must have already configured and the iso in the same directory of the 
 place where you execute the command, if not just give full path!
-The adition this time is the `-enable-kvm` parameter that will bring 
-improved performance, becouse will use direc hardware of the host machine.
+The adition this time is the `-enable-kvm` and `-mem-path /dev/hugepages` parameters 
+that will bring improved performance, becouse will use direc hardware of the host machine.
 
 > Warning: here we previously configure the program, 
 
+## Qemu usage
 
+We learned how to setup property the environment to run qemu 
+but now we must to setup the virtual machines, taking into consideration:
+
+* qemu is command line only, no saved configurations are possible, 
+  for that you must [use libvirt framework in combination](alpine-howto-qemu-libvirt-service.md)
+* virsh can configure and save virtual machines and later just lauch
+  but this will need the [use libvirt framework in combination](alpine-howto-qemu-libvirt-service.md)
+
+
+## Starting a clean empty virtual machine
+
+```
+apk add qemu-system-$(uname -m)
+
+/usr/bin/qemu-system-$(uname -m) \
+  -m 256 \
+  -net none 
+  -name "alpinebootqemu1"
+```
+
+If you want to start again such machine you must to re run same command.
+
+## Starting a clean empty virtual machine but from different architecture
+
+This will start a virtual machine for aarch64 architecture with 356Megs of RAM 
+but no network card and no hardisk configured, neither cdrom boot device.
+
+```
+apk add qemu-system-aarch64
+
+/usr/bin/qemu-system-aarch64 \
+  -m 256 \
+  -net none 
+  -name "alpinebootqemu2"
+```
+
+If you want to start again such machine you must to re run same command.
+
+## Starting a clean empty aarch64 virtual machine adn boot iso alpine aarch64
+
+This will start a virtual machine for aarch64 architecture with 356Megs of RAM 
+but no network card and no hardisk configured, but will boot the iso alpine 
+as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.19
+
+```
+apk add qemu-system-aarch64
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standard-3.19.0-aarch64.iso
+
+/usr/bin/qemu-system-aarch64 \
+  -m 256 \
+  -boot once=d,menu=off -cdrom alpine-standard-3.19.0-aarch64.iso 
+  -net none 
+  -name "alpinebootqemu3"
+```
+
+The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
+of the virtual machine.. cos will wait until user input choose!
+
+## Creating a virtual hard disk and manage it
+
+The most simple is the **RAW** format, is **the most faster and compatible but lest featured**:
+
+```
+apk add qemu-img
+
+qemu-img create -f raw computer1-vitualdisk1-file.raw 4G
+```
+
+You can use a **QCOW2** format, is **the most popular but not so faster than raw, but featured**:
+
+```
+apk add qemu-img
+
+qemu-img create -f qcow2 computer1-vitualdisk2-file.img 4G
+```
+
+QCOW does not support holes, so is less storage occupies, only the already 
+used by the virtual environment, also supports snapshots of the image in some 
+point of the time with AES encryption.
+
+## Starting a i386 virtual machine using prevous disks created
+
+```
+apk add qemu-system-i386 qemu-img
+
+qemu-img create -f raw computer4-vitualdisk1-file.raw 4G
+
+qemu-img create -f qcow2 computer4-vitualdisk2-file.img 4G
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
+
+/usr/bin/qemu-system-i386 \
+  -m 256 \
+  -hda computer4-vitualdisk1-file.raw \
+  -hdb computer4-vitualdisk2-file.img \
+  -boot once=c,menu=off \
+  -net none 
+  -name "computer4alpine"
+```
+
+The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
+of the virtual machine.. cos will wait until user input choose! This will boot the iso file 
+as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.10 
+but the machine is 32bit only.
+
+If you want to start again such machine you must to re run same command.
+
+## Starting a i386 virtual machine with iso boot and previous disks created
+
+```
+apk add qemu-system-i386 qemu-img
+
+qemu-img create -f raw computer4-vitualdisk1-file.raw 4G
+
+qemu-img create -f qcow2 computer4-vitualdisk2-file.img 4G
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
+
+/usr/bin/qemu-system-i386 \
+  -m 256 \
+  -cdrom alpine-standard-3.10.0-x86.iso 
+  -hda computer4-vitualdisk1-file.raw \
+  -hdb computer4-vitualdisk2-file.img \
+  -boot once=d,menu=off \
+  -net none 
+  -name "computer4alpine"
+```
+
+The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
+of the virtual machine.. cos will wait until user input choose! This will boot the iso file 
+as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.10 
+but the machine is 32bit only.
+
+If you want to start again such machine you must to re run same command.
+
+
+## Starting a virtual machine with hard disk and net support
 
 
 ## see also

@@ -47,6 +47,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
 * Power management
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
+* Emulation
+    * Qemu simple emulation [alpine-howto-qemu-emulation.md](alpine-howto-qemu-emulation.md)
 
 ## SERVERS
 
@@ -59,6 +61,9 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * Filebrowser [alpine-howto-filebrowser-service.md](tutorials/alpine-howto-filebrowser-service.md)
 * Power management
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
+* Virtualization
+    * Qemu simple emulation with KVM [alpine-howto-qemu-emulation.md](alpine-howto-qemu-emulation.md)
+
 
 ## Convention for naming the files:
 
