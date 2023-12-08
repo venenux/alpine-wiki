@@ -162,6 +162,7 @@ All the Development process are detailed for newbie users in the Alpine newbie d
     * Configuring the hugepage sizes at [alpine-newbie-hugepages.md](alpine-newbie-hugepages.md)
 * Specific doucmentation cases:
     * ARM tvbox TODO
+    * Alpine huge pages and applications enabled for [alpine-newbie-hugepages.md](alpine-newbie-hugepages.md)
 
 ## Community
 
