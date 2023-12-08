@@ -63,6 +63,7 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 * Virtualization
     * Qemu simple emulation with KVM [alpine-howto-qemu-emulation.md](alpine-howto-qemu-emulation.md)
+    * Libvirt with qemu and KVM [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
 
 
 ## Convention for naming the files:
