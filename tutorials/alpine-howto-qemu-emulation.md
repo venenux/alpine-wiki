@@ -1,4 +1,4 @@
-# alpine server qemu
+# alpine qemu emulation
 
 `qemu` its a emulation system that uses KVM (kernel virual machine) and also are capable of hypervision!
 
@@ -102,7 +102,7 @@ grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
 
 
 ```
-adduser -S -D -g '' -h /var/lib/libvirt qemuvirt
+adduser -S -D -g '' -s /bin/bash -h /var/lib/libvirt qemuvirt
 
 adduser qemuvirt qemu
 
@@ -112,7 +112,6 @@ modprobe tun && modprobe vhost_net
 
 /usr/bin/qemu-system-$(uname -m) \
   -m 256 \
-  -boot once=d -cdrom alpine-standard-3.12.0-$(uname -m).iso 
   -net none 
   -name "alpinebootqemu1"
   -enable-kvm
@@ -124,7 +123,7 @@ place where you execute the command, if not just give full path!
 The adition this time is the `-enable-kvm` parameter that will bring 
 improved performance, becouse will use direc hardware of the host machine.
 
-> Warning: here we previously configure the program, 
+> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
 
 #### running the qemu without the kvm support
 
@@ -144,6 +143,8 @@ the qemu system will just interpreted all the things but will runs more slow als
 
 This time we parsed `-no-kvm` but you can also add `-machine accel=tcg` to try 
 others ways of optimization.
+
+> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
 
 ## QEMU with HugePages memory
 
@@ -185,7 +186,7 @@ The mode 17770 will allow to users modify only their own resources,
 the mount of the **hugetlbfs can be automatized by added this to fstab** with:
 
 ```
-echo \
+grep hugetlbfs /etc/fstab || echo \
 "hugetlbfs /dev/hugepages hugetlbfs rw,pagesize=$(grep Hugepagesize /proc/meminfo|tr -s ' '|cut -d' ' -f 2)k,mode=1770,relatime,gid=$(getent group qemu | cut -d':' -f3) 0 0" \
  >> /etc/fstab
 ```
@@ -196,10 +197,11 @@ echo \
 * add to the groups with privilegies
 * load the tun and vhost_net modules
 * download and iso to boot
+* run and pass the parameter to qemu command that uses the hugepages feature
 
 
 ```
-adduser -S -D -g '' -h /var/lib/libvirt qemuvirt
+adduser -S -D -g '' -s /bin/bash -h /var/lib/libvirt qemuvirt
 
 adduser qemuvirt qemu
 
@@ -211,7 +213,6 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.12/releases/$(uname -m)/alpine-sta
 
 /usr/bin/qemu-system-$(uname -m) \
   -m 256 \
-  -boot once=d -cdrom alpine-standard-3.12.0-$(uname -m).iso 
   -net none 
   -name "alpinebootqemu1"
   -enable-kvm
@@ -224,7 +225,8 @@ place where you execute the command, if not just give full path!
 The adition this time is the `-enable-kvm` and `-mem-path /dev/hugepages` parameters 
 that will bring improved performance, becouse will use direc hardware of the host machine.
 
-> Warning: here we previously configure the program, 
+> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
+
 
 ## Qemu usage
 
@@ -237,7 +239,9 @@ but now we must to setup the virtual machines, taking into consideration:
   but this will need the [use libvirt framework in combination](alpine-howto-qemu-libvirt-service.md)
 
 
-## Starting a clean empty virtual machine
+### Starting a clean empty virtual machine
+
+Will start a simples default machine with 256 Megs of RAM
 
 ```
 apk add qemu-system-$(uname -m)
@@ -250,7 +254,73 @@ apk add qemu-system-$(uname -m)
 
 If you want to start again such machine you must to re run same command.
 
-## Starting a clean empty virtual machine but from different architecture
+
+### Error initialization
+
+If you dont have a X11 sesions, or if you dont have allowed to share your devices, by 
+example when you run linux inside shit operating systems, will raise some errors like:
+
+* `Error GTK initialization failed` means you dont have any X11 sesion running 
+or you dont have allowe to connect to the x11 sesions (by example if you run from non 
+linux host or inside a crap operating system)
+* `MESA'LOADER: failed to open ...` means you cannot see the display running 
+or you dont install X11/mesa environment/packages yet (by example running server only 
+linux host or inside a crap operating system)
+
+Solution is to run healess and setup non graphics output screen, for that we
+will connect using vnc only so the screen will be server over network/localhost 
+only, see next section for examples.
+
+
+### Starting a clean empty virtual machine but no X11
+
+Will start a simples default machine with 256 Megs of RAM, but 
+if you are on a server the screen will be text only
+
+```
+apk add qemu-system-$(uname -m)
+
+/usr/bin/qemu-system-$(uname -m) \
+  -m 256 \
+  -net none 
+  -name "alpinebootqemu2"
+  -display curses
+```
+
+No graphic devices will be on the virtual machine if not expecified (see more examples for)
+
+This will start the virtual machine but will only work for text only operation 
+by example FREEDOS or TTY, becouse there is no graphics defined only text mode 
+becouse we used the `-display curses` that will only output text to the console 
+and there is no connection for communications due we used `-net none` parameter.
+
+If you wants to get out of the text machine you must to kill the command.
+
+### Starting a clean empty virtual machine but no grapchics neither text or X11
+
+Will start a simples default machine with 256 Megs of RAM, but 
+if you are on a server the screen will be text only
+
+```
+apk add qemu-system-$(uname -m)
+
+/usr/bin/qemu-system-$(uname -m) \
+  -m 256 \
+  -net none 
+  -name "alpinebootqemu3"
+  -display none
+```
+
+No graphic devices will be on the virtual machine if not expecified (see more examples for)
+
+This will start the virtual machine but will not be any form of communication 
+with the machine, becouse there is no graphics defined neither a display to see 
+what is happened inside the virutal machine becouse we used the `-display none` 
+parameter and ther is no connection due we used `-net none` parameter.
+
+If you wants to get out of the text machine you must to kill the command.
+
+### Starting a clean empty virtual machine but from different architecture
 
 This will start a virtual machine for aarch64 architecture with 356Megs of RAM 
 but no network card and no hardisk configured, neither cdrom boot device.
@@ -261,111 +331,16 @@ apk add qemu-system-aarch64
 /usr/bin/qemu-system-aarch64 \
   -m 256 \
   -net none 
-  -name "alpinebootqemu2"
+  -name "alpinebootqemu4"
+  -display curses
 ```
 
+If you wants to get out of the text machine you must to kill the command.
 If you want to start again such machine you must to re run same command.
 
-## Starting a clean empty aarch64 virtual machine adn boot iso alpine aarch64
-
-This will start a virtual machine for aarch64 architecture with 356Megs of RAM 
-but no network card and no hardisk configured, but will boot the iso alpine 
-as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.19
-
-```
-apk add qemu-system-aarch64
-
-wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standard-3.19.0-aarch64.iso
-
-/usr/bin/qemu-system-aarch64 \
-  -m 256 \
-  -boot once=d,menu=off -cdrom alpine-standard-3.19.0-aarch64.iso 
-  -net none 
-  -name "alpinebootqemu3"
-```
-
-The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
-of the virtual machine.. cos will wait until user input choose!
-
-## Creating a virtual hard disk and manage it
-
-The most simple is the **RAW** format, is **the most faster and compatible but lest featured**:
-
-```
-apk add qemu-img
-
-qemu-img create -f raw computer1-vitualdisk1-file.raw 4G
-```
-
-You can use a **QCOW2** format, is **the most popular but not so faster than raw, but featured**:
-
-```
-apk add qemu-img
-
-qemu-img create -f qcow2 computer1-vitualdisk2-file.img 4G
-```
-
-QCOW does not support holes, so is less storage occupies, only the already 
-used by the virtual environment, also supports snapshots of the image in some 
-point of the time with AES encryption.
-
-## Starting a i386 virtual machine using prevous disks created
-
-```
-apk add qemu-system-i386 qemu-img
-
-qemu-img create -f raw computer4-vitualdisk1-file.raw 4G
-
-qemu-img create -f qcow2 computer4-vitualdisk2-file.img 4G
-
-wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
-
-/usr/bin/qemu-system-i386 \
-  -m 256 \
-  -hda computer4-vitualdisk1-file.raw \
-  -hdb computer4-vitualdisk2-file.img \
-  -boot once=c,menu=off \
-  -net none 
-  -name "computer4alpine"
-```
-
-The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
-of the virtual machine.. cos will wait until user input choose! This will boot the iso file 
-as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.10 
-but the machine is 32bit only.
-
-If you want to start again such machine you must to re run same command.
-
-## Starting a i386 virtual machine with iso boot and previous disks created
-
-```
-apk add qemu-system-i386 qemu-img
-
-qemu-img create -f raw computer4-vitualdisk1-file.raw 4G
-
-qemu-img create -f qcow2 computer4-vitualdisk2-file.img 4G
-
-wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
-
-/usr/bin/qemu-system-i386 \
-  -m 256 \
-  -cdrom alpine-standard-3.10.0-x86.iso 
-  -hda computer4-vitualdisk1-file.raw \
-  -hdb computer4-vitualdisk2-file.img \
-  -boot once=d,menu=off \
-  -net none 
-  -name "computer4alpine"
-```
-
-The `menu=off` adition is need if you dont have a direct output monitor to check the screen 
-of the virtual machine.. cos will wait until user input choose! This will boot the iso file 
-as representation of a CDROM device with a CD disk inserted so will boot alpine linux 3.10 
-but the machine is 32bit only.
-
-If you want to start again such machine you must to re run same command.
+## Tutorials for qemu
 
 
-## Starting a virtual machine with hard disk and net support
 
 
 ## see also
