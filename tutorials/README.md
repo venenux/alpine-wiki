@@ -48,7 +48,7 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 * Power management
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 * Emulation
-    * Qemu simple emulation [alpine-howto-qemu-emulation.md](alpine-howto-qemu-emulation.md)
+    * Qemu simple emulation on any PC to emulate other PC [alpine-howto-qemu-on-pc.md](alpine-howto-qemu-on-pc.md)
 
 ## SERVERS
 
@@ -62,8 +62,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 * Power management
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 * Virtualization
-    * Qemu simple emulation with KVM [alpine-howto-qemu-emulation.md](alpine-howto-qemu-emulation.md)
-    * Libvirt with qemu and KVM [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
+    * Qemu simple emulation with KVM [alpine-howto-qemu-on-pc.md](alpine-howto-qemu-on-pc.md)
+    * Libvirt with qemu and KVM with hugepages [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
 
 
 ## Convention for naming the files:

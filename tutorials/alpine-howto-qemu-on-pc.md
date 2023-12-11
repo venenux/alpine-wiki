@@ -1,25 +1,29 @@
-# alpine qemu emulation
+# alpine qemu emulation on a computer
 
-`qemu` its a emulation system that uses KVM (kernel virual machine) and also are capable of hypervision!
+`qemu` its a emulation system, in a computer it can use 
+the KVM for kernel virual machine, only in x86 and arm based coputers
 
-#### modes of emulation:
+Complete alpine documentation for Qemu is on [../documents/alpine-newbie-qemu-virtualization.md](../documents/alpine-newbie-qemu-virtualization.md)
 
-* Full: the qemu emulates all the machine, like have a pc inside other pc
-* USer: the qemu uses binary translation so prograsm runs like into the native orignal machine
+This how to is only for qemu withour libvirt management, for that 
+you could visit [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
 
-## QEMU alone for direc usage
+## Emulation in simple mode on a x86_64 of a i386 computer
 
-The program can be used no mmater if you have hardware support or not in its simples way, 
-of couse is the most slow way to use emulation but runs on any system. For advanced usage 
-with KVM and hardware support forward to the next mayor section [QEMU with KVM and hardware virtualization](#qemu-with-kvm-and-hardware-virtualization).
+Fortunately, since versions 2 of qemu all unspecified options is not specified 
+will try to be configured according to the available environment.
 
-#### installing qemu for simple emulation
+First preparation of the things and later try to running the virtualization:
 
-* (added and) update normal repositories
+#### Prepare a 1386 virtual machine on a amd64 machine
+
+* added alpine repositories
 * update database repositories
-* install basic need packages and qemu modules
+* install basic need packages for emulate a 32bit x86 and qemu modules
 * load and setup the tun module
-
+* allow user of qemu group to manage briged devices
+* change permissions of the configurations
+* added/create to our user to run the virtual machines (prevents lack of security)
 
 ```
 cat > /etc/apk/repositories << EOF; $(echo)
@@ -29,42 +33,48 @@ EOF
 
 apk update
 
-apk add qemu-img qemu-system-$(uname -m) qemu-modules
+apk add qemu-img qemu-system-i386 qemu-modules wget
 
 grep tun /etc/modules|| echo tun >> /etc/modules
-```
 
-#### Configuring qemu for simple emulation
-
-* allow user of qemu group to manage briged devices
-* change permissions of the configurations
-
-```
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+adduser -S -D -g '' -s /bin/bash -h /home/general general
+
+adduser general qemu
 ```
 
-#### Running qemu machines with simple emulation
+#### Run a 1386 virtual machine on a amd64 machine without virtualization
 
-We can just boot a machine from a simple boot device:
+* change (or initate session) on your user
+* create the virtual disk to install the 32bit x86 system with faster RAW format
+* download the iso file to boot and isntall a a 32bit x86 operating system
+* run the vitual machine with the prepared components, but witouyt virtualization hardware
 
 ```
-/usr/bin/qemu-system-$(uname -m) \
+su -l  general
+
+/usr/bin/qemu-img create -f raw computer1alpine-vitualdisk1-file.raw 4G
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
+
+/usr/bin/qemu-system-i386 \
   -m 256 \
-  -boot once=d -cdrom alpine-standard-3.12.0-$(uname -m).iso 
-  -net none 
-  -name "alpinebootqemu1"
+  -hda computer1alpine-vitualdisk1-file.raw
+  -cdrom alpine-standard-3.10.0-x86.iso 
+  -boot once=d
+  -name "computer1alpine312"
+  -no-kvm
+  -display curses
 ```
 
-This will boot the alpine iso of the same architecture of the host machine, so 
-you must have already configured and the iso in the same directory of the 
-place where you execute the command, if not just give full path!
+Here we pass `-no-kvm` becouse we do not prepared kvm virtual environment, 
+and `-display curses` becouse we dont have X11 session initalized, if 
+you try to run a virtual machine will show you error about 
 
-
-## QEMU with KVM and hardware virtualization
-
-#### Checking Virtualization Hardware support
+#### Emulation on a x86_64 of an ARM computer
 
 you must check if your CPU support emulation by the command:
 `grep "vmx|svm" /proc/cpuinfo | uniq`, this is necesary for `kvm` implementation, 
