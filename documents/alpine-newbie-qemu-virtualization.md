@@ -7,6 +7,32 @@
 * Full: the qemu emulates all the machine, like have a pc inside other pc
 * USer: the qemu uses binary translation so prograsm runs like into the native orignal machine
 
+#### packages in alpine
+
+| name         | debian equivalent |  important files |
+| -------------| -------------- | ----------|
+| qemu         | seabios           | bios.bin |
+| aavmf        | qemu-efi-aarch64  | QEMU_EFI.fd |
+| qemu-modules | qemu-system-gui+qemu-system-common |  |
+
+#### terminology to understand mechanish
+
+The host is the plaform and architecture which QEMU is running on.
+
+The guest is the architecture which is emulated by QEMU.
+
+Initially QEMU was an emulation engine, with a Just-In-Time compiler (TCG) 
+to dynamically translate target instruction set architecture (ISA) to host ISA.
+
+There exists scenario where target and host architectures are the same. 
+The terminology is usually Host and Guest (target).
+
+Nowadays, QEMU offers virtualization through different accelerators. 
+Virtualization is considered an accelerator because it prevents unneeded 
+emulation of instructions when host and target share the same architecture. 
+
+Only system level (aka supervisor/ring0) instructions might be emulated/intercepted.
+
 ### QEMU setup for simple virtualization
 
 The program can be used no matter if you have hardware support or not in its 
@@ -30,7 +56,7 @@ EOF
 
 apk update
 
-apk add qemu-img qemu-system-$(uname -m) qemu-modules
+apk add qemu qemu-img qemu-system-i386 qemu-modules
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 ```
@@ -51,7 +77,7 @@ chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
 We can just boot a machine from a simple boot device:
 
 ```
-/usr/bin/qemu-system-$(uname -m)  -name "alpinebootqemu1"
+/usr/bin/qemu-system-i386  -name "alpinebootqemu1"
 ```
 
 #### Error initialization on qemu if no display
@@ -76,7 +102,7 @@ We can just boot a machine but with arguments display to "ncurses" to run
 with no need of instalations of Xorg complete software:
 
 ```
-/usr/bin/qemu-system-$(uname -m) -name "alpinebootqemu2" -display curses
+/usr/bin/qemu-system-i386 -name "alpinebootqemu2" -display curses
 ```
 
 The ncurses interface will take all the console output as a screen output!
@@ -89,11 +115,15 @@ To run again or terminate such command you will need to kill in another console!
 You can improve the performance if your machine is PC based or ARM based (some) 
 with the KVM (kernel virtual machine) and your vitualization support from hardware!
 
+Hardware virtualization only could be possible when host and guest are same or 
+similar architecture.
+
 #### Checking Virtualization Hardware support
 
 You must check if your CPU support emulation by the command:
-`grep "vmx|svm" /proc/cpuinfo | uniq`, this is necesary for `kvm` implementation, 
-if the above command does not show nothing you cannot do such emulation.
+`apk add arch-install-scripts && lscpu | grep Virtualization`, this is necesary 
+for `kvm` implementation, if the above command does not show nothing you cannot 
+do such emulation.
 
 #### Installation qemu with KVM
 
@@ -108,7 +138,7 @@ if the above command does not show nothing you cannot do such emulation.
 * add to the groups with privilegies
 
 ```
-apk add bash qemu-img qemu-system-$(uname -m) qemu-modules libvirt-qemu  libvirt-daemon
+apk add bash qemu-img qemu-system-* qemu-modules qemu-tools qemu-img
 
 rmmod tun && rmmod vhost_net && rmmod vhost && modprobe vhost_net && modprobe tun
 grep tun /etc/modules|| echo tun >> /etc/modules
@@ -133,13 +163,14 @@ We can just boot a machine but with arguments to enable KVM and
 display to "ncurses" to avoid X11 xorg software:
 
 ```
-/usr/bin/qemu-system-$(uname -m) -name "alpinebootqemu3" -enable-kvm -display curses
+/usr/bin/qemu-system-i386 -name "alpinebootqemu3" -enable-kvm -display curses
 ```
 
-The adition of `-enable-kvm` can be combined with acceleration machine:
+The adition of `-enable-kvm` can be combined with acceleration machine, 
+if the host is amd64 then this i386 will run accelerated:
 
 ```
-/usr/bin/qemu-system-$(uname -m) -name "alpinebootqemu4" -enable-kvm -machine accel=kvm -display curses
+/usr/bin/qemu-system-i386 -name "alpinebootqemu4" -enable-kvm -machine accel=kvm -display curses
 ```
 
 The adition this time is the `-machine accel=kvm` parameter that will give 
