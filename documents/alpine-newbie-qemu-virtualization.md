@@ -15,6 +15,36 @@
 | aavmf        | qemu-efi-aarch64  | QEMU_EFI.fd |
 | qemu-modules | qemu-system-gui+qemu-system-common |  |
 
+#### emulation of x86 based machines and best configurations
+
+| machine option      |  32bit x86 i386  | 64bit x86_64 amd64 |  observations |
+| ------------------- | --------------------- | ------------------- | ------------ |
+| CPU and motherboard | `-cpu n270 -machine pc` | `-cpu Conroe -machine q35` | each provides defaults based on natural features |
+| Defaults on chipset | i440FX+PIIX3 PATA PS2 | G31+ICH9 SATA USB | no matter choosed features can be combined but not the best |
+| Hardware on virtual | ISA, PATA, BIOS | PCIe, MMCFG, vIOMMU, AHCI, UEFI | For MSDOS or WinXP you must set "pc" machine |
+| Use cases           | boot older software | P2V, OVMF, vIOMMU | migration of modern machines can be done with "q35" |
+| it required KVM?    | no, if you use defaults | yes if you map mor devices | if you dont use kvm you cannot translate real devices |
+
+#### emulation of arm based machines and best configurations
+
+| machine option      | 32bit arm32 armv6  | 64bit aarch64 armv8 |  observations |
+| ------------------- | --------------------- | ------------------- | ------------ |
+| CPU and motherboard | `cortex-a7 -machine virt` | `cortex-a35 -machine virt` | Note that ITS is not modeled in TCG mode |
+| Defaults on chipset | GICv2M PCI GPIO | MSI GICv2M PCI/PCIe PL011 UART | no defaults, must select a machine profile |
+| Hardware on virtual | it depends on machine | it depends on machine | Unfortunately Arm boards are currently undocumented |
+| Use cases           | boot older software | basic testing only | migration of modern machines can be done with "q35" |
+| it required KVM?    | cannot be determine | not tested | if you dont use kvm you cannot translate real devices in general |
+
+##### emulation of devices and compatibility
+
+| device type  | command line                 | i386  | amd64 | arm  | aarch64 |  observations |
+| ------------- | --------------------------- | --- |  --- |  --- |  --- | ----------- |
+| USB 1.x       | `-device pci-ohci`          | [x] | [x] | [x] | [x] | can be dificult with arm machines |
+| USB 2.x       | `-device usb-ehci`          | [x] | [x] | [x] | [x] | is not the best option, consumes CPU |
+| USB 3.x+2.x   | `-device nec-usb-xhci`      | [x] | [x] | [x] | [x] | best option, recent version has `qemu-xhci` |
+| keyboard      | ``      | [x] | [x] | [x] | [x] | best option, recent version has `qemu-xhci` |
+| Storage SCSI  | `-device virtio-scsi-device -device scsi-hd,drive=id1` | [x] | [x] | [x] | [x] | use with `-drive file=diskimg.qcow,if=none,id=d1` |
+
 #### terminology to understand mechanish
 
 The host is the plaform and architecture which QEMU is running on.
@@ -115,8 +145,29 @@ To run again or terminate such command you will need to kill in another console!
 You can improve the performance if your machine is PC based or ARM based (some) 
 with the KVM (kernel virtual machine) and your vitualization support from hardware!
 
-Hardware virtualization only could be possible when host and guest are same or 
-similar architecture.
+* The argument `accel=kvm` of the `-machine` option is equivalent to the `-enable-kvm`
+* CPU model `host requires KVM.
+* IOMMU must require KVM support, so combinations cannot be made for some cases
+* If you start your virtual machine and experience very bad performance, should check for proper KVM support
+* KVM needs to be enabled in order to start Win7 or Win8 properly without a blue screen.
+* TPM must be enabled (throught q35 and UEFI+TPM fartures) in order to start Win10 without a blue screen.
+
+#### Where can be loaded the KVM support
+
+The KVM for Hardware virtualization **only could be possible when host and guest 
+are same or similar architecture**, some examples:
+
+| use case      | host    | guest   | KVM possible? |
+| ------------- | ------- | ------- | ---------- |
+| emulate i386  | i386    | i386    | Yes         |
+| emulate amd64 | i386    | amd64   | Yes, only if host is also 64bit and kernel is amd64 |
+| emulate i386  | amd64   | i386    | Yes         |
+| emulate arm   | i386    | arm     | no, there is no common hardware for kvm |
+| emulate i386  | aarch64 | i386    | no, there is no common hardware for kvm |
+| emulate arm   | aarch64 | armv7   | Yes, but becouse host already has all the guest cpu feaures |
+| emulate arm   | armv6   | armv7   | Yes, **but limited** host does not support all the guest features |
+| emulate amd64 | amd64   | amd64   | Yes, only if host is a more recent cpu rather than guest |
+| emulate arm   | aarch64 | aarch64 | Yes, only if host is a more recent cpu rather than guest | |
 
 #### Checking Virtualization Hardware support
 
