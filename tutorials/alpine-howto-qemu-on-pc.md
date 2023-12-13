@@ -1,29 +1,28 @@
 # alpine qemu emulation on a computer
 
-`qemu` its a emulation system, in a computer it can use 
-the KVM for kernel virual machine, only in x86 and arm based coputers
+`qemu` its a emulation system, complete alpine documentation 
+for Qemu is on [../documents/alpine-newbie-qemu-virtualization.md](../documents/alpine-newbie-qemu-virtualization.md)
 
-Complete alpine documentation for Qemu is on [../documents/alpine-newbie-qemu-virtualization.md](../documents/alpine-newbie-qemu-virtualization.md)
+* **Host** where the qemu is runinng and emulated another machine
+* **Guest** the emulated result product inside the virtual machine
 
-This how to is only for qemu withour libvirt management, for that 
-you could visit [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
+Fortunately, since versions 2 of qemu all unspecified options if not specified 
+will be auto configured according to the available environment.
+Hardware virtualization only could be possible when host and guest are same or 
+similar architecture.
 
-## Emulation in simple mode on a x86_64 of a i386 computer
+## Emulation in simple mode ON ANY MACHINE OF i386 COMPUTER without hardware virtualization
 
-Fortunately, since versions 2 of qemu all unspecified options is not specified 
-will try to be configured according to the available environment.
-
-First preparation of the things and later try to running the virtualization:
-
-#### Prepare a 1386 virtual machine on a amd64 machine
+The i386 is the ancient name for 32bit computers, that are really started 
+since i286+DX math co-procesor. The amd64 is same but 64bit and is not same as ia64.
 
 * added alpine repositories
-* update database repositories
-* install basic need packages for emulate a 32bit x86 and qemu modules
+* update database repositories and install packages for emulate a 32bit x86 and qemu modules
 * load and setup the tun module
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
-* added/create to our user to run the virtual machines (prevents lack of security)
+* added/create our user to run the virtual machines (prevents lack of security)
+* added the user to the qemu group to property create virtualmachines with devices access
 
 ```
 cat > /etc/apk/repositories << EOF; $(echo)
@@ -31,9 +30,7 @@ http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,
 http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
 EOF
 
-apk update
-
-apk add qemu-img qemu-system-i386 qemu-modules wget
+apk update && apk add qemu qemu-img qemu-system-i386 qemu-modules wget
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 
@@ -46,51 +43,301 @@ adduser -S -D -g '' -s /bin/bash -h /home/general general
 adduser general qemu
 ```
 
-#### Run a 1386 virtual machine on a amd64 machine without virtualization
-
-* change (or initate session) on your user
+* change (or init X11 graphical session) for the user
 * create the virtual disk to install the 32bit x86 system with faster RAW format
-* download the iso file to boot and isntall a a 32bit x86 operating system
+* download the iso file to boot for isntall a 32bit x86 operating system
 * run the vitual machine with the prepared components, but witouyt virtualization hardware
 
 ```
 su -l  general
 
-/usr/bin/qemu-img create -f raw computer1alpine-vitualdisk1-file.raw 4G
+/usr/bin/qemu-img create -f raw computerint1alpine-vitualdisk1-file.raw 4G
 
 wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.0-x86.iso
 
 /usr/bin/qemu-system-i386 \
-  -m 256 \
-  -hda computer1alpine-vitualdisk1-file.raw
-  -cdrom alpine-standard-3.10.0-x86.iso 
-  -boot once=d
-  -name "computer1alpine312"
-  -no-kvm
+  -m 1024 \
+  -cpu n270 -machine pc \
+  -accel tcg \
+  -boot order=dc 
+  -cdrom alpine-standard-3.10.0-x86.iso  \
+  -hda computerint1alpine-vitualdisk1-file.raw \
   -display curses
 ```
 
-Here we pass `-no-kvm` becouse we do not prepared kvm virtual environment, 
+Here we pass `-accel tcg` because we do not prepared kvm virtual environment, 
 and `-display curses` becouse we dont have X11 session initalized, if 
 you try to run a virtual machine will show you error about 
 
-#### Emulation on a x86_64 of an ARM computer
+The iso will boot the alpine system into the virtual machine, **you can perform 
+all the steps of a real hardware machine installation** into such virtual machine, 
+**after is finished you can just boot again but with no iso/cdrom** boot:
+
+```
+/usr/bin/qemu-system-i386 \
+  -m 1024 \
+  -cpu n270 -machine pc \
+  -hda computerint1alpine-vitualdisk1-file.raw \
+  -display curses
+```
+
+Once tested you can then power off (inside virtual machine) and re run 
+with a little of more ram (2048 here, you cannot assing more than half or real),
+run **again but with minimal set of devices hardware like sound and usb** as:
+
+```
+/usr/bin/qemu-system-i386 \
+  -m 2048 \
+  -name "computerint1alpine310" \
+  -cpu n270 -machine pc \
+  -device virtio-scsi -device scsi-hd,drive=hd0 -drive file=computerint1alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none \
+  -device rtl8139,netdev=nd1 -netdev user,id=nd1 \
+  -device pci-ohci -device nec-usb-xhci \
+  -device virtio-keyboard -device virtio-mouse -device virtio-tablet \
+  -device cirrus-vga -device AC97 \
+  -display curses
+```
+
+* the `-cpu n270 -machine pc` forces 32bit most compatible SSE2 cpu on defualt i440fx and PIIX3
+* the `-device virtio-scsi` just add new base backend, this just feature kernel integration
+* the `-device scsi-hd,drive=hd0 -drive file=computerint1alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none` improved hda
+* the `-device rtl8139,netdev=nd1 -netdev user,id=nd1` allows sync network access for internet browsing
+* the `-device pci-ohci` enables USB 1.1 that allows to use older USB devices or emulate such bus
+* the `-device nec-usb-xhci` enables USB 3.0 that allows to use also USB 2.0 in fact
+* the `-device virtio-keyboard -device virtio-mouse -device virtio-tablet` allows keyboard and mouse touchpad
+* the `-device cirrus-vga -device AC97` allows direct graphics video and audio for older 32bit pc
+
+## Emulation in simple mode on ANY MACHINE OF AN ARM32 COMPUTER without hardware virtualization
+
+The "arm" simple only were 32bit only are from ARMv1 to ARMv7. Qemu 
+only can emulate those from ARMv5 to the ARMv7, ARMv1 to ARMv4 seems not documented. 
+Cortex CPUs are mostly 64bit only except ARMv6 and ARMv7. For that use aarch64.
+
+* added alpine repositories
+* update database repositories and install packages for 32bit ARM and qemu modules **with bios module also**
+* load and setup the tun module
+* allow user of qemu group to manage briged devices
+* change permissions of the configurations
+* added/create to our user to run the virtual machines (prevents lack of security)
+* added the user to the qemu group to property create virtualmachines with devices access
+
+```
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update && apk add qemu qemu-img qemu-system-arm qemu-modules wget ovmf
+
+grep tun /etc/modules|| echo tun >> /etc/modules
+
+sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
+
+chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+adduser -S -D -g '' -s /bin/bash -h /home/general general
+
+adduser general qemu
+```
+
+* change (or init X11 graphical session) for the user
+* create the virtual disk to install the 32bit ARM system with faster RAW format
+* download the iso file to boot and install the 32bit ARM operating system
+* run the vitual machine, but **with OVMF bios firmware and specific cpu core**
+
+```
+su -l  general
+
+/usr/bin/qemu-img create -f raw computerarm3alpine-vitualdisk1-file.raw 4G
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/armv7/alpine-standard-3.19.0-armv7.iso
+
+/usr/bin/qemu-system-aarch64 \
+  -m 1024 \
+  -cpu cortex-a7 -machine virt -bios /usr/share/OVMF/QEMU_EFI.fd \
+  -accel tcg \
+  -boot order=dc \
+  -cdrom alpine-standard-3.19.0-armv7.iso \
+  -hda computerarm2alpine-vitualdisk1-file.raw \
+  -display curses -nographic
+```
+
+Here we pass `-accel tcg` because we could run in any host machine not only same ARM, 
+also we pass `-bios /usr/share/OVMF/QEMU_EFI.fd -cpu cortex-a7 -machine virt` as mandatory 
+cos aarch64 will not run if you dont specify a bios boot and cpu core, also 
+and `-display curses` becouse we dont have X11 session initalized, but also
+add `-nographic` because inital redirection in ARM devices are not happened to any display 
+and we will assume you dont have any x11 session running fi were the case.
+
+But this will have two little details that could relly into problems:
+
+* the image format is not specified, unless qemu will limited the writting
+* you cannot interact with the machine (no keyboard response) due lack of usb devices
+
+Change the drive parameter and boot again with supprot for drive and keyboard using usb as:
+
+```
+/usr/bin/qemu-system-arm \
+  -m 1024 \
+  -cpu cortex-a7 -machine virt -bios /usr/share/OVMF/QEMU_EFI.fd \
+  -accel tcg \
+  -boot order=cd \
+  -cdrom alpine-standard-3.19.0-aarch64.iso \
+  -device usb-ehci -device usb-kbd -device usb-mouse \
+  -drive file=computerarm2alpine-vitualdisk1-file.raw,format=raw \
+  -display curses -nographic
+```
+
+The iso will boot the alpine system into the virtual machine, **you can perform 
+all the steps of a real hardware machine installation** into such virtual machine, 
+**after is finished you can just boot again but with no iso/cdrom** boot:
+
+```
+/usr/bin/qemu-system-arm \
+  -m 1024 \
+  -cpu cortex-a7 -machine virt -bios /usr/share/OVMF/QEMU_EFI.fd \
+  -hda computerint1alpine-vitualdisk1-file.raw \
+  -display curses -nographic
+```
+
+Once tested you can then power off (inside virtual machine) and re run 
+with a little of more ram (2048 here, you cannot assing more than half or real),
+run **again but with minimal set of devices hardware like sound and usb** as:
+
+```
+/usr/bin/qemu-system-arm \
+  -m 1024 \
+  -name "computerarm2alpine319" \
+  -cpu cortex-a7 -machine virt -bios /usr/share/OVMF/QEMU_EFI.fd \
+  -device virtio-scsi -device scsi-hd,drive=hd0 -drive file=computerint1alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none \
+  -device rtl8139,netdev=nd1 -netdev user,id=nd1 \
+  -device pci-ohci -device nec-usb-xhci \
+  -device virtio-keyboard -device virtio-mouse -device virtio-tablet \
+  -device cirrus-vga -device AC97 \
+  -display curses -nographic
+```
+
+* the `-cpu n270 -machine pc` forces 32bit most compatible SSE2 cpu on defualt i440fx and PIIX3
+* the `-device virtio-scsi` just add new base backend, this just feature kernel integration
+* the `-device scsi-hd,drive=hd0 -drive file=computerint1alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none` improved hda
+* the `-device rtl8139,netdev=nd1 -netdev user,id=nd1` allows sync network access for internet browsing
+* the `-device pci-ohci` enables USB 1.1 that allows to use older USB devices or emulate such bus
+* the `-device nec-usb-xhci` enables USB 3.0 that allows to use also USB 2.0 in fact
+* the `-device virtio-keyboard -device virtio-mouse -device virtio-tablet` allows keyboard and mouse touchpad
+* the `-device cirrus-vga -device AC97` allows direct graphics video and audio for older 32bit pc
+
+
+
+## Emulation in simple mode on ANY MACHINE OF AN ARM64 COMPUTER without hardware virtualization
+
+The aarch64 is the final name for 64bit ARM computers from ARMv8, for 32bit they 
+are from ARMv1 to ARMv7. Cortex CPUs are mostly ARM and most recents are 64bit only.
+
+* added alpine repositories
+* update database repositories
+* install basic need packages for emulate a 64bit ARM and qemu modules **with bios module also**
+* load and setup the tun module
+* allow user of qemu group to manage briged devices
+* change permissions of the configurations
+* added/create to our user to run the virtual machines (prevents lack of security)
+* added the user to the qemu group to property create virtualmachines with devices access
+
+```
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update
+
+apk add qemu qemu-img qemu-system-aarch64 qemu-modules wget ovmf
+
+grep tun /etc/modules|| echo tun >> /etc/modules
+
+sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
+
+chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+adduser -S -D -g '' -s /bin/bash -h /home/general general
+
+adduser general qemu
+```
+
+* change (or init X11 graphical session) for the user
+* create the virtual disk to install the 64bit ARM system with faster RAW format
+* download the iso file to boot and isntall the 64bit ARM operating system
+* run the vitual machine, but **with OVMF bios firmware and specific cpu core**
+
+```
+su -l  general
+
+/usr/bin/qemu-img create -f raw computerarm2alpine-vitualdisk1-file.raw 4G
+
+wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standard-3.19.0-aarch64.iso
+
+/usr/bin/qemu-system-aarch64 \
+  -m 1024 \
+  -hda computerarm2alpine-vitualdisk1-file.raw \
+  -cdrom alpine-standard-3.19.0-aarch64.iso \
+  -boot order=dc \
+  -name "computerarm2alpine319" \
+  -no-kvm -bios /usr/share/OVMF/QEMU_EFI.fd -cpu cortex-a35 -machine virt \
+  -display curses -nographic
+```
+
+Here we pass `-no-kvm` because we could run in any host machine not only same ARM, 
+also we pass `-bios /usr/share/OVMF/QEMU_EFI.fd -cpu cortex-a35 -machine virt` as mandatory 
+cos aarch64 will not run if you dont specify a bios boot and cpu core, also 
+and `-display curses` becouse we dont have X11 session initalized, but also
+add `-nographic` because inital redirection in ARM devices are not happened to any display 
+and we will assume you dont have any x11 session running fi were the case.
+
+```
+/usr/bin/qemu-system-aarch64 \
+  -m 1024 \
+  -name "computerint1alpine310" \
+  -cpu cortex-a35 -machine virt -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
+  -drive file=x.raw,id=hd0,format=raw,if=none \
+  -netdev user,id=nd1 -device rtl8139,netdev=nd1 \
+  -device pci-ohci -device nec-usb-xhci -device virtio-keyboard -device virtio-mouse -device virtio-tablet \
+  -device virtio-gpu  -display curses -cdrom alpine-standard-3.19.0-aarch64.iso -boot dc  -nographic
+```
+
+## Emulation on a x86_64 of an i386 or amd64 computer but hardware virtualization
 
 you must check if your CPU support emulation by the command:
-`grep "vmx|svm" /proc/cpuinfo | uniq`, this is necesary for `kvm` implementation, 
-if the above command does not show nothing you cannot do such emulation.
+`apk add arch-install-scripts && LC_ALL=C lscpu | grep Virtualization`, 
+this is necesary for `kvm` implementation, if the above command does 
+not show nothing you cannot do such emulation in optimized way.
 
-#### Installation qemu with kvm
+Hardware virtualization only could be possible when host and guest are same or 
+similar architecture. By example run aarch64 over ARM machine or i386 over amd64 machine.
 
-* install basic need packages and qemu modules
-* installing to path
-* installing for loading tun module
+#### Prepare a i386 or amd64 virtual machine on a amd64 machine
+
+* added alpine repositories
+* update database repositories
+* install basic need packages for emulate an x86 based and qemu modules
+* load and setup the tun module
 * installing for loading vhost_net module
 * detecting intel cpu and load their nested kvm module
 * detecting amd cpu and if true loading nested kvm module
+* loading kvm module if still not loaded
+* allow user of qemu group to manage briged devices
+* change permissions of the configurations
+* added/create to our user to run the virtual machines (prevents lack of security)
+* added the user to the qemu group to property create virtualmachines with devices access
+* added the user to the kvm group to property access hardware virtualization support
 
 ```
-apk add bash qemu-img qemu-system-$(uname -m) qemu-modules libvirt-qemu  libvirt-daemon eudev-netifnames
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update
+
+apk add qemu-img qemu-system-i386 qemu-modules wget
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
@@ -98,74 +345,67 @@ grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
 /bin/bash -c [  -z '$(grep -i intel /proc/cpuinfo|head -n1)' ] && echo AMD  || modprobe kvm_intel nested=1 && echo "options kvm_intel nested=Y">/etc/modprobe.d/kvm_intel.conf
 
 /bin/bash -c [  -z '$(grep -i amd /proc/cpuinfo|head -n1)' ] && echo INTEL  || modprobe kvm_amd nested=1 && echo "options kvm_amd nested=Y">/etc/modprobe.d/kvm_intel.conf
+
+modprobe kvm
+
+sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
+chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+adduser -S -D -g '' -s /bin/bash -h /home/general general
+
+adduser general qemu
+adduser general kvm
 ```
 
-> Warning: the `eudev-netifnames` is only need for compatibility with SHITstemd related script if you will use it
+##### running qemu 32bit i386 virtual with kvm support
 
-##### running qemu with kvm support
-
-* setup the user to run the machines
-* add to the groups with privilegies
-* load the tun and vhost_net modules
-* add the services of the virtual library
-* add the services of the virtual guest libraries
-
+* change (or initate session) on your user
+* create the virtual disk to install the 64bit ARM system with faster RAW format
+* download the iso file to boot and isntall a 64bit ARM operating system
+* run the vitual machine with the prepared components, **but with** virtualization hardware
 
 ```
-adduser -S -D -g '' -s /bin/bash -h /var/lib/libvirt qemuvirt
+su -l  general
 
-adduser qemuvirt qemu
+/usr/bin/qemu-img create -f raw computerint2alpine-vitualdisk1-file.raw 4G
 
-adduser qemuvirt kvm
+wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.10.3-x86.iso
 
-modprobe tun && modprobe vhost_net
-
-/usr/bin/qemu-system-$(uname -m) \
+/usr/bin/qemu-system-i386 \
   -m 256 \
-  -net none 
-  -name "alpinebootqemu1"
-  -enable-kvm
+  -hda computerint2alpine-vitualdisk1-file.raw \
+  -cdrom alpine-standard-3.10.3-x86.iso \
+  -boot once=d \
+  -name "computerint2alpine310" \
+  -enable-kvm -machine accel=kvm \
+  -display curses
 ```
 
-This will boot the alpine iso of the same architecture of the host machine, so 
-you must have already configured and the iso in the same directory of the 
-place where you execute the command, if not just give full path!
-The adition this time is the `-enable-kvm` parameter that will bring 
-improved performance, becouse will use direc hardware of the host machine.
+Here we pass `-enable-kvm -machine accel=kvm` for the hardware emulation 
+and `-display curses` becouse we dont have X11 session initalized, if 
+you already has xorg/X11 session you can just use `-display gtk`.
 
-> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
-
-#### running the qemu without the kvm support
-
-If your computer that will act as host does not support the KVM 
-infraestructure you can deactivate it explicit in command line:
+The iso will boot the alpine system into the virtual machine, you can perform all the steps 
+of a real hardware machine installation into such virtual machine started, 
+after is finished you can just **boot again but with no iso** boot:
 
 ```
-/usr/bin/qemu-system-$(uname -m) \
-  -m 256 \
-  -net none 
-  -name "alpinebootqemu1"
-  -no-kvm
+/usr/bin/qemu-system-i386 \
+  -m 1024 \
+  -hda computerint2alpine-vitualdisk1-file.raw \
+  -boot once=c \
+  -name "computerint2alpine310" \
+  -enable-kvm -machine accel=kvm \
+  -device virtio-gpu -device usb-ehci -device intel-hda -device hda-output
+  -display curses
 ```
 
-Obviously you will not need to confiugure any KVM or qemu group or user, 
-the qemu system will just interpreted all the things but will runs more slow also.
+Now after restart we added som paremeters, with KVM activated more hardware can 
+be emulated without impact in performance, with such common parameters we add
+the `-device virtio-gpu -device usb-ehci -device intel-hda -device hda-output` 
+for VGA, USB, HDA, and oputput of HDA sound.
 
-This time we parsed `-no-kvm` but you can also add `-machine accel=tcg` to try 
-others ways of optimization.
-
-> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
-
-## QEMU with HugePages memory
-
-Here we will configure hugepages for default system setup, 
-for more deep use [../documents/alpine-newbie-hugepages.md](../documents/alpine-newbie-hugepages.md)
-
-Foir this you must previously enabled KVM on your setup, 
-as [QEMU with KVM and hardware virtualization](#qemu-with-kvm-and-hardware-virtualization) 
-section described.
-
-##### Auto Configure the hugepages for qemu
+##### Auto Configure the hugepages for qemu on an amd64 machine
 
 If you will have a VM with 4096 Mb of RAM (only one)so then (4096/2)+1024 where 
 the 1024 will be the amount of pages for.. this number will be the amouh of huges pages 
@@ -201,42 +441,131 @@ grep hugetlbfs /etc/fstab || echo \
  >> /etc/fstab
 ```
 
-#### running qemu with hugepages memory support
+##### running qemu ARM 64 virtual with kvm support and hugepages
 
-* setup the user to run the machines
-* add to the groups with privilegies
-* load the tun and vhost_net modules
-* download and iso to boot
-* run and pass the parameter to qemu command that uses the hugepages feature
-
+* change (or initate session) on your user, after the kvm and hugepages configuration (previous sections)
+* create the virtual disk to install the 32bit x86 system with faster RAW format
+* download the iso file to boot and isntall a 64bit ARM operating system
+* run the vitual machine with the prepared components, **but with** virtualization hardware
 
 ```
-adduser -S -D -g '' -s /bin/bash -h /var/lib/libvirt qemuvirt
+su -l  general
 
-adduser qemuvirt qemu
+/usr/bin/qemu-img create -f raw computerarm2alpine-vitualdisk1-file.raw 4G
 
-adduser qemuvirt kvm
+wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standard-3.19.0-aarch64.iso
 
-modprobe tun && modprobe vhost_net
-
-wget https://dl-cdn.alpinelinux.org/alpine/v3.12/releases/$(uname -m)/alpine-standard-3.12.0-$(uname -m).iso
-
-/usr/bin/qemu-system-$(uname -m) \
+/usr/bin/qemu-system-aarch64 \
   -m 256 \
-  -net none 
-  -name "alpinebootqemu1"
-  -enable-kvm
-  -mem-path /dev/hugepages
+  -hda computerarm2alpine-vitualdisk1-file.raw \
+  -cdrom alpine-standard-3.19.0-aarch64.iso \
+  -boot once=d \
+  -name "computerarm2alpine312" \
+  -enable-kvm -machine accel=kvm -mem-path /dev/hugepages \
+  -display curses
 ```
 
-This will boot the alpine iso of the same architecture of the host machine, so 
-you must have already configured and the iso in the same directory of the 
-place where you execute the command, if not just give full path!
-The adition this time is the `-enable-kvm` and `-mem-path /dev/hugepages` parameters 
-that will bring improved performance, becouse will use direc hardware of the host machine.
+Here we pass `-enable-kvm -machine accel=kvm` for the hardware emulation 
+also `-mem-path /dev/hugepages` to have better RAM management respect host 
+and `-display curses` becouse we dont have X11 session initalized, if 
+you already has xorg/X11 session you can just use `-display gtk`.
 
-> Warning: here we cannot see much more cos we dont pass enought arguments, check usage in sections below
 
+## Emulation on a x86_64 of a i386 computer with Debian 9 and networking sharing vnc using kvm and hugepages
+
+you must check if your CPU support emulation by the command:
+`apk add arch-install-scripts && LC_ALL=C lscpu | grep Virtualization`, 
+this is necesary for `kvm` implementation, if the above command does 
+not show nothing you cannot do such emulation in optimized way.
+
+* added alpine repositories
+* update database repositories
+* install basic need packages for emulate a 32bit i386 and qemu modules
+* load and setup the tun module
+* installing for loading vhost_net module
+* detecting intel cpu and load their nested kvm module
+* detecting amd cpu and if true loading nested kvm module
+* loading kvm module if still not loaded
+* allow user of qemu group to manage briged devices
+* change permissions of the configurations
+* added/create to our user to run the virtual machines (prevents lack of security)
+* added the user to the qemu group to property create virtualmachines with devices access
+* added the user to the kvm group to property access hardware virtualization support
+
+```
+cat > /etc/apk/repositories << EOF; $(echo)
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update
+
+apk add qemu-img qemu-system-i386 qemu-modules wget
+
+grep tun /etc/modules|| echo tun >> /etc/modules
+grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
+
+/bin/bash -c [  -z '$(grep -i intel /proc/cpuinfo|head -n1)' ] && echo AMD  || modprobe kvm_intel nested=1 && echo "options kvm_intel nested=Y">/etc/modprobe.d/kvm_intel.conf
+
+/bin/bash -c [  -z '$(grep -i amd /proc/cpuinfo|head -n1)' ] && echo INTEL  || modprobe kvm_amd nested=1 && echo "options kvm_amd nested=Y">/etc/modprobe.d/kvm_intel.conf
+
+modprobe kvm
+
+sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
+chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+adduser -S -D -g '' -s /bin/bash -h /home/general general
+
+adduser general qemu
+adduser general kvm
+```
+
+##### running qemu ARM 64 virtual with kvm support
+
+* change (or initate session) on your user
+* create the virtual disk to install the 64bit ARM system with faster RAW format
+* download the iso file to boot and isntall a 64bit ARM operating system
+* run the vitual machine with the prepared components, **but with** virtualization hardware
+* Foir ARM you must specify board model to use with the `-machine` option; there is no default.
+
+```
+su -l  general
+
+/usr/bin/qemu-img create -f raw computerarm2alpine-vitualdisk1-file.raw 4G
+
+wget https://cdimage.debian.org/mirror/cdimage/archive/9.13.0-live/i386/iso-hybrid/debian-live-9.13.0-i386-mate.iso
+
+/usr/bin/qemu-system-i386 \
+  -m 256 \
+  -hda computerarm2alpine-vitualdisk1-file.raw \
+  -cdrom debian-live-9.13.0-i386-mate.iso \
+  -boot once=d \
+  -name "computerarm2alpine312" \
+  -enable-kvm -machine accel=kvm \
+  -display curses
+```
+
+Here we pass `-enable-kvm -machine accel=kvm` for the hardware emulation 
+and `-display curses` becouse we dont have X11 session initalized, if 
+you already has xorg/X11 session you can just use `-display gtk`.
+
+The iso will boot the alpine sistem into the virtual machine, you can perform all the steps 
+of a real hardware machine installation into such virtual machine started, 
+after is finished you can just **boot again but with no iso** boot:
+
+```
+/usr/bin/qemu-system-i386 \
+  -m 1024 \
+  -hda computerarm2alpine-vitualdisk1-file.raw \
+  -boot once=c \
+  -name "computerarm2alpine312" \
+  -enable-kvm -machine accel=kvm \
+  -display curses
+```
+
+
+
+##
 
 ## Qemu usage
 
@@ -332,13 +661,13 @@ If you wants to get out of the text machine you must to kill the command.
 
 ### Starting a clean empty virtual machine but from different architecture
 
-This will start a virtual machine for aarch64 architecture with 356Megs of RAM 
+This will start a virtual machine for i386 architecture with 356Megs of RAM 
 but no network card and no hardisk configured, neither cdrom boot device.
 
 ```
-apk add qemu-system-aarch64
+apk add qemu-system-i386
 
-/usr/bin/qemu-system-aarch64 \
+/usr/bin/qemu-system-i386 \
   -m 256 \
   -net none 
   -name "alpinebootqemu4"
