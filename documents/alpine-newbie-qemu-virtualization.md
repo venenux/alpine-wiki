@@ -2,10 +2,46 @@
 
 `qemu` its a emulation system that uses KVM (kernel virual machine) and also are capable of hypervision!
 
+Initially QEMU was an emulation engine, with a Just-In-Time compiler (TCG) 
+to dynamically translate target instruction set architecture (ISA) to host ISA.
+
+Nowadays, QEMU offers virtualization through different accelerators. 
+Virtualization is considered an accelerator because it prevents unneeded 
+emulation of instructions when host and target share the same architecture. 
+
+Only system level (aka supervisor/ring0) instructions might be emulated/intercepted.
+
 #### modes of emulation:
 
 * Full: the qemu emulates all the machine, like have a pc inside other pc
 * USer: the qemu uses binary translation so prograsm runs like into the native orignal machine
+
+#### terminology to understand mechanish
+
+The **host** is the plaform and architecture which QEMU is running on, is the native 
+machine where the qemu will run the virtual machine
+
+The **guest** is the architecture which is emulated by QEMU, is the target machine 
+that will be emulated from the host or native machine.
+
+The **device front** end is how a device is presented to the guest. The type of 
+device presented should match the hardware that the guest operating system is 
+expecting to see. All devices can be specified with the `--device` command line option. 
+Running QEMU with the command line options `--device help` will list all devices.
+Running QEMU with command line `--device foo,help` will list optons for "foo" device.
+The **device front* end is often paired with a back end, which describes how the 
+hosts devices resources are used in the emulation.
+
+The **device back** end describes how the data from the emulated device will be 
+processed by QEMU. The configuration of the back end is usually specific to the 
+class of device being emulated.
+While the choice of back end is generally transparent to the guest, there are 
+cases where features will not be reported to the guest if the back end is unable 
+to support it.
+
+The **Device pass through** is where the device is actually given access to the 
+underlying hardware. This can be as simple as exposing a single USB device on the 
+host system to the guest or dedicating a video card in a PCI slot to the exclusive.
 
 #### packages in alpine
 
@@ -29,39 +65,39 @@
 
 | machine option      | 32bit arm32 armv6  | 64bit aarch64 armv8 |  observations |
 | ------------------- | --------------------- | ------------------- | ------------ |
-| CPU and motherboard | `cortex-a7 -machine virt` | `cortex-a35 -machine virt` | Note that ITS is not modeled in TCG mode |
-| Defaults on chipset | GICv2M PCI GPIO | MSI GICv2M PCI/PCIe PL011 UART | no defaults, must select a machine profile |
+| CPU and motherboard | `cortex-a7 -machine virt` | `cortex-a35 -machine virt` | no defaults, must select a machine profile |
+| Defaults on chipset | GICv2M PCI GPIO | MSI GICv2M PCI/PCIe PL011 UART | Note that ITS is not modeled in TCG mode |
 | Hardware on virtual | it depends on machine | it depends on machine | Unfortunately Arm boards are currently undocumented |
 | Use cases           | boot older software | basic testing only | migration of modern machines can be done with "q35" |
 | it required KVM?    | cannot be determine | not tested | if you dont use kvm you cannot translate real devices in general |
 
-##### emulation of devices and compatibility
+#### emulation of devices and compatibility
 
-| device type  | command line                 | i386  | amd64 | arm  | aarch64 |  observations |
-| ------------- | --------------------------- | --- |  --- |  --- |  --- | ----------- |
-| USB 1.x       | `-device pci-ohci`          | [x] | [x] | [x] | [x] | can be dificult with arm machines |
-| USB 2.x       | `-device usb-ehci`          | [x] | [x] | [x] | [x] | is not the best option, consumes CPU |
-| USB 3.x+2.x   | `-device nec-usb-xhci`      | [x] | [x] | [x] | [x] | best option, recent version has `qemu-xhci` |
-| keyboard      | ``      | [x] | [x] | [x] | [x] | best option, recent version has `qemu-xhci` |
-| Storage SCSI  | `-device virtio-scsi-device -device scsi-hd,drive=id1` | [x] | [x] | [x] | [x] | use with `-drive file=diskimg.qcow,if=none,id=d1` |
+| device type    | command line                           | i386  | amd64 | arm  | aarch64 |  observations |
+| -------------- | -------------------------------------- | --- |  --- |  --- |  --- | ----------- |
+| USB 1.x        | `-device pci-ohci`                     | Yes | Yes | Yes | Yes | can be dificult with arm machines |
+| USB 2.x        | `-device usb-ehci`                     | Yes | Yes | No | Yes | is not the best option, consumes CPU |
+| USB 3.x+2.x    | `-device nec-usb-xhci`                 | Yes | Yes | Yes | Yes | best option, recent version has `qemu-xhci` |
+| keyboard/mouse | `-device usb-mouse -device usb-tablet` | Yes | Yes | Not | Yes | best option, recent version has `usb-kbd` |
+| Storage Virtio | `-device virtio-scsi -device scsi-hd,drive=hd1` | Not | Yes | Yes | Yes | slow, use with `-drive file=diskimg.qcow,if=none,id=hd1` |
+| Storage IDE    |                                        | in | Yes | Not | Not | Built in on i440fx and q32 machines |
+| HD audio       | `-device intel-hda -device hda-duplex` | Not | Yes | Yes | Yes | `-device AC97` is best for i386 32bit and older software |
+| Hardware entropy | `-device virtio-rng-pci,rng=rng0`    | Yes | Yes | Yes | Yes | Use with `-object rng-random,id=rng0,filename=/dev/urandom` |
+| Hardware HDD/SSD | `-drive file=/dev/sdX#,cache=none,if=virtio` | Yes | Yes | Not | Not | Use with caution, `X` is disk and `#` is partition |
 
-#### terminology to understand mechanish
+#### Provisioning virtual disks
 
-The host is the plaform and architecture which QEMU is running on.
+|  Type         |  Qemu builin | block feats | migration | extra required | observations |
+| ------------- | ------------ | ----------- | --------- | -------------- | ----------------------- |
+| Qemu emulated | IDE          | Yes         | Yes       | No, build in   | slow or mid performance |
+| Qemu emulated | NVMe         | Yes         | Yes       | command line   | mid performance |
+| Qemu emulated | virtio-blk   | Yes         | Yes       | command line   | relative best performance, few disks |
+| Qemu emulated | virtio-scsi  | Yes         | Yes       | command line   | mid or slow performance, many disks |
+| vhost         | vhost-scsi   | no          | no        | command line   | relative or mid performance |
+| vhost SPDK    | vhost-user   | no          | no        | command line   | relative or mid performance |
+| Device assignment | vfio-pci | no          | no        | Exclusive use  | Hihg performance, device is blocked by qemu |
 
-The guest is the architecture which is emulated by QEMU.
-
-Initially QEMU was an emulation engine, with a Just-In-Time compiler (TCG) 
-to dynamically translate target instruction set architecture (ISA) to host ISA.
-
-There exists scenario where target and host architectures are the same. 
-The terminology is usually Host and Guest (target).
-
-Nowadays, QEMU offers virtualization through different accelerators. 
-Virtualization is considered an accelerator because it prevents unneeded 
-emulation of instructions when host and target share the same architecture. 
-
-Only system level (aka supervisor/ring0) instructions might be emulated/intercepted.
+Sometimes higher performance means less flexibility
 
 ### QEMU setup for simple virtualization
 
@@ -110,6 +146,8 @@ We can just boot a machine from a simple boot device:
 /usr/bin/qemu-system-i386  -name "alpinebootqemu1"
 ```
 
+> **Warning**: QEMU should **never be run as root** use the `-runas` option to make QEMU drop root privileges.
+
 #### Error initialization on qemu if no display
 
 If you dont have a X11 sesions, or if you dont have allowed to share your devices, by 
@@ -146,8 +184,10 @@ You can improve the performance if your machine is PC based or ARM based (some)
 with the KVM (kernel virtual machine) and your vitualization support from hardware!
 
 * The argument `accel=kvm` of the `-machine` option is equivalent to the `-enable-kvm`
-* CPU model `host requires KVM.
-* IOMMU must require KVM support, so combinations cannot be made for some cases
+* CPU model `host` requires KVM, but you must take care if you use PCI passthrough
+* Using OVMF you can passthrough devices (a graphics card), offering the virtual machine native performance
+* IOMMU must require KVM support, and `-device intel-iommu` should not be set if PCI passthrough is required
+* IOMMU needs to adding the kernel parameter `intel_iommu=on` for remapping IO in guest
 * If you start your virtual machine and experience very bad performance, should check for proper KVM support
 * KVM needs to be enabled in order to start Win7 or Win8 properly without a blue screen.
 * TPM must be enabled (throught q35 and UEFI+TPM fartures) in order to start Win10 without a blue screen.
@@ -304,6 +344,54 @@ The adition this time is the `-enable-kvm` and `-mem-path /dev/hugepages` parame
 that will bring improved performance, because will use direc hardware of the host 
 but also including RAM access mapping,  To run again or terminate such command you will 
 need to kill in another console!
+
+### Qemu and disk image storages
+
+Best options for are RAW and COW, this last the Qcow2.
+
+* Image file is more flexible, but slower rather than raw file format
+* Both supports snapshots, but Qcow2 writes snapshot directly.
+* Raw block device has better performance, but harder to manage, by example 
+  snapshot is supported with raw block device, but need to create a 
+  separate file image to write those snapshot states respect the image disk.
+* Image file is organized in units of constant size called clusters, 
+  raw image file is organized directly as the filesystem under.
+* Image file does not take all the space on disk, because does not write zeroes, 
+  but it grow faster, wasting more disk space and duplicating data if the
+  cluster size is greater than default.
+
+The RAW storage is the best option for people that has slow real hardware, 
+but will require complete file size allocation.
+
+#### Creation of disk images
+
+* RAW format: `qemu-img create -f raw storagedisk0.raw 10G`
+* Qcow2 format: `qemu-img create -f qcow2 -o cluster_size=512k storagedisk1.img 10G`
+
+#### Tune up disk storage for QCOW formats
+
+A common option is L2 table cache size, that is related to the amount of mapped 
+size of virtual disk as `disk_size = l2_cache_size * cluster_size / 8` 
+so the based on disk size you could configure qemu drives (all in bytes):
+`l2_cache_size = ( 8 * disk_size ) / cluster_size`, reasonable values are 128k 
+or 512k for `cluster_size` for calculations, 2M will take space too quickly.
+
+Default qemu option today is 32M of cache sizes, but **unfortunatelly large cache 
+sizes implicts large amount of memory, because QEMU has a separate L2 cache for 
+each qcow2 file**, that gets worse with snapshots. This will tune up.
+
+* l2-cache-size: maximum size of the L2 table, can be use in `qemu-system-<arch>` with `-drive`
+* refcount-cache-size: maximum size of refcount block, can be use in `qemu-system-<arch>` with `-drive`
+* cache-size: maximum size of both caches combined, can be use in `qemu-system-<arch>` with `-drive`
+
+By example, for the 10G previously created images:
+
+* QCOW format: `-drive file=storagedisk1.img,if=none,l2_cache-size=1572864,cache_size=2097152,refcount-cache-size=262144,cache-clean-interval=700`
+
+The values here for the 10G QCOW2 disk1 were estimated from the calculated values, 
+so will cover also disk of 15G or 20G inclusivelly, the `cache-clean-interval=700` 
+is to clean the cache cos large cache sizes implicts large amount of memory, because 
+QEMU has a separate L2 cache for each qcow2 file, that gets worse with snapshots.
 
 ### Qemu and network configurations
 
