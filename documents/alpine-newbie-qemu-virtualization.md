@@ -68,7 +68,7 @@ host system to the guest or dedicating a video card in a PCI slot to the exclusi
 | CPU and motherboard | `cortex-a7 -machine virt` | `cortex-a35 -machine virt` | no defaults, must select a machine profile |
 | Defaults on chipset | GICv2M PCI GPIO | MSI GICv2M PCI/PCIe PL011 UART | Note that ITS is not modeled in TCG mode |
 | Hardware on virtual | it depends on machine | it depends on machine | Unfortunately Arm boards are currently undocumented |
-| Use cases           | boot older software | basic testing only | migration of modern machines can be done with "q35" |
+| Use cases           | boot older software | basic testing only | you must setup specific machine board |
 | it required KVM?    | cannot be determine | not tested | if you dont use kvm you cannot translate real devices in general |
 
 #### emulation of devices and compatibility
@@ -411,6 +411,72 @@ but now we must to setup the virtual machines, taking into consideration:
   for that you must [use libvirt framework in combination](server-alpine-libvirt-qemu-virtualization.md)
 * virsh can configure and save virtual machines and later just lauch
   but this will need the [use libvirt framework in combination](server-alpine-libvirt-qemu-virtualization.md)
+
+#### Display video and device recommendations
+
+In order of best compatibilty to most improvement:
+
+1. `-device cirrus-vga,vgamem_mb=16` the most compatible with older and 
+modern systems, this has only most common features and enables the needs 
+of vgabios, uefivga, VGA ouput and any OS supported, allows max 16Mgs video 
+and is the best choice compatibility wise, pretty much any guest should 
+be able to bring up a working display on this device; on default use 4Mgs 
+of video, it not gets full hd but is close to 1024p if use 16 megs, The 
+**best option for older systems emulaton and full emulation compatibilty**
+2. `-device virtio-vga,max_outputs=2` the most compatible with modern and 
+up to date systems, has no dedicated video memory (except VGA compat.), 
+if supports vgabios, uefivga, VGA ouput, gest os will need special module 
+that is since 3.2 into linux; it gets full HD on it defaults, has (optional) 
+hardware-assisted opengl acceleration which in turn needs opengl support 
+enabled if `-display xxx,gl=on` is enabled in the qemu display (sdl/gtk), 
+**recommended for both modern or older systems with support of opengl**
+3. `-device ramfb` very simple display device; ases a framebuffer stored 
+in guest memory; does not have vga, support vgabios and uefivga; the 
+firmware initializes it and allows to use it as boot display (grub boot 
+menu, efifb, ...) without needing complex legacy VGA emulation. **Only 
+recommended for SOC devices like older ARM boars emulation**
+4. `-device bochs-display` the simple linear framebuffer, with modesetting, 
+does not have vga, supports vgabios, supports uefivga, and is linux focused; 
+firmware will setup a linear framebuffer as GOP anyway and never use any 
+legacy VGA features, so this device is **best option for UEFI related; 
+also this is best option for server virtualized implementation**.
+4. `-device xql-vga` mostly dated, it feature is multihead support to a 
+second display to remote connection, mostly for crap operating systems; 
+if supports vgabios, uefivga, VGA ouput, and any guest OS will support it; 
+featured 2D acceletarion so is mostly great for remote connection, but 
+relies on a special client, offloading 2D acceleration to the spice client
+mostly virt-viewer; **its best option for modern and older combinations**.
+5. `-device virtio-gpu,max_outputs=2` the most featured with modern and 
+up to date systems, has no dedicated video memory, it lack of VGA layer, 
+only has uefivga, will reduce the attack surface (no VGA emulation) and 
+reduce the memory footprint by 8 MB (no pci memory bar for VGA compatibility);
+that is since 4.0 into linux; it gets full HD on it defaults, has (optional) 
+hardware-assisted opengl acceleration which in turn needs opengl support 
+enabled if `-display xxx,gl=on` is enabled in the qemu display (sdl/gtk)
+gpu data will be stored in main memory instead. **This option is the best 
+for linux or mac modern system and moder platform desktop emulation**
+
+#### Audio and Network device recommendations
+
+For audio in order of best compatibilty to most improvement:
+
+1. `-device AC97` is enought for older or newer devices, it comes with 
+the mic and output at the same time, all the inputs and ouputs are auto 
+mapped to the backend and provided without , this is the **best option 
+for emulation of 32 or 64 bits of ARM or X86 based computers**
+2. `-device intel-hda -device hda-duplex` the High definition audio, 
+that must be provided with a specific device way, the `hda-duplex` 
+**will provide only "line in" and "line out" sound, no mic allowed**.
+3. `-device intel-hda -device hda-micro` the High definition audio, 
+that must be provided with a specific device way, the `hda-micro` 
+**will provide only "mic in" and "line out" sound, no "line in" allowed**.
+
+For network devices this will rely n two options only:
+
+* `-device rtl8139,netdev=nd1 -netdev user,id=nd1` is the most compatible 
+for older or newer systems, performance is enought decent.
+* `-device virtio-net,netdev=nd1 -netdev user,id=nd1` is usefully for 
+newer guest operating systems, performance will need of KVM.
 
 ## see also
 
