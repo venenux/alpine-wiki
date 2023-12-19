@@ -1,6 +1,6 @@
 # alpine qemu emulation
 
-`qemu` its a emulation system that uses KVM (kernel virual machine) and also are capable of hypervision!
+`qemu` its a emulation system that uses KVM (kernel virtual machine) and also are capable of hypervision!
 
 Initially QEMU was an emulation engine, with a Just-In-Time compiler (TCG) 
 to dynamically translate target instruction set architecture (ISA) to host ISA.
@@ -14,11 +14,11 @@ Only system level (aka supervisor/ring0) instructions might be emulated/intercep
 #### modes of emulation:
 
 * Full: the qemu emulates all the machine, like have a pc inside other pc
-* USer: the qemu uses binary translation so prograsm runs like into the native orignal machine
+* USer: the qemu uses binary translation so programs runs like into original machine
 
-#### terminology to understand mechanish
+#### terminology to understand mechanism
 
-The **host** is the plaform and architecture which QEMU is running on, is the native 
+The **host** is the platform and architecture which QEMU is running on, is the native 
 machine where the qemu will run the virtual machine
 
 The **guest** is the architecture which is emulated by QEMU, is the target machine 
@@ -28,7 +28,7 @@ The **device front** end is how a device is presented to the guest. The type of
 device presented should match the hardware that the guest operating system is 
 expecting to see. All devices can be specified with the `--device` command line option. 
 Running QEMU with the command line options `--device help` will list all devices.
-Running QEMU with command line `--device foo,help` will list optons for "foo" device.
+Running QEMU with command line `--device foo,help` will list options for "foo" device.
 The **device front* end is often paired with a back end, which describes how the 
 hosts devices resources are used in the emulation.
 
@@ -102,7 +102,7 @@ Sometimes higher performance means less flexibility
 ### QEMU setup for simple virtualization
 
 The program can be used no matter if you have hardware support or not in its 
-simples way, of couse is the most slow way to use emulation but runs on any system. 
+simplest way, of couse is the most slow way to use emulation but runs on any system. 
 For advanced usage with KVM and hardware support forward to the next 
 mayor section [QEMU with KVM and hardware virtualization](#qemu-with-kvm-and-hardware-virtualization).
 
@@ -150,24 +150,24 @@ We can just boot a machine from a simple boot device:
 
 #### Error initialization on qemu if no display
 
-If you dont have a X11 sesions, or if you dont have allowed to share your devices, by 
+If you dont have a X11 sessions, or if you dont have allowed to share your devices, by 
 example when you run linux inside shit operating systems, will raise some errors like:
 
-* `Error GTK initialization failed` means you dont have any X11 sesion running 
-or you dont have allowe to connect to the x11 sesions (by example if you run from non 
+* `Error GTK initialization failed` means you dont have any X11 session running 
+or you dont allow to connect to the x11 sessions (by example if you run from non 
 linux host or inside a crap operating system)
 * `MESA-LOADER: failed to open ...` means you cannot see the display running 
 or you dont install X11/mesa environment/packages yet (by example running server only 
 linux host or inside a crap operating system)
 
-Solution is to run healess and setup non graphics output screen, next setups will 
+Solution is to run headless and setup non graphics output screen, next setups will 
 show two ways, first we just see the text only way with no X11 allowed:
 
 
 #### Running qemu machines with simple emulation but no X11 output only text
 
 We can just boot a machine but with arguments display to "ncurses" to run 
-with no need of instalations of Xorg complete software:
+with no need of installations of Xorg complete software:
 
 ```
 /usr/bin/qemu-system-i386 -name "alpinebootqemu2" -display curses
@@ -181,16 +181,16 @@ To run again or terminate such command you will need to kill in another console!
 ### QEMU with KVM and hardware virtualization
 
 You can improve the performance if your machine is PC based or ARM based (some) 
-with the KVM (kernel virtual machine) and your vitualization support from hardware!
+with the KVM (kernel virtual machine) and your virtualization support from hardware!
 
-* The argument `accel=kvm` of the `-machine` option is equivalent to the `-enable-kvm`
+* The argument `accel=kvm` of the `-machine` option is equivalent to the `-accel kvm`
 * CPU model `host` requires KVM, but you must take care if you use PCI passthrough
-* Using OVMF you can passthrough devices (a graphics card), offering the virtual machine native performance
-* IOMMU must require KVM support, and `-device intel-iommu` should not be set if PCI passthrough is required
-* IOMMU needs to adding the kernel parameter `intel_iommu=on` for remapping IO in guest
-* If you start your virtual machine and experience very bad performance, should check for proper KVM support
-* KVM needs to be enabled in order to start Win7 or Win8 properly without a blue screen.
-* TPM must be enabled (throught q35 and UEFI+TPM fartures) in order to start Win10 without a blue screen.
+* The passthrough options offers the virtual machine native performance with KVM
+* IOMMU requires KVM, and `-device intel-iommu` should not be set if PCI passthrough
+* IOMMU needs add kernel parameter `iommu=on` for remapping IO in guest
+* On virtual machine with bad performance, should check for proper KVM support
+* KVM is required in order to start Win7 or Win8 properly without a blue screen
+* TPM is need (thought q35 and UEFI+TPM features) to start Win10 without errors
 
 #### Where can be loaded the KVM support
 
@@ -204,7 +204,7 @@ are same or similar architecture**, some examples:
 | emulate i386  | amd64   | i386    | Yes         |
 | emulate arm   | i386    | arm     | no, there is no common hardware for kvm |
 | emulate i386  | aarch64 | i386    | no, there is no common hardware for kvm |
-| emulate arm   | aarch64 | armv7   | Yes, but becouse host already has all the guest cpu feaures |
+| emulate arm   | aarch64 | armv7   | Yes, but because host already has all the guest cpu feaures |
 | emulate arm   | armv6   | armv7   | Yes, **but limited** host does not support all the guest features |
 | emulate amd64 | amd64   | amd64   | Yes, only if host is a more recent cpu rather than guest |
 | emulate arm   | aarch64 | aarch64 | Yes, only if host is a more recent cpu rather than guest | |
@@ -212,7 +212,7 @@ are same or similar architecture**, some examples:
 #### Checking Virtualization Hardware support
 
 You must check if your CPU support emulation by the command:
-`apk add arch-install-scripts && lscpu | grep Virtualization`, this is necesary 
+`apk add arch-install-scripts && lscpu | grep Virtualization`, this is necessary 
 for `kvm` implementation, if the above command does not show nothing you cannot 
 do such emulation.
 
@@ -254,40 +254,64 @@ We can just boot a machine but with arguments to enable KVM and
 display to "ncurses" to avoid X11 xorg software:
 
 ```
-/usr/bin/qemu-system-i386 -name "alpinebootqemu3" -enable-kvm -display curses
+/usr/bin/qemu-system-i386 -name "alpinebootqemu3" -accel kvm -display curses
 ```
 
-The adition of `-enable-kvm` can be combined with acceleration machine, 
-if the host is amd64 then this i386 will run accelerated:
+The addition of `-accel kvm` if the host is amd64 then this i386 virtual machine 
+will run accelerated, will give improved performance, because will use direct 
+hardware of the host machine.
 
-```
-/usr/bin/qemu-system-i386 -name "alpinebootqemu4" -enable-kvm -machine accel=kvm -display curses
-```
-
-The adition this time is the `-machine accel=kvm` parameter that will give 
-improved performance, because will use direc hardware of the host machine.
 To run again or terminate such command you will need to kill in another console!
 
 #### Running the qemu without the kvm support
 
 If your computer that will act as host it does not support the KVM 
-infraestructure you can deactivate it explicit in command line:
+infrastructure you can deactivate it explicit in command line:
 
 ```
-/usr/bin/qemu-system-$(uname -m) -name "alpinebootqemu5" -no-kvm -display curses
+/usr/bin/qemu-system-i386 -name "alpinebootqemu5" -accel tcg -display curses
 ```
 
-Obviously you will not need to confiugure any KVM or qemu group or user, 
+Obviously you will not need to configure any KVM or qemu group or user, 
 the qemu system will just interpreted all the things but will runs more slow also.
 
-This time we parsed `-no-kvm` but you can also add `-machine accel=tcg` to try 
+This time we parsed `-accel tcg` but you can also add `-machine accel=tcg` to try 
 others ways of optimization. To run again or terminate such command you will 
 need to kill in another console!
 
-### QEMU with HugePages memory
+## QEMU and the memory - the IOMMU or DMAR and hugepages
+
+IOMMU (Input/Output Memory Management Unit) is a feature of some CPUs that allows 
+to map physical and virtual memory addresses to manage resources securely; this 
+prevent buffer overflow attacks and other security threats by allowing devices 
+to access only the memory regions that are explicitly allocated to them.
+
+The IOMMU allows each VM to have its own virtual address space, preventing one VM 
+from accessing the memory of another VM or the host system where multiple virtual 
+machines (VMs) share the same physical hardware.
+
+**Hugepages allows to map huge address of RAM more faster, so IOMMU is highly 
+necessary to and for emulation of unknown or insecure operating systems.**, 
 
 Here we will configure hugepages for default system setup, 
 for more deep use [alpine-newbie-hugepages.md](alpine-newbie-hugepages.md)
+
+#### Checking IOMMU or DMAR support
+
+You must run a kernel with support for IOMMU, most of the desktop focused linux 
+do not enable it, so you must check with two steps:
+
+1. Check if the CPU already were factorized for that. (Any xeon is)
+2. Check if BIOS/motherboard already set the feature and enable it!
+    * the IOMMU technology is called "Intel VT-d" for intel CPUs
+    * the IOMMU technology is called "AMD-Vi" or IOMMU for AMD CPUs
+3. Add to the kernel parameters the `iommu=on` after `ro` part on grub or `cmdline` 
+4. After reboot check with root command: `dmesg | grep -e DMAR -e IOMMU`
+
+You should see a "DMAR" word (if intel) or "IOMMU" word (if AMD).
+
+Specifically, `iommu` kernel parameter manages the use of this technology in the 
+system, there are also `intel_iommu` is for intel and `amd_iommu` for amd.
 
 #### Auto Configure the hugepages for qemu
 
@@ -337,13 +361,24 @@ will depends of your current group, here we are using the "qemu" group for acces
 #### running qemu with hugepages memory support and KVM acceleration
 
 ```
-/usr/bin/qemu-system-$(uname -m) -name "alpinebootqemu6" -enable-kvm -mem-path /dev/hugepages -display curses
+/usr/bin/qemu-system-i386 -accel kvm -mem-path /dev/hugepages -display curses
 ```
 
-The adition this time is the `-enable-kvm` and `-mem-path /dev/hugepages` parameters 
+The addition this time is the `-accel kvm` and `-mem-path /dev/hugepages` parameters 
 that will bring improved performance, because will use direc hardware of the host 
 but also including RAM access mapping,  To run again or terminate such command you will 
 need to kill in another console!
+
+### Qemu and network configurations
+
+Network configurations are the first way to configure communication support 
+with guess from host, network configuration is always auto configured.
+
+Keep in mind that communicating with the virtual machine management is not the same 
+as communicating with the virtualized system, for management and communication of 
+the virtual machine see the connection section using sockets or ports below.
+
+TODO
 
 ### Qemu and disk image storages
 
@@ -365,8 +400,17 @@ but will require complete file size allocation.
 
 #### Creation of disk images
 
-* RAW format: `qemu-img create -f raw storagedisk0.raw 10G`
+* RAW format: `qemu-img create -f raw -o preallocation=full storagedisk0.raw 10G`
 * Qcow2 format: `qemu-img create -f qcow2 -o cluster_size=512k storagedisk1.img 10G`
+
+The RAW image file format is best for fast implementation, for best performance 
+using a qcow2 image file, increase the cluster size when creating the qcow2 file, 
+around 2 Megs and also perform a preallocation like we done with RAW before.
+
+* `qemu-img create -f qcow2 -o cluster_size=2M,reallocation=full storagedisk1.img 10G`
+
+**Warning** this will make that the storage gain performance but this defeats 
+thin provisioning, also mayor cluster size will increase waste of storage.
 
 #### Tune up disk storage for QCOW formats
 
@@ -384,23 +428,49 @@ each qcow2 file**, that gets worse with snapshots. This will tune up.
 * refcount-cache-size: maximum size of refcount block, can be use in `qemu-system-<arch>` with `-drive`
 * cache-size: maximum size of both caches combined, can be use in `qemu-system-<arch>` with `-drive`
 
-By example, for the 10G previously created images:
+By example, for the 10G previously created images add to the qemu command VM this:
 
-* QCOW format: `-drive file=storagedisk1.img,if=none,l2_cache-size=1572864,cache_size=2097152,refcount-cache-size=262144,cache-clean-interval=700`
+* `-drive file=storagedisk1.img,if=none,l2_cache-size=1572864,cache_size=2097152,refcount-cache-size=262144,cache-clean-interval=700`
 
 The values here for the 10G QCOW2 disk1 were estimated from the calculated values, 
 so will cover also disk of 15G or 20G inclusivelly, the `cache-clean-interval=700` 
 is to clean the cache cos large cache sizes implicts large amount of memory, because 
 QEMU has a separate L2 cache for each qcow2 file, that gets worse with snapshots.
 
-### Qemu and network configurations
+#### Storage device recommendations
 
-Network configurations si the first way to configure communication support 
-with guess from host, network configuration is always autoconfigured.
+This depends of the virtual machine, over x86 by default uses SATA `ich9-ahci` 
+but for ARM you must specify based oon the machine to emulated, there is 
+a option generic but guess (emulated OS) will need virtio modules on kernel.
 
-TODO
+Also it depends of the virtualization, if you wil use file storage virtualization 
+(using a virtual hard disk and not real hard disk through passthrought) you must 
+tune up the file of virtual disk and also the device of storage. On other case, 
+if you use the real hardware is more complicated, you must know address and 
+feature limits of the real hardware storage to use.
 
-### Qemu usage
+For file based virtual storage those are from best to most featured:
+
+1. `-device virtio-blk,drive=hd0` is newer virtio block device for file storage 
+emulation **best option for performance but dont support huge amount of "disks"**
+is prefered for ARM and Amd64 emulation, can be used on any emulation if the 
+kernel of operating system support it!
+2. `-device ide-hd,drive=hd0` is the most compatible storage device front, use 
+it for older emulations. Will be a SATA similar to `ich9-ahci` if not specify in 
+the drive with `if=ide` so will be `-drive file=storagedisk1.img,if=ide,id=hd0` 
+so for older emulation with older OSs this could be best option.
+3. `-device virtio-scsi -device scsi-hd,drive=hd0` is newer virtio block device 
+for file storage emulation **best option for huge amount of "disks" but less 
+performance** is prefered for server cluster emulation, can be used on any emulation 
+if the kernel of operating system support it! Dont use it on older OSs.
+
+With the `aio=threads` option is the preferred option when storing the VM image 
+file on an ext4 file system. With other file systems, `aio=native` must be used.
+
+More complex combinations can be made, inclusive just usage of one partition, 
+event a complete hard drive, or network mount drive also.
+
+## Qemu usage
 
 We learned how to setup property the environment to run qemu 
 but now we must to setup the virtual machines, taking into consideration:
@@ -418,18 +488,19 @@ In order of best compatibilty to most improvement:
 
 1. `-device cirrus-vga,vgamem_mb=16` the most compatible with older and 
 modern systems, this has only most common features and enables the needs 
-of vgabios, uefivga, VGA ouput and any OS supported, allows max 16Mgs video 
+of vgabios, uefivga, VGA output and any OS supported, allows max 16Mgs video 
 and is the best choice compatibility wise, pretty much any guest should 
 be able to bring up a working display on this device; on default use 4Mgs 
 of video, it not gets full hd but is close to 1024p if use 16 megs, The 
-**best option for older systems emulaton and full emulation compatibilty**
+**best option for older systems emulation and full emulation compatibility**
 2. `-device virtio-vga,max_outputs=2` the most compatible with modern and 
 up to date systems, has no dedicated video memory (except VGA compat.), 
-if supports vgabios, uefivga, VGA ouput, gest os will need special module 
+if supports vgabios, uefivga, VGA output, gest os will need special module 
 that is since 3.2 into linux; it gets full HD on it defaults, has (optional) 
 hardware-assisted opengl acceleration which in turn needs opengl support 
 enabled if `-display xxx,gl=on` is enabled in the qemu display (sdl/gtk), 
 **recommended for both modern or older systems with support of opengl**
+but will require KVM support on host machine.
 3. `-device ramfb` very simple display device; ases a framebuffer stored 
 in guest memory; does not have vga, support vgabios and uefivga; the 
 firmware initializes it and allows to use it as boot display (grub boot 
@@ -442,8 +513,8 @@ legacy VGA features, so this device is **best option for UEFI related;
 also this is best option for server virtualized implementation**.
 4. `-device xql-vga` mostly dated, it feature is multihead support to a 
 second display to remote connection, mostly for crap operating systems; 
-if supports vgabios, uefivga, VGA ouput, and any guest OS will support it; 
-featured 2D acceletarion so is mostly great for remote connection, but 
+if supports vgabios, uefivga, VGA output and any guest OS will support it; 
+featured 2D acceleration so is mostly great for remote connection, but 
 relies on a special client, offloading 2D acceleration to the spice client
 mostly virt-viewer; **its best option for modern and older combinations**.
 5. `-device virtio-gpu,max_outputs=2` the most featured with modern and 
@@ -454,14 +525,15 @@ that is since 4.0 into linux; it gets full HD on it defaults, has (optional)
 hardware-assisted opengl acceleration which in turn needs opengl support 
 enabled if `-display xxx,gl=on` is enabled in the qemu display (sdl/gtk)
 gpu data will be stored in main memory instead. **This option is the best 
-for linux or mac modern system and moder platform desktop emulation**
+for linux or mac modern system and modern platform desktop emulation** 
+but will require of KVM on host machine.
 
 #### Audio and Network device recommendations
 
 For audio in order of best compatibilty to most improvement:
 
-1. `-device AC97` is enought for older or newer devices, it comes with 
-the mic and output at the same time, all the inputs and ouputs are auto 
+1. `-device AC97` is enough for older or newer devices, it comes with 
+the mic and output at the same time, all the inputs and outputs are auto 
 mapped to the backend and provided without , this is the **best option 
 for emulation of 32 or 64 bits of ARM or X86 based computers**
 2. `-device intel-hda -device hda-duplex` the High definition audio, 
@@ -471,12 +543,51 @@ that must be provided with a specific device way, the `hda-duplex`
 that must be provided with a specific device way, the `hda-micro` 
 **will provide only "mic in" and "line out" sound, no "line in" allowed**.
 
-For network devices this will rely n two options only:
+For network devices this will rely on two options only:
 
 * `-device rtl8139,netdev=nd1 -netdev user,id=nd1` is the most compatible 
 for older or newer systems, performance is enought decent.
 * `-device virtio-net,netdev=nd1 -netdev user,id=nd1` is usefully for 
 newer guest operating systems, performance will need of KVM.
+
+#### Manage running qemu instance with qemu monitor and TCP connection
+
+If you need to communicate with qemu remotely you can send network commands, by 
+**using a TCP session over monitor and netcat**, for that the virtual machine instance 
+must have a name with `-name` and declare a tcp/address with `-monitor` so we can 
+use a unix connection to communicate with the virtual machine for commands.
+
+
+1. Install need tools apart of qemu like `apk add netcat-openbsd`
+2. Run qemu VM, add arguments with `-monitor tcp:0.0.0.0:<port>,server,nowait;`
+3. No you can use netcat as: `echo info\ status |nc -N <ip> <port>`
+
+Example: `echo info\ status |nc -N localhost 19101` if you run both in same machine 
+and qemu was run with addition of `-monitor tcp:0.0.0.0:19101,server,nowait`.
+
+This method is the most **insecure due lack of ssl, but the most flexible** because 
+the connection can be made across network.
+
+#### Manage running qemu instance with qemu monitor and Unix socket connection
+
+If you need to communicate with qemu locally but secure you can send socket commands, 
+**using unix socket and `sockat` utility**, for that the virtual machine instance 
+must have a name with `-name` and declare a unix/socket with `-monitor` so we can 
+use a unix connection to communicate with the virtual machine for commands.
+
+
+1. Install need tools apart of qemu like `apk add sockat`
+2. Run qemu VM, add arguments with `-monitor unix:<path/to/socketname>,server,nowait;`
+3. No you can use netcat as: `echo info\ status |nc -N <ip> 19101`
+
+Example: `echo "info status" | socat - unix-connect:qemuvm1socket` if you run 
+both in same directory (qemu in one tty/console and socat in another tty/console) 
+and qemu was run with addition of `-monitor unix:qemuvm1socket,server,nowait`
+
+This method is the most **elegant and secure, but the most limited** becouse 
+the unix socket is only local, or NFS made.
+
+You can made a session monitor: `socat -,echo=0,icanon=0 unix-connect:qemuvm1socket`
 
 ## see also
 

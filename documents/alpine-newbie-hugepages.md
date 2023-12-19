@@ -29,7 +29,17 @@ Excessive page size wastes memory space, causes memory fragmentation,
 and reduces memory utilization. That is the reason because large pages 
 only has meaning in large amounts of memory.
 
-#### Standar Default hugepages and page sizes
+#### Importance of configuring memory access
+
+IOMMU (Input/Output Memory Management Unit) is a feature of some CPUs that allows 
+to map physical and virtual memory addresses to manage resources securely; this 
+prevent buffer overflow attacks and other security threats by allowing devices 
+to access only the memory regions that are explicitly allocated to them.
+
+**Hugepages allows to map huge address of RAM more faster, so IOMMU is highly 
+necessary to and for control of unknown or insecure access to mapped memory.**, 
+
+#### Standard Default hugepages and page sizes
 
 The operation system do not have a official interface or configuration for hugepages 
 and there is no standard for the hugepage filesystem or sizes
