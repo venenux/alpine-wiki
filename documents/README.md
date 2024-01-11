@@ -25,6 +25,7 @@ Linux is just the **kernel** that handles and manages the **hardware** to the op
     * [Developer](#developer)
         * [Developers: compilers, IDE's and tools](#developer)
     * [Servers: deploy in production](#servers--deploy-in-production)
+        * [fail2ban: server protection](server-alpine-fail2ban-professional.md)
 * [Community and contact](#community)
 
 ## Feature Differences
@@ -157,6 +158,7 @@ All the Development process are detailed for newbie users in the Alpine newbie d
 4. [Alpine newbie qemu virtualization](alpine-newbie-qemu-virtualization.md)
 
 * Special documentation:
+    * How to protect professinally servers [server-alpine-fail2ban-professional.md](server-alpine-fail2ban-professional.md)
     * How to setup apache professional at [server-alpine-apache2-professional.md](server-alpine-apache2-professional.md)
     * How to setup gitea professional at [server-alpine-gitea-professional.md](server-alpine-gitea-professional.md)
     * Implementation of a certificate [guide-only-dehydrated.md](guide-only-dehydrated.md)
