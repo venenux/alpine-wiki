@@ -373,6 +373,8 @@ rc-service mariadb restart
 rc-update add mariadb
 ```
 
+For information and more deep setup check [../documents/server-alpine-mysql-professional.md](../documents/server-alpine-mysql-professional.md)
+
 #### PostgreSQL instalation and configuration
 
 1. install postgres packages **WARNING** since alpine v3.15 the pacakge has name scheme version number
@@ -443,7 +445,9 @@ CPReuse		=
 odbcinst -u -d -f /tmp/tmpmdb.tmp
 ```
 
-> **Warning**  the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
+> **Warning** the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
+
+> **Warning** if your alpine version is too older, you cannot use the mysql edge package for odbc unfortunatelly
 
 ## Extra needs
 

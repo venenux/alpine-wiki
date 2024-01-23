@@ -123,6 +123,8 @@ rc-update add gitea default
 service gitea status
 ```
 
+For information and more deep setup check [../documents/server-alpine-mysql-professional.md](../documents/server-alpine-mysql-professional.md)
+
 ##### Option 1.C Setup backend PostgreSQL
 
 ```
