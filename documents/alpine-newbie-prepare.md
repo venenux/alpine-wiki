@@ -1,60 +1,43 @@
+When starting to learn something, you should consider your capabilities and the availability of resources:
 
-.. firs of all.. When starting to learn something, you should weigh 
-your capabilities and availability of resources:
+## 1 - Check Requirements
 
-## 1 - Check requirements
+As humans, we have real-life requirements and related requirements.
 
-We are persons, [we have real life requirements](#real-life-requirements) 
-and after [we need related requirements](#related-requirements).
+### Real Life Requirements
 
-### Real life requirementes
+* **Manners**: You must have a passion for reading and analysis.
+* **Time**: You will need time because you will need to read a lot!
+* **Device**: You should have a computer, or at least a phone, or something similar. For example, you could use Termux or iOS for phones.
 
-* **Manners**, you will must have a vocation for reading and analysis.
-* **Time**, you will need time, cos you will need to read a lot!
-* **Device**, you should have a computer, or phone at least, or similar, by example using [Termux or IOs for phones](alpine-tutorial-in-phones.md) 
+### Related Requirements
 
-### Related requirementes
+* **Knowledge**: You should have knowledge of using Linux, Git, and editors.
+ * **vi/nano**: You must know how to use vi and nano editors. Just writing and saving are enough.
+ * **Linux File System Hierarchy (LFSH)**: You must read about the Linux file system hierarchy. You just need to know where the files should go.
+ * **Git**: You must know minimal usage of Git. Just cloning and pulling are enough.
+* **Unix-like**: You should have some way to interact with a Unix-like operating system, like MacOS or Linux.
+ * **xterm**: You must know how to use xterm. You should be able to copy/paste text and manage a terminal command line.
+ * **SSH**: You must know how to use SSH at the command line.
+* **Internet**: You need minimal bandwidth on an internet network because almost all development forces you to contribute over the internet.
 
-* **Knowledge** have knowledge of using linux, git and editors
-    * **vi/nano** you must know how to use VI and NANO editors, just write and save are enought
-    * **LFSH** you must read about the linux filesystem hierarchy, just where the files should go
-    * **git** you must know minimal usage of git, just clone and pull are enought
-* **Unix-like**, you should have some kind of way to interact with a UNIX like operating system, like MAC or Linux.
-    * **xterm** you must know how to use, cpy/paste text and manage a terminal command line
-    * **ssh** you ust know how to use SSH at the comand line
-* **Internet**, and minimal bandwitch of internet network.. cos almost today all the development will forced to you to contribute over internet.
+## 2 - Where to Start
 
-## 2 - Where to start
-
-Please, check requirements mentioned above, before continues; **this material 
-(newbie sections) assumes a more general level and helps you to follow the steps more slowly:
-**Of course the first document to read is [alpine-newbie-install.md](alpine-newbie-install.md).**
-and then **after install read [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)**
-
-But for more focused guides, the requirements mentioned above are mandatory, 
-without them you will not be able to understand the documents at the [../tutorials/](../tutorials/) 
-directory space, **guides or tutorials will assume you already have those knowledge requirements**.
+Please, check the requirements mentioned above, before continuing. This material (newbie sections) assumes a more general level and helps you to follow the steps more slowly. Of course, the first document to read is [alpine-newbie-install.md](alpine-newbie-install.md). After installation, read [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md). But for more focused guides, the requirements mentioned above are mandatory. Without them, you will not be able to understand the documents in the [../tutorials/](../tutorials/) directory space. Guides or tutorials will assume you already have those knowledge requirements.
 
 ### WARNING
 
-* First of all, if you do not use Linux before, this is not a "click click click" environment
-* Second: if you comes from other Linux, there are a huge difference respect others: MUSL libc!
+* First of all, if you have not used Linux before, this is not a "click click" environment.
+* Second: if you come from other Linux distributions, there are significant differences compared to others, such as MUSL libc!
 
-Al of those means that most of the programs may need manual intervention of precompilation.
-IF you plan to use Alpine Linux as desktop maybe you will find a difficult path but, 
-its totally workable, and also pretty best performed. Alpine its best know for usage over containers, 
-like dockers or virtual machines.
+This means that most of the programs may require manual intervention or precompilation. If you plan to use Alpine Linux as a desktop, you might find the path difficult, but it's totally manageable and also has excellent performance. Alpine is best known for usage in containers, like Docker or virtual machines.
 
-### About copyright material
+### About Copyright Material
 
-**CC BY-NC-SA**: the project allows reusers to distribute, remix, adapt, and build upon the material 
-in any medium or format for noncommercial purposes only, and only so long as attribution is given 
-to the creators involved. If you remix, adapt, or build upon the material, you must license the modified 
-material under identical terms,  includes the following elements:
+The project allows reusers to distribute, remix, adapt, and build upon the material in any medium or format for noncommercial purposes only, and only so long as attribution is given to the creators involved. If you remix, adapt, or build upon the material, you must license the modified material under identical terms, which include the following elements:
 
-* **BY**  – Credit must be given to the creator of each content respectivelly, starting at the first contributor.
-* **NC**  – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
-* **SA**  – Adaptations must be shared under the same terms, you must obey this terms and do not change it.
+* **BY** – Credit must be given to the creator of each content respectively, starting at the first contributor.
+* **NC** – Only noncommercial uses of the work are permitted, with exceptions if you fill an issue here!
+* **SA** – Adaptations must be shared under the same terms. You must obey these terms and not change them.
 
 Please check our [../alpine/copyright.md](../alpine/copyright.md).
-
