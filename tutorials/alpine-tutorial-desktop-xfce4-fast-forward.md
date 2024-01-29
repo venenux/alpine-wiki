@@ -210,8 +210,10 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-adobe-utopia-type1 font-adobe-utopia-75dpi font-adobe-utopia-100dpi \
  font-isas-misc
 
-apk add alsa-utils alsa-plugins alsa-tools alsaconf \
+apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf \
  pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez
+
+amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - memlock 256
@@ -219,11 +221,15 @@ cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - rtprio 88
 EOF
 
+rc-update add alsa
+
 rc-service dbus restart
 
 rc-service elogind restart
 
 rc-service polkit restart
+
+rc-service alsa restart
 
 rc-service lightdm restart
 

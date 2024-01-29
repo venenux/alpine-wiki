@@ -461,18 +461,27 @@ we are in transition to the wonderful pipewire framework.
 
 1. install the base audio subsystem software
 2. install the base audio framework user support
-3. restart bus communicacion, due we already have the software video subsystem support bus communication
-4. setup the access prority for the audio communication
-5. install optional bluetooth software support if you have a bluez audio card or phones
-6. setup the bluetooth service
-7. start the bluetooth service so the audio devices can be stablished
+3. set alsa to start on each boot
+4. restart bus communicacion, due we already have the software video subsystem support bus communication
+5. setup the mixed volumes, becous comes muted
+6. setup the access prority for the audio communication
+7. install optional bluetooth software support if you have a bluez audio card or phones
+8. setup the bluetooth service
+9. start the bluetooth service so the audio devices can be stablished
 
 ```
 apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf
 
 apk add pipewire pipewire-doc pipewire-pulse pipewire-alsa sndio sndio-doc
 
+rc-update add alsa
+
 rc-service dbus restart
+
+amixer sset Master unmute;
+amixer sset PCM unmute;
+amixer set Master 100%;
+amixer set PCM 100%;
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - memlock 256
