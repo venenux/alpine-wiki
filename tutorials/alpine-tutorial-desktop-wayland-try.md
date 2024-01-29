@@ -200,7 +200,7 @@ apk add xf86-input-evdev cairo pango pixman \
 apk add bluez bluez-openrc polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
  dbus dbus-x11 elogind elogind-openrc \
  gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind 
+ networkmanager-elogind
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -214,7 +214,7 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-isas-misc
 
 apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf \
- pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez
+ pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez sndio wireplumber-logind
 
 amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
@@ -304,7 +304,7 @@ all the sesion and login GUI managers runs over Xorg.
 
 ```
 apk add lightdm elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind \
- lightdm-lang lightdm-gtk-greeter 
+ lightdm-lang lightdm-gtk-greeter wireplumber-logind
 
 rc-update add lightdm
 
@@ -324,7 +324,7 @@ apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-de
 #### multimedia and device enhanced
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good \
+apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugin-pipewire \
  libcanberra-gstreamer wxgtk-media \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 

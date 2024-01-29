@@ -211,8 +211,8 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-adobe-utopia-type1 font-adobe-utopia-75dpi font-adobe-utopia-100dpi \
  font-isas-misc
 
-apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf \
- pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez
+apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf sndio \
+ pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez wireplumber-logind
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - memlock 256
@@ -354,7 +354,7 @@ apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-de
 #### Desktop multimedia and media devices
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk \
+apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
  libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 

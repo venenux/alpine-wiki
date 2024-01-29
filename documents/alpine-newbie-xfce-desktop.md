@@ -464,7 +464,7 @@ we are in transition to the wonderful pipewire framework.
 3. set alsa to start on each boot
 4. restart bus communicacion, due we already have the software video subsystem support bus communication
 5. setup the mixed volumes, becous comes muted
-6. setup the access prority for the audio communication
+6. setup the access prority for the audio communication and pipewrite also
 7. install optional bluetooth software support if you have a bluez audio card or phones
 8. setup the bluetooth service
 9. start the bluetooth service so the audio devices can be stablished
@@ -472,7 +472,7 @@ we are in transition to the wonderful pipewire framework.
 ```
 apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf
 
-apk add pipewire pipewire-doc pipewire-pulse pipewire-alsa sndio sndio-doc
+apk add pipewire pipewire-doc pipewire-pulse pipewire-alsa pipewire-jack sndio sndio-doc wireplumber-logind
 
 rc-update add alsa
 
@@ -484,9 +484,12 @@ amixer set Master 100%;
 amixer set PCM 100%;
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
-@audio - memlock 256
+@audio - memlock 4096
 @audio - nice -11
 @audio - rtprio 88
+@pipewire - memlock 4194304
+@pipewire - nice -19
+@pipewire - rtprio 95
 EOF
 
 apk add bluez bluez-openrc pipewire-spa-bluez
@@ -503,6 +506,26 @@ the only kind of devices not covered yet until this point are printers.
 For any desktop this is the point where you choose which graphical environment 
 or desktop to install. Next section will prefers the XFCE4 desktop setup, 
 currently ws the first and its the most complete desktop packaged in the repos.
+
+> **Warning**: pipewire needs `XDG_RUNTIME_DIR` configured correctly, if not `~/pulse` will be created and **pavucontrol** willnot access to!
+
+##### pipewire running without graphical session
+
+This means **no dbus** and no `XDG_RUNTIME_DIR` setup, the pipewrite can 
+be configured to assumed never will exits a graphical session running:
+
+```
+cp -a /usr/share/pipewire /etc
+
+cp -a /usr/share/wireplumber /etc
+
+sed -i 's|.*support.dbus.* =.*|    support.dbus = false|g' /etc/pipewire/pipewire.conf
+sed -i 's|.*support.dbus.* =.*|    support.dbus = false|g' /etc/wireplumber/wireplumber.conf
+sed -i 's|.*\["with-logind"\].*=.*|  ["with-logind"] = false|g' /etc/wireplumber/bluetooth.lua.d/50-bluez-config.lua
+sed -i 's|.*\["alsa.reserve"\].*=.*|  ["alsa.reserve"] = false|g' /etc/wireplumber/main.lua.d/50-alsa-config.lua
+```
+
+**Only do this if you never will run a managed xdg sesion or x11/wayshit setup**
 
 ## instalacion Xfce4 Alpine
 
@@ -566,15 +589,15 @@ and minimal support for editing.
 14. at this point logout and relogin from your current sesion to start to work
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-bad-lang gst-plugins-ugly gst-plugins-ugly-lang gst-plugins-good gst-plugins-good-gtk
+apk add gst-plugins-base gst-plugins-bad gst-plugins-bad-lang gst-plugins-ugly gst-plugins-ugly-lang gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire
 
-apk add libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang
+apk add libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang pipewire-pulse pipewire-zeroconf pipewire-lang
 
 apk add mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc 
 
 apk add mpv mpv-doc deadbeef deadbeef-lang deadbeef-doc
 
-apk add gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp pcmanfm
+apk add gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp pcmanfm blueman
 
 apk add libxinerama xrandr wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils
 
