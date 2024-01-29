@@ -356,7 +356,7 @@ configure the graphical environment to property setup any desktop.
 17. install software backend for usage of abstract device filesystem representation using FUSE user space
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux zram-init
+apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux zram-init
 
 rc-update add udev
 rc-update add acpid
@@ -470,7 +470,7 @@ we are in transition to the wonderful pipewire framework.
 9. start the bluetooth service so the audio devices can be stablished
 
 ```
-apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf
+apk add alsa-utils alsa-utils-doc alsa-plugins alsa-plugins-doc alsa-tools alsa-tools-doc alsaconf linux-pam
 
 apk add pipewire pipewire-doc pipewire-pulse pipewire-alsa pipewire-jack sndio sndio-doc wireplumber-logind
 
@@ -512,7 +512,8 @@ currently ws the first and its the most complete desktop packaged in the repos.
 ##### pipewire running without graphical session
 
 This means **no dbus** and no `XDG_RUNTIME_DIR` setup, the pipewrite can 
-be configured to assumed never will exits a graphical session running:
+be configured to assumed never will exits a graphical session running, 
+also the package `eudev` must be installed for alsa cards:
 
 ```
 cp -a /usr/share/pipewire /etc
@@ -525,7 +526,16 @@ sed -i 's|.*\["with-logind"\].*=.*|  ["with-logind"] = false|g' /etc/wireplumber
 sed -i 's|.*\["alsa.reserve"\].*=.*|  ["alsa.reserve"] = false|g' /etc/wireplumber/main.lua.d/50-alsa-config.lua
 ```
 
-**Only do this if you never will run a managed xdg sesion or x11/wayshit setup**
+**Only do this if you never will run a managed xdg sesion or x11/wayshit setup**, of 
+course this also will need the `linux-pam` and `pipewire` packages, becouse the second 
+does not depends on the first so will fails if you dont installed xplicit!
+
+**PROBLEMS**: if you try to run any alsa or app and get "Host is down", means that 
+the pipewire session and the access is wronly configured. try "alsamixer -c0" to 
+check if work or `alsamixer -c1` or similar, and if work the pipewire session 
+must be reconfigured to provide media device access, try to added the user to the 
+group of pipewire.
+
 
 ## instalacion Xfce4 Alpine
 

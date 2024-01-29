@@ -156,10 +156,12 @@ For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbi
 #### setup hardware support
 
 ```
-apk add acpi eudev eudev-doc eudev-rule-generator eudev-openrc pciutils util-linux zram-init \
+apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc pciutils util-linux zram-init \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
+
+setup-devd udev
 
 rc-update add udev
 rc-update add acpid
@@ -196,7 +198,7 @@ apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
  dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
  polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
  gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind
+ networkmanager-elogind linux-pam
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -216,9 +218,12 @@ apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf sndio \
 amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
-@audio - memlock 256
+@audio - memlock 4096
 @audio - nice -11
 @audio - rtprio 88
+@pipewire - memlock 4194304
+@pipewire - nice -19
+@pipewire - rtprio 95
 EOF
 
 rc-update add alsa
