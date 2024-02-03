@@ -1001,6 +1001,8 @@ As user general, emulation of amd64 machine boot after alpine install:
 
 ## see also
 
+* https://mathiashueber.com/virtual-machine-audio-setup-get-pulse-audio-working/
+* https://lists.gnu.org/archive/html/qemu-discuss/2020-10/msg00031.html
 
 # LICENSE
 

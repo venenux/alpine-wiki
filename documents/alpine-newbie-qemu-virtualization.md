@@ -313,6 +313,15 @@ You should see a "DMAR" word (if intel) or "IOMMU" word (if AMD).
 Specifically, `iommu` kernel parameter manages the use of this technology in the 
 system, there are also `intel_iommu` is for intel and `amd_iommu` for amd.
 
+**Manufacturers sometimes do not give the complete specifications but only those 
+most popular ones** such as how many cores it has or the speed, while **the more 
+internal specifications such as the Intel-Vt or the AMD-Vi do not mention whether 
+they exist or not**
+
+CPU manufacturers show them but **motherboard manufacturers often do not show 
+them or even change their name.** By example almost **any XEON provides all necesary 
+technology but if are mounted in a poor motherboard will not give you nothing.**
+
 #### Auto Configure the hugepages for qemu
 
 If you will have a VM with 4096 Mb of RAM (only one)so then (4096/2)+1024 where 
@@ -528,22 +537,64 @@ gpu data will be stored in main memory instead. **This option is the best
 for linux or mac modern system and modern platform desktop emulation** 
 but will require of KVM on host machine.
 
-#### Audio and Network device recommendations
+**WARNING** opengl native support its broken in alpine qemu package: 
+https://t.me/alpine_linux/1287
 
-For audio in order of best compatibilty to most improvement:
+#### Audio device recommendations
+
+**If the `audiodev` backend is not provided, QEMU looks up for it and adds 
+it automatically, this only works for a single audiodev.**
+For audio in order of best compatibilty to most improvement on modern hosted:
 
 1. `-device AC97` is enough for older or newer devices, it comes with 
 the mic and output at the same time, all the inputs and outputs are auto 
-mapped to the backend and provided without , this is the **best option 
-for emulation of 32 or 64 bits of ARM or X86 based computers**
+mapped to the backend and provided without, this is the **best option 
+for emulation of 32 or 64 bits of ARM or X86 based computers and older OS**
 2. `-device intel-hda -device hda-duplex` the High definition audio, 
 that must be provided with a specific device way, the `hda-duplex` 
 **will provide only "line in" and "line out" sound, no mic allowed**.
 3. `-device intel-hda -device hda-micro` the High definition audio, 
 that must be provided with a specific device way, the `hda-micro` 
 **will provide only "mic in" and "line out" sound, no "line in" allowed**.
+4. `-device ich9-intel-hda` is the only **recommended device to the 
+emulation of modern propietary operating system** from Apple or M$.
+5. `-device virtio-sound-pci` is the most recent feature of qemu, but 
+only supported for modern guest OSs, its not recommended on most cases 
+becouse is too recent and is complete virtualized (more slow but featured).
 
-For network devices this will rely on two options only:
+**IMPORTANT** On the host end (the VM not the host), available support include 
+ALSA, OSS and WAV. The latter two being not so useful for practical audio on 
+modern systems, ALSA is the only real option.
+The problem is, **KVM does not support virtual ALSA devices, requires 
+exclusive access to the hardware ALSA device**, which of course **leaves 
+the host system (the machine runing qemu) without audio**. If you need the 
+virtual machine for some audio applications, it would be hugely practical 
+to be able to somehow mix guest audio with host audio.
+
+This can be achieved using ALSA loopback or JAck/Pulseaudio/Pipewire.
+
+**ALSA**: If you use `AC97` you should not get problems, using command 
+as `-device ac97,audiodev=sd1 -audiodev alsa,id=sd1` but is not the 
+same if you try to boot modern system, so must use `HDA` audio device 
+as `-device intel-hda -device hda-micro,audiodev=sd1 -audiodev alsa,id=sd1,out.try-poll=off`
+where audiodev will be the host system audio serve for the guess host, 
+this need `modprobe snd-aloop;modprobe snd-pcm-oss;modprobe snd-mixer-oss` 
+modules to be loaded, mostly firs one `snd-aloop` that is not so common.
+
+**PULSE**: This case is not the same, you will need the address socket 
+of the pulse server running (Each user runs their own instance), generally 
+will be of `unix:/run/user/<ID>/pulse/native` where `<ID>` is the numeric 
+id of the user that runs the command of qemu (with `id -u general` using 
+the name `general` as username login you can get it); then you must use 
+as `-device ac97,audiodev=sd1 -audiodev pa,id=sd1,server=unix:/run/user/<ID>/pulse/native`
+if you try older guest OS using the older AC97, but for modern ones use 
+as `-device intel-hda -device hda-micro,audiodev=sd1 -audiodev pa,id=sd1,server=unix:/run/user/<ID>/pulse/native`
+
+#### Network device recommendations
+
+**If the `netdev` backend is not provided, QEMU looks up for it and adds 
+it automatically, this only works for a single netdev.**
+For network devices this will rely on two options only as most recommended:
 
 * `-device rtl8139,netdev=nd1 -netdev user,id=nd1` is the most compatible 
 for older or newer systems, performance is enought decent.
@@ -584,16 +635,27 @@ Example: `echo "info status" | socat - unix-connect:qemuvm1socket` if you run
 both in same directory (qemu in one tty/console and socat in another tty/console) 
 and qemu was run with addition of `-monitor unix:qemuvm1socket,server,nowait`
 
-This method is the most **elegant and secure, but the most limited** becouse 
+This method is the most **elegant and secure, but the most limited** because 
 the unix socket is only local, or NFS made.
 
 You can made a session monitor: `socat -,echo=0,icanon=0 unix-connect:qemuvm1socket`
+
+#### Guest setup and combinations
+
+* For 32-bit guests systems Intel 82801AA AC97 its recommended and could use http://www.linux-kvm.org/page/Sound .
+* For 64-bit guests systems Intel HDA must be used most of those provided base usage already.
+* USB 2.0 pass through can be configured from host to guest with variations of: -usb -device usb-ehci,id=ehci -device usb-host,bus=ehci.0,vendorid=1452`
+For Windows 8.1 USB tablet is available only with USB 2.0 pass through (QEMU option: -device usb-ehci,id=ehci -device usb-tablet,bus=ehci.0
+The USB tablet device helps the Windows guest to accurately track mouse movements. Without it mouse movements will be jerky.
+Another device that can be presented to the Windows guest is the random number generator. Add QEMU option: -device virtio-rng-pci . Now install the viorng driver from the driver image.
+For Windows 10, to boot using UEFI the sys-firmware/edk2-ovmf is required on the host, then add QEMU option: -bios /usr/share/edk2-ovmf/OVMF_CODE.fd. to the qemu call. This option is essential for running Hyper-V guest images.
 
 ## see also
 
 * [../tutorials/alpine-howto-qemu-on-pc.md](../tutorials/alpine-howto-qemu-on-pc.md)
 * [../tutorials/alpine-howto-qemu-on-arm.md](../tutorials/alpine-howto-qemu-on-arm.md)
 * [server-alpine-libvirt-qemu-virtualization.md](server-alpine-libvirt-qemu-virtualization.md)
+* https://wiki.gentoo.org/wiki/QEMU/Windows_guest
 
 # LICENSE
 
