@@ -197,17 +197,24 @@ with the KVM (kernel virtual machine) and your virtualization support from hardw
 The KVM for Hardware virtualization **only could be possible when host and guest 
 are same or similar architecture**, some examples:
 
-| use case      | host    | guest   | KVM possible? |
-| ------------- | ------- | ------- | ---------- |
-| emulate i386  | i386    | i386    | Yes         |
-| emulate amd64 | i386    | amd64   | Yes, only if host is also 64bit and kernel is amd64 |
-| emulate i386  | amd64   | i386    | Yes         |
-| emulate arm   | i386    | arm     | no, there is no common hardware for kvm |
-| emulate i386  | aarch64 | i386    | no, there is no common hardware for kvm |
-| emulate arm   | aarch64 | armv7   | Yes, but because host already has all the guest cpu feaures |
-| emulate arm   | armv6   | armv7   | Yes, **but limited** host does not support all the guest features |
-| emulate amd64 | amd64   | amd64   | Yes, only if host is a more recent cpu rather than guest |
-| emulate arm   | aarch64 | aarch64 | Yes, only if host is a more recent cpu rather than guest | |
+| host/guess | i386   | amd64  | armv6  | armv7  | aarch64 | observations |
+| ---------- | ------ | ------ | ------ | ------ | ------- | ------------ |
+| i386       | KVM(*) | KVM(*) | TCG    | TCG    | TCG     | only if common hardware is present, otherwise TCG |
+| amd64      | KVM(*) | KVM(*) | TCG    | TCG    | TCG     | only if common hardware and host is more recent rather guess, otherwise will be TCG |
+| armv6      | TCG    | TCG    | KVM(*) | KVM(*) | KVM(*)  | only if host is a more recent cpu rather than guest |
+| armv7      | TCG    | TCG    | KVM    | KVM    | KVM(*)  | only if common hardware and host is more recent rather guess, otherwise will be TCG |
+| aarch64    | TCG    | TCG    | KVM    | KVM    | KVM(*)  | only if common hardware is present, otherwise TCG |
+
+In such matrix, we fount at the column of i386, that if host is armv7 the emulation 
+only will be full emulated (TCG) and not accelerated (KVM), cos there no common 
+hardware to accelerated, but in case of emulation of armv6 any host of aarch64 or armv7 
+will do accelerated because the host is more recent and also has common hardware!
+
+For marks (*) the underliying hardware must be equal or superior respect the emulated 
+so by example we cannot emulate SSE4 from a host that does not have SSE4 flags on cpu, 
+by example for emulation of i386 guess over i386 host, if the guess is a pentium4 the 
+host cpu must be as minimun pentium4, if you already has a pentium3 and wants to emulate 
+a pentium4 you will be very limited then!
 
 #### Checking Virtualization Hardware support
 
@@ -645,6 +652,7 @@ You can made a session monitor: `socat -,echo=0,icanon=0 unix-connect:qemuvm1soc
 * For 32-bit guests systems Intel 82801AA AC97 its recommended and could use http://www.linux-kvm.org/page/Sound .
 * For 64-bit guests systems Intel HDA must be used most of those provided base usage already.
 * USB 2.0 pass through can be configured from host to guest with variations of: -usb -device usb-ehci,id=ehci -device usb-host,bus=ehci.0,vendorid=1452`
+
 For Windows 8.1 USB tablet is available only with USB 2.0 pass through (QEMU option: -device usb-ehci,id=ehci -device usb-tablet,bus=ehci.0
 The USB tablet device helps the Windows guest to accurately track mouse movements. Without it mouse movements will be jerky.
 Another device that can be presented to the Windows guest is the random number generator. Add QEMU option: -device virtio-rng-pci . Now install the viorng driver from the driver image.
