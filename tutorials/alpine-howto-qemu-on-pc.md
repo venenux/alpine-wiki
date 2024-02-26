@@ -999,6 +999,65 @@ As user general, emulation of amd64 machine boot after alpine install:
 ```
 
 
+#### how to change cdrom inside qemu using monitor output console
+
+Qemu provides a way to change the iso in the virtual cdrom device via the monitor 
+interface (Ctrl+Alt+2 if you have display output active in your active window of qemu).
+
+```
+QEMU 0.10.5 monitor - type 'help' for more information
+(qemu)
+```
+
+The commands you'll want to use are `info block`, `eject`, and `change`. First we 
+need to determine which block device is the cdrom device you are interested in. 
+Issue the info block command and look if you already have any cdrom device support:
+
+```
+(qemu) info block
+hd0 (#block180): /home/general/VMs/vm1x64alpine318/vm1x86alpine318.raw (raw)
+    Attached to:      /machine/peripheral-anon/device[0]
+    Cache mode:       writeback
+
+sd0: [not inserted]
+    Removable device: not locked, tray closed
+```
+
+The `sd0` is the only cdrom device in this example and there isn't any media inserted. 
+
+1. eject any possible disk from the current cdrom device using `eject`
+2. change the cdrom device disk by usage of the `change` command supplying the device name 
+
+We must add the device name (sd0) and the path to the new iso file (that can be relative 
+to the current directory), last optional command could be the format, raw for iso files.
+
+
+```
+(qemu) eject sd0
+
+(qemu) change sd0 alpine-virt-3.19.0-x86_64.iso raw
+```
+
+We now can check the result of the operation and see that there is a device at the cdrom:
+
+```
+(qemu) info block
+hd0 (#block180): /home/general/VMs/vm1x64alpine318/vm1x86alpine318.raw (raw)
+    Attached to:      /machine/peripheral-anon/device[0]
+    Cache mode:       writeback
+
+sd0 (#block580): /home/general/VMs/vm1x64alpine318/alpine-virt-3.19.0-x86_64.iso (raw)
+    Removable device: not locked, tray closed
+    Cache mode:       writeback
+```
+
+To free such cdrom from such disk you can then eject the iso file image:
+
+```
+(qemu) eject sd0
+```
+
+
 ## see also
 
 * https://mathiashueber.com/virtual-machine-audio-setup-get-pulse-audio-working/
