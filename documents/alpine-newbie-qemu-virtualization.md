@@ -55,21 +55,23 @@ host system to the guest or dedicating a video card in a PCI slot to the exclusi
 
 | machine option      |  32bit x86 i386  | 64bit x86_64 amd64 |  observations |
 | ------------------- | --------------------- | ------------------- | ------------ |
+| bios best option    | bios-256k.bin (qemu)  |  OVMF.fd  (ovmf)    |  both are under `/usr/share` paths, ovmf is EFI only |
 | CPU and motherboard | `-cpu n270 -machine pc` | `-cpu Conroe -machine q35` | each provides defaults based on natural features |
 | Defaults on chipset | i440FX+PIIX3 PATA PS2 | G31+ICH9 SATA USB | no matter choosed features can be combined but not the best |
-| Hardware on virtual | ISA, PATA, BIOS | PCIe, MMCFG, vIOMMU, AHCI, UEFI | For MSDOS or WinXP you must set "pc" machine |
+| Hardware on virtual | ISA, PCI, PATA, BIOS | PCIe, MMCFG, vIOMMU, AHCI, UEFI | For MSDOS or WinXP you must set "pc" machine |
 | Use cases           | boot older software | P2V, OVMF, vIOMMU | migration of modern machines can be done with "q35" |
-| it required KVM?    | no, if you use defaults | yes if you map mor devices | if you dont use kvm you cannot translate real devices |
+| it required KVM?    | no, if you use defaults | yes if you map real devices | if you dont use kvm you cannot translate real devices |
 
 #### emulation of arm based machines and best configurations
 
 | machine option      | 32bit arm32 armv6  | 64bit aarch64 armv8 |  observations |
 | ------------------- | --------------------- | ------------------- | ------------ |
+| bios best option    | default               | QEMU_EFI.fd (aamf)  | under `/usr/share/` path using aamvf package from aarch64 arch |
 | CPU and motherboard | `cortex-a7 -machine virt` | `cortex-a35 -machine virt` | no defaults, must select a machine profile |
 | Defaults on chipset | GICv2M PCI GPIO | MSI GICv2M PCI/PCIe PL011 UART | Note that ITS is not modeled in TCG mode |
-| Hardware on virtual | it depends on machine | it depends on machine | Unfortunately Arm boards are currently undocumented |
+| Hardware on virtual | PCIe, PCI, it depends on machine | PCIe, it depends on machine | Unfortunately Arm boards are currently undocumented |
 | Use cases           | boot older software | basic testing only | you must setup specific machine board |
-| it required KVM?    | cannot be determine | not tested | if you dont use kvm you cannot translate real devices in general |
+| it required KVM?    | no, for basic emulation | not tested, need for real devices mapped | if you dont use kvm you cannot translate real devices in general |
 
 #### emulation of devices and compatibility
 
@@ -87,10 +89,14 @@ host system to the guest or dedicating a video card in a PCI slot to the exclusi
 
 #### Provisioning virtual disks
 
+AS we said.. qemu can manage in many ways the storage, it can use emulated 
+storage or inclusivelly real one, this will impact in performance, and also 
+will deal with limitations:
+
 |  Type         |  Qemu builin | block feats | migration | extra required | observations |
 | ------------- | ------------ | ----------- | --------- | -------------- | ----------------------- |
 | Qemu emulated | IDE          | Yes         | Yes       | No, build in   | slow or mid performance |
-| Qemu emulated | NVMe         | Yes         | Yes       | command line   | mid performance |
+| Qemu emulated | NVMe         | Yes         | Yes       | command line   | basic or mid performance |
 | Qemu emulated | virtio-blk   | Yes         | Yes       | command line   | relative best performance, few disks |
 | Qemu emulated | virtio-scsi  | Yes         | Yes       | command line   | mid or slow performance, many disks |
 | vhost         | vhost-scsi   | no          | no        | command line   | relative or mid performance |
@@ -122,7 +128,7 @@ EOF
 
 apk update
 
-apk add qemu qemu-img qemu-system-i386 qemu-modules
+apk add qemu qemu-img qemu-system-i386 qemu-system-arm qemu-modules
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 ```
@@ -140,10 +146,20 @@ chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
 
 #### Running qemu machines with simple emulation
 
-We can just boot a machine from a simple boot device:
+We can just boot a machine from a simple boot device of 32bit intel, 
+over any other, it will relative decent becouse is an older sistem to emulate:
 
 ```
 /usr/bin/qemu-system-i386  -name "alpinebootqemu1"
+```
+
+> **Warning**: QEMU should **never be run as root** use the `-runas` option to make QEMU drop root privileges.
+
+In any hardware you can also boot other machines, but emulation will be slow
+if "guest" (emulated) and "host" (that runs emulator) are not "common":
+
+```
+/usr/bin/qemu-system-arm  -name "alpinebootqemu1"
 ```
 
 > **Warning**: QEMU should **never be run as root** use the `-runas` option to make QEMU drop root privileges.
@@ -167,15 +183,19 @@ show two ways, first we just see the text only way with no X11 allowed:
 #### Running qemu machines with simple emulation but no X11 output only text
 
 We can just boot a machine but with arguments display to "ncurses" to run 
-with no need of installations of Xorg complete software:
+with no need of installations of Xorg complete software, but caution, this 
+means you will only see what the emulated software are allowed to show in:
 
 ```
 /usr/bin/qemu-system-i386 -name "alpinebootqemu2" -display curses
 ```
 
-The ncurses interface will take all the console output as a screen output!
+The ncurses interface will take all the console output as a screen output! 
+but when the OS emulated or software runs any graphical thing, blank output 
+will happened and you can see anything then!
 
-To run again or terminate such command you will need to kill in another console!
+To run again or terminate such command you will need to kill in another console, 
+or send shutdown action over the monitor console!
 
 
 ### QEMU with KVM and hardware virtualization

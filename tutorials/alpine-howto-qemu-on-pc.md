@@ -182,7 +182,7 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standar
   -display curses -nographic
 ```
 
-Here we pass -accel tcg` to be able to run it on any host that is huge different 
+Here we pass `-accel tcg` to be able to run it on any host that is huge different 
 hardware, for example running this i386 over an arm host device also 
 pass `-display curses -nographic` because we dont have X11 session initalized, 
 the arm linux kernels never have an active VGA framebuffers so we just redirect 
@@ -293,7 +293,7 @@ wget https://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-standard-3.
   -display none -serial mon:stdio
 ```
 
-Here we pass -accel tcg` to be able to run it on any host that is huge different 
+Here we pass `-accel tcg` to be able to run it on any host that is huge different 
 hardware, for example running this i386 over an arm host device also 
 pass `-display none -serial mon:stdio` because we dont have X11 session initalized, 
 the x86/x64 linux kernels always request VGA framebuffers so we just redirect 
