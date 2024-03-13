@@ -130,7 +130,7 @@ sed -i -r 's#.*LoadModule.*modules/mod_userdir.so.*#LoadModule userdir_module mo
 
 sed -i -r 's#^UserDir .*#UserDir public_html#g' /etc/apache2/conf.d/userdir.conf
 
-rc-service lighttpd restart
+rc-service apache2 restart
 ```
 
 > **Warning**  as we said.. alpine policy is to be most upstream equal possible, almost like packagers are lazy? NO! just dont put any thing about root user access, but well, you must know what are you doing, by the addition of `UserDir disabled root postmaster` you will denied specific users due security.
@@ -329,7 +329,7 @@ rc-service apache2 start
 
 cat >> /etc/apache2/conf.d/php-fpm.conf << EOF
 <FilesMatch \\.php\$>
-    ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php-fpm8/php8-fpm.sock|fcgi://localhost/var/www/"
+    ProxyPassMatch "^/(.*\\.php(/.*)?)\$" "unix:/run/php-fpm8/php8-fpm.sock|fcgi://localhost/var/www/"
 </FilesMatch>
 EOF
 rc-service apache2 start
@@ -343,6 +343,30 @@ rc-service apache2 start
 
 In alpine the only option is using Mariadb or Postgresql, ODBC only provides TDS and Postgresql, 
 rest of options are only in edge or using other linuxes
+
+#### adminer to MANAGE ANY DATABASE SERVERS
+
+The most secure for web Mysql managemend its adminer, cos phpmyadmin its too polite
+Adminer permits to manage any kind of database, including odbc, postgresql and mysql/mariadb.
+
+```
+mkdir -p /usr/share/webapps/adminer
+
+wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php -O /usr/share/webapps/adminer/adminer-4.8.1.php
+
+ln -s adminer-4.8.1.php /usr/share/webapps/adminer/index.php
+
+cat >> /etc/apache2/conf.d/adminer.conf << EOF
+Alias /manag/adminer /usr/share/webapps/adminer/
+<Directory /usr/share/webapps/adminer/>
+    Require all granted
+    DirectoryIndex index.php
+</Directory>
+
+rc-service apache2 restart
+```
+
+This configurations assumes you already runs all this guide!
 
 #### Mysql Instalation and configuration
 
@@ -459,12 +483,6 @@ odbcinst -u -d -f /tmp/tmpmdb.tmp
 To obtain a real certificate, you must have a external direct public ip, so for local LAMP common deploys are nonsense. 
 
 Check the document [guide-only-dehydrated.md](guide-only-dehydrated.md) there's also a specific section to setup apache2.
-
-#### adminer to manage database
-
-The most secure for web Mysql managemend its adminer, cos phpmyadmin its too polite
-
-Adminer permits to manage any kind of database, including odbc.
 
 ## see also
 
