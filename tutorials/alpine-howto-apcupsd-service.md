@@ -77,10 +77,11 @@ The apcupsd has internal defaults, the default values are for pure USB device ty
 that is USB cable only, there are some models that uses a internal serial by a RJ45 connector those 
 can be manage also by USB or network, but you must take care of such configuration.
 
-The most important part is the DEVICE/UPSTYPE combination, the most problematic are the SmartUPS 
+The **most important part is the DEVICE/UPSTYPE combination**, the most problematic are the SmartUPS 
 with SERIAL or RJ45 connectors, specially the last one will need a special cable named 
 as "smart signalling cable" that can be SERIAL: http://www.apcupsd.org/manual/manual.html#smart-custom-cable-for-smartupses 
 or can be USBSERIAL: http://www.apcupsd.org/manual/manual.html#custom-rj45-smart-signalling-cable-for-backups-cs-models
+so **beware! if you use "usb" type, the DEVICE must be blank, otherwise must be defined based on UPSTYPE**
 
 Here the commands to configure the device using model ES 600M1 that is usb pure device:
 
@@ -88,8 +89,9 @@ Here the commands to configure the device using model ES 600M1 that is usb pure 
 * set UPSTYPE to the configured device, **Warning** beware of the previous paragraph advertisement
 * set POLLTIME to a minimun amout, so we will check more frecuently
 * set ONBATTERYDELAY to a maximun of 12 so false positives will not shutdown the machine
-* set BATTERYLEVEL to 40 percent so wel will shutdown the machine to do not take risk on empty source power
-* set MINUTES to 10 as the same reason of the previous topic
+* set BATTERYLEVEL to 15 percent so wel will shutdown the machine to do not take risk on empty source power
+* set MINUTES to 12 as the same reason of the previous topic, but this if there are only 12 minutes left
+* set TIMEOUT to 20 if the machien was run on battery for 20 minutes and there is not shutdown yet
 * set ANNOY to 100 seconds we dont care the current logged users, the software and data inside is so important
 * set ANNOYDELAY to 20 seconds so we will anunce to loged users about a fast shutdown
 * enable the service after configured
@@ -98,26 +100,41 @@ Here the commands to configure the device using model ES 600M1 that is usb pure 
 ```
 sed -Ei "s|^[[:space:]]?UPSCABLE.*|UPSCABLE usb|g" /etc/apcupsd/apcupsd.conf
 
+sed -Ei "s|^[[:space:]]?DEVICE.*|DEVICE|g" /etc/apcupsd/apcupsd.conf
+
 sed -Ei "s|^[[:space:]]?UPSTYPE.*|UPSTYPE usb|g" /etc/apcupsd/apcupsd.conf
 
-sed -Ei "s|^[[:space:]]?POLLTIME.*|POLLTIME 40|g" /etc/apcupsd/apcupsd.conf
+sed -Ei "s|^[[:space:]]?POLLTIME.*|POLLTIME 50|g" /etc/apcupsd/apcupsd.conf
 
 sed -Ei "s|^[[:space:]]?ONBATTERYDELAY.*|ONBATTERYDELAY 12|g" /etc/apcupsd/apcupsd.conf
 
-sed -Ei "s|^[[:space:]]?BATTERYLEVEL.*|BATTERYLEVEL 40|g" /etc/apcupsd/apcupsd.conf
+sed -Ei "s|^[[:space:]]?BATTERYLEVEL.*|BATTERYLEVEL 15|g" /etc/apcupsd/apcupsd.conf
 
-sed -Ei "s|^[[:space:]]?MINUTES.*|MINUTES 10|g" /etc/apcupsd/apcupsd.conf
+sed -Ei "s|^[[:space:]]?MINUTES.*|MINUTES 12|g" /etc/apcupsd/apcupsd.conf
 
-sed -Ei "s|^[[:space:]]?ANNOY.*|ANNOY 100|g" /etc/apcupsd/apcupsd.conf
+sed -Ei "s|^[[:space:]]?TIMEOUT.*|TIMEOUT 20|g" /etc/apcupsd/apcupsd.conf
 
-sed -Ei "s|^[[:space:]]?ANNOYDELAY.*|ANNOYDELAY 20|g" /etc/apcupsd/apcupsd.conf
+sed -Ei "s|^[[:space:]]?ANNOY.*|ANNOY 10|g" /etc/apcupsd/apcupsd.conf
+
+sed -Ei "s|^[[:space:]]?ANNOYDELAY.*|ANNOYDELAY 10|g" /etc/apcupsd/apcupsd.conf
 
 rc-update add apcupsd
 
 rc-service apcupsd restart
 ```
 
-After configuraton and restarting the service you can test it by the `apcaccess` command line:
+The configurations of BATTERYLEVEL and TIMEOUT are coodinated with MINUTES to 
+shutdown the machine after a period, this configuration is made only for an UPS 
+that has only a small battery to power off the machine if a cut of the service 
+is happened, if you have a datacenter and/or big battery use a TIMEOUT of zero, 
+and set BATTERYLEVEL to 20 percent and MINUTES to 10 so can address many short 
+comming events wihtout sporadic shutdowns.
+
+After configuraton and restarting the service you can test it with `apcaccess` 
+command line, and you should see at the line with word "STATUS" the result with 
+the world of "ONLINE", otherwise you have something wrong, and in such case you 
+should again check the DEVICE/UPSTYPE combination, mostly most of the problems 
+are a DEVICE wrong path (as we said, use blank for usb type):
 
 ```
 $ apcaccess 
@@ -163,15 +180,24 @@ END APC  : 2023-11-30 16:56:57 -0400
 
 #### Installation of apcupsd-webif network and web monitor servide
 
+The package comes with simple monitor script in CGI, that can connect to others 
+machines that runs the same program and check for others UPS devices, also can 
+check virtual ones (machines that do not manange the ups but is connected to the 
+same one), so you can have overall of the status using just web service.
+
 * install basic need packages and apcupsd web modules
 
 ```
-apk add apcupsd apcupsd-webif sed lighttpd
+apk add apcupsd apcupsd-webif sed lighttpd arch-install-scripts
 ```
 
 > **Warning**: the apcupsd service must be configure, inclusivelly if the UPS is not in the machine connected
 
-Due a bug in packaging becouse of lazy developers `apcupsd` must be previously configured https://t.me/alpine_linux_english/71210
+Due a bug in packaging becouse of lazy developers `apcupsd` must be previously 
+configured https://t.me/alpine_linux_english/71210 so you must install both 
+the web and the service packages and configure both, so before install this, 
+first isntall and configure the apcupsd package and setup local or remote device, 
+remote devices can be setup over the network!
 
 ### Configuration of apcupsd-webif - web service monitoring
 
@@ -200,7 +226,7 @@ sed -Ei "s|^[[:space:]]?NISPORT.*|NISPORT 3551|g" /etc/apcupsd/apcupsd.conf
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
 sed -i -r 's#\#.*mod_accesslog.*,.*#    "mod_accesslog",#g' /etc/lighttpd/lighttpd.conf
-sed -i -r 's#\#.*dir-listing.activate*=.*,.*#dir-listing.activate   = "enable"#g' /etc/lighttpd/lighttpd.conf
+sed -i -r 's#\#.*dir-listing.activate*=.*,.*dir-listing.activate   = "disable"#g' /etc/lighttpd/lighttpd.conf
 
 mkdir -p /var/www/localhost/cgi-bin/apcupsd && mkdir -p /var/www/localhost/htdocs && mkdir -p /var/lib/lighttpd
 
@@ -208,12 +234,14 @@ chown -R lighttpd:lighttpd /var/www/localhost/ && chown -R lighttpd:lighttpd /va
 
 mount /usr/share/webapps/apcupsd /var/www/localhost/cgi-bin/apcupsd --bind
 
+genfstab -U / >> /etc/fstab
+
 rc-update add lighttpd default
 
 rc-service lighttpd restart
 ```
 
-After that you can visit the URI http://localhost/cgi-bin/acpupsd/multimon.cgi to check the web monitor service
+After that you can visit the URI http://localhost/cgi-bin/apcupsd/multimon.cgi to check the web monitor service
 
 
 #### Configurations - advanced with events and scripts
