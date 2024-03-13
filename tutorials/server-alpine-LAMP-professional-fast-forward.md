@@ -214,7 +214,9 @@ rc-service apache2 restart
 ## 2 - PHP
 
 The php packages in alpine are only one version at time.
-Those instructions are for **php7 for alpine 3.8 until alpine 3.15, for alpine 3.16 and go just change "7" to "8" in name packages**
+
+> **Warning** Those instructions are for **php8 and alpine 3.16+** if you runs 
+> olders alpine from 3.8 until alpine 3.15 **just change "8" to "7" in name packages for php7**
 
 #### php install
 
@@ -231,32 +233,32 @@ Those instructions are for **php7 for alpine 3.8 until alpine 3.15, for alpine 3
 7. install the php apache2 module package
 
 ```
-apk add php7-opcache php7-openssl php7-json php7-bcmath php7-mbstring php7-bz2 php7-calendar \
- php7-ctype php7-dev php7-dom php7-enchant php7-fileinfophp7-shmop php7-simplexml php7-tidy \
- php7-tokenizer php7-sysvmsg php7-sysvsem php7-sysvshm php7-xml php7-xmlreader php7-xmlrpc \
- php7-xmlwriter php7-xsl php7-zip
+apk add php8-opcache php8-openssl php8-json php8-bcmath php8-mbstring php8-bz2 php8-calendar \
+ php8-ctype php8-dev php8-dom php8-enchant php8-fileinfophp8-shmop php8-simplexml php8-tidy \
+ php8-tokenizer php8-sysvmsg php8-sysvsem php8-sysvshm php8-xml php8-xmlreader php8-xmlrpc \
+ php8-xmlwriter php8-xsl php8-zip
 
-apk add php7-iconv php7-intl php7-gettext php7-pspell php7-recode
+apk add php8-iconv php8-intl php8-gettext php8-pspell php8-recode
 
-apk add php7-exif php7-gd php7-pcntl php7-gmp php7-litespeed
+apk add php8-exif php8-gd php8-pcntl php8-gmp php8-litespeed
 
-apk add php7-ftp php7-ldap php7-imap php7-session php7-snmp php7-sockets
+apk add php8-ftp php8-ldap php8-imap php8-session php8-snmp php8-sockets
 
-apk add php7 php7-sockets php7-curl php7-pear php7-phar php7-doc php7-embed php7-posix 
+apk add php8 php8-sockets php8-curl php8-pear php8-phar php8-doc php8-embed php8-posix 
 
 apk add php-fpm
 
 apk add php fgi
 
-apk add php7-dba php7-mysqli php7-mysqlnd php7-odbc php7-pgsql php7-sodium php7-sqlite3
+apk add php8-dba php8-mysqli php8-mysqlnd php8-odbc php8-pgsql php8-sodium php8-sqlite3
 
-apk add php7-pdo php7-pdo_dblib php7-pdo_mysql php7-pdo_odbc php7-pdo_pgsql php7-pdo_sqlite
+apk add php8-pdo php8-pdo_dblib php8-pdo_mysql php8-pdo_odbc php8-pdo_pgsql php8-pdo_sqlite
 
-apk add php7-apache2
+apk add php8-apache2
 ```
 
-> **Warning**  all of these are due alpine 3.10 to 3.15 uses php7, alpine 3.16 start to use php8, 
-so in such case just change the "7" by "8" exam ple change "php7-apache2" by "php8-apache2".
+> **Warning** Those instructions are for **php8 and alpine 3.16+** if you runs 
+> olders alpine from 3.8 until alpine 3.15 **just change "8" to "7" in name packages for php7**
 
 #### configuration of php
 
@@ -298,11 +300,11 @@ sed -i -r 's#^max_input_time =.*#max_input_time = 90#g' /etc/php*/php.ini
     * add the handler into apache2 configuration for php using fpm and restart apache2
 
 ```
-mkdir -p /var/run/php-fpm7/
-chown apache:apache /var/run/php-fpm7
+mkdir -p /var/run/php-fpm8/
+chown apache:apache /var/run/php-fpm8
 
-sed -i -r 's|^.*listen =.*|listen = /run/php-fpm7/php7-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
-sed -i -r 's|^pid =.*|pid = /run/php-fpm7/php7-fpm.pid|g' /etc/php*/php-fpm.conf
+sed -i -r 's|^.*listen =.*|listen = /run/php-fpm8/php8-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^pid =.*|pid = /run/php-fpm8/php8-fpm.pid|g' /etc/php*/php-fpm.conf
 
 sed -i -r 's|^.*listen.owner = .*|listen.owner = apache|g' /etc/php*/php-fpm.d/www.conf
 sed -i -r 's|^.*listen.group = .*|listen.group = apache|g' /etc/php*/php-fpm.d/www.conf
@@ -311,13 +313,13 @@ sed -i -r 's|^.*listen.mode = .*|listen.mode = 0660|g' /etc/php*/php-fpm.d/www.c
 sed -i -r 's|.*LoadModule.*modules/mod_mpm_event.so.*|LoadModule mpm_event_module modules/mod_mpm_event.so|g' /etc/apache2/httpd.conf
 sed -i -r 's|.*LoadModule.*modules/mod_mpm_prefork.so.*|#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so|g' /etc/apache2/httpd.conf
 
-rc-update add php-fpm7
+rc-update add php-fpm8
 rc-update add apache2
 
-rc-service php-fpm7 start
+rc-service php-fpm8 start
 
-cat >> /etc/apache2/conf.d/php7-module.conf << EOF
-LoadModule php_module modules/mod_php7.so
+cat >> /etc/apache2/conf.d/php8-module.conf << EOF
+LoadModule php_module modules/mod_php8.so
 DirectoryIndex index.php index.html
 <FilesMatch \\.php\$>
     SetHandler application/x-httpd-php
@@ -327,7 +329,7 @@ rc-service apache2 start
 
 cat >> /etc/apache2/conf.d/php-fpm.conf << EOF
 <FilesMatch \\.php\$>
-    ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php-fpm7/php7-fpm.sock|fcgi://localhost/var/www/"
+    ProxyPassMatch "^/(.*\.php(/.*)?)$" "unix:/run/php-fpm8/php8-fpm.sock|fcgi://localhost/var/www/"
 </FilesMatch>
 EOF
 rc-service apache2 start
@@ -448,6 +450,7 @@ odbcinst -u -d -f /tmp/tmpmdb.tmp
 > **Warning** the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
 
 > **Warning** if your alpine version is too older, you cannot use the mysql edge package for odbc unfortunatelly
+
 
 ## Extra needs
 
