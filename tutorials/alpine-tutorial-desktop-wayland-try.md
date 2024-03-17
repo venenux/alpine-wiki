@@ -4,56 +4,38 @@
 Alpine must be previously installed. This will install a new fashioned desktop, for more traditional check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 * [How to use this guide](#how-to-use-this-guide)
-* [Preparation](#preparation-alpine)
+* [Preparation](#preparation)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
-* [Instalacion WAYLAND Alpine](#instalacion-wayland-apine)
-    * [wayland sway console login](#wayland-sway-console-login)
-    * [wayland gui login manager](#wayland-gui-login-manager)
+* [Instalacion Desktop WAYLAND Alpine](#instalacion-desktop-wayland-apine)
+    * [Login manager and user configurations](#login-manager-and-user-configurations)
     * [multimedia and device enhanced](#multimedia-and-device-enhanced)
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
 
 ## preparation Alpine
 
-You must have already installed alpine, and wayland only works well in alpine 3.14 and up
+You must have already installed alpine, and wayland only works well in few GPU cards, for stable desktop use XFCE check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 > **Warning** **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
 or configure a network connection check [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
+
+Main problem with alpine is that most old images of installation doe snot have the tools 
+installed to setup the wifi.. so you must have wired connection or setup a wifi manually!
 
 #### setup OS configuration
 
 Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
 
+> **Warning** For **didactic** processes, **the root password will be "toor"**, you can change it after
+
+Runs following commands as root user:
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
-
 rc-service sshd restart;rc-update add sshd default
-
-hostname venenux-desktop
-echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
-echo "venenux-desktop" > /etc/hostname
-
-cat > /etc/hosts << EOF
-127.0.0.1 venenux-desktop localhost.localdomain localhost
-::1 localhost localhost.localdomain
-EOF
-
-cat > /etc/network/interfaces << EOF
-auto lo
-iface lo inet loopback
-
-auto eth0
-iface eth0 inet dhcp
-
-iface eth0 inet6 dhcp
-    pre-up echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_ra
-EOF
-
-rc-service networking restart;rc-update add networking boot
 
 cat > /root/.cshrc << EOF
 unsetenv DISPLAY || true
@@ -61,15 +43,19 @@ HISTCONTROL=ignoreboth
 EOF
 
 cp /root/.cshrc  /root/.bashrc
-
  echo "root:toor" | chpasswd
 
-apk add tcsh
+hostname venenux-desktop
+echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
+echo "venenux-desktop" > /etc/hostname
+cat > /etc/hosts << EOF
+127.0.0.1 venenux-desktop localhost.localdomain localhost
+::1 localhost localhost.localdomain
+EOF
 
-add-shell '/bin/csh'
+apk add tcsh && add-shell '/bin/csh'
 
 adduser -D -g "" -u 998 -h /opt/daru -s /bin/csh daru
-
  echo "daru:daru" | chpasswd
 
 rm -f /opt/daru/*
@@ -94,10 +80,11 @@ apk update
 
 apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
+ file lz4 arch-install-scripts gawk tree pciutils usbutils lshw \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
- e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils \
+ e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
  f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
- testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
+ arch-install-scripts util-linux zram-init tzdata tzdata-utils
 
 sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
 setfont /usr/share/consolefonts/ter-132n.psf.gz
@@ -152,14 +139,15 @@ useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netd
 for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
 ```
 
-> **Warning**  your user name must be `general`, you can put a "human name" as you wish, later.
+> **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-For more details check  [../../newbie/alpine-newbie-configuration.md](../../newbie/alpine-newbie-configuration.md#setup-system-users)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
 
 #### setup hardware support
 
 ```
-apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc pciutils util-linux zram-init \
+apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc \
+ pciutils util-linux arch-install-scripts zram-init acpi-utils \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
@@ -189,20 +177,22 @@ rc-service cpufreqd restart
 
 ```
 
-For more details check  [../../newbie/alpine-newbie-configuration.md](../../newbie/alpine-newbie-configuration.md#setup-software-graphical-fonts-and-languajes)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
 
-#### setup audio and video for wayland
+#### setup audio and video
 
 > **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
 
 ```
-apk add xf86-input-evdev cairo pango pixman \
- mesa xinit mesa-dri-gallium xf86-video-modesetting xf86-input-libinput libxinerama xrandr kbd setxkbmap
+apk add xinit xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
+ xf86-video-dummy xf86-video-vesa xf86-video-amdgpu xf86-video-noveau xf86-video-intel \
+ xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
+ mesa mesa-gl mesa-utils mesa-osmesa mesa-dri-gallium libxinerama xrandr kbd setxkbmap
 
-apk add bluez bluez-openrc polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
- dbus dbus-x11 elogind elogind-openrc \
- gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind linux-pam
+apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
+ dbus dbus-x11 udisks2 udisks2-lang \
+ gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
+
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -215,8 +205,8 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-adobe-utopia-type1 font-adobe-utopia-75dpi font-adobe-utopia-100dpi \
  font-isas-misc
 
-apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf \
- pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez sndio wireplumber-logind
+apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf sndio \
+ pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez wireplumber-logind
 
 amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
@@ -238,18 +228,24 @@ rc-service alsa restart
 rc-service elogind restart
 
 rc-service polkit restart
-
-rc-update del lightdm
 ```
 
-> **Warning**  your user name must be `general`, you can put a "human name" as you wish, later.
+> **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-> **Note** pure wayland will work only in modern gpu, otherwise will use xwayland if you need some modules like xf86-video packages as `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
+> **Note** pure wayland will work only in modern gpu, `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv` may not work due crap wayland requirements
 
-## Instalacion WAYLAND Alpine
+## Instalacion Desktop WAYLAND Alpine
+
+At the moment of alpine 3.16 and wayland development, this mayor shit is 
+that only works with OpenGL and 3D acceleration, its pretty ilogical that 
+a so reduced environment need 3D for mostly eye candy.. ironically thing!
 
 ```
-apk add wayland wlroots foot sway sway-doc bemenu swaylock swaylockd swaybg swayidle \
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+ numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
+
+apk add xwayland 
+ wayland wlroots foot sway sway-doc bemenu swaylock swaylockd swaybg swayidle \
  weston weston-backend-wayland weston-backend-x11 weston-backend-drm weston-backend-wayland weston-backend-headless \
  weston-doc weston-shell-desktop weston-desktop-x11 weston-clients weston-terminal \
  weston-xwayland weston-shell-desktop weston-shell-fullscreen weston-cms-static
@@ -259,23 +255,38 @@ At this point you already has a waylan environment and can choose beetween westo
 just login into and start your desktop, weston is just the first implementation, can be run 
 inside and X11 or another wayland session, sway is a window manager and compositor.
 
-#### configurations
+#### Login manager and user configurations
 
 ```
-for u in $(ls /home); do mkdir -p /home/$u/.config/sway/ && cp /etc/sway/config /home/$u/.config/sway/config ;done
+apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+ polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
+ network-manager-applet network-manager-applet-lang vte3
 
-for u in $(ls /home); touch /home/$u/.config/weston.ini;done
+rc-service networking restart
+
+rc-service wpa_supplicant restart
+
+rc-service networkmanager restart
+
+rc-service lightdm restart
 ```
+
+> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
+result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
+
+Wayland its on early stages.. so there is no login manager compatible, 
+this is cos wayland per ser its another way to run GUI, and 
+all the sesion and login GUI managers runs over Xorg.
 
 The wayland weston and sway configurations depens on your preferences, 
 the above commands just provide defaults to made those compositors able to run for users.
 
-#### wayland sway console login
-
 If want autologin with TTY use this script to your system users:
 
 ```
-mkdir /home/general/
+for u in $(ls /home); do mkdir -p /home/$u/.config/sway/ && cp /etc/sway/config /home/$u/.config/sway/config ;done
+
+for u in $(ls /home); do touch /home/$u/.config/weston.ini;done
 
 cat > /etc/skel/.profile << EOF
     if test -z "\${XDG_RUNTIME_DIR}"; then
@@ -288,8 +299,7 @@ cat > /etc/skel/.profile << EOF
 EOF
 for u in $(ls /home); do cp /etc/skel/.profile /home/$u/ ;done
 
-cat > /home/general/.xinitrc << EOF
-
+cat > /tmp/.xinitrc << EOF
 if [ -z "\${DISPLAY}" ] && [ "\${XDG_VTNR}" -eq 1 ]; then
   if [ "\$(fgconsole 2>/dev/null || echo -1)" -eq 1 ]; then
     dbus-run-session -- sway
@@ -297,42 +307,27 @@ if [ -z "\${DISPLAY}" ] && [ "\${XDG_VTNR}" -eq 1 ]; then
   fi
 fi
 EOF
-
+for u in $(ls /home); do cp /tmp/.xinitrc /home/$u/.xinitrc;done
 ```
 
-#### wayland gui login manager
-
-
-Wayland its on early stages.. so there is no login manager compatible, 
-this is cos wayland per ser its another way to run GUI, and 
-all the sesion and login GUI managers runs over Xorg.
-
-```
-apk add lightdm elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind \
- lightdm-lang lightdm-gtk-greeter wireplumber-logind
-
-rc-update add lightdm
-
-rc-service lightdm restart
-```
-
-> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
-result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
+On older versions (Alpine 3.12 or less) the xx-openrc packages dont exists!
 
 #### desktop integration and device media
-
 
 ```
 apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
-#### multimedia and device enhanced
+#### multimedia and hardware media device access for the users
 
 ```
-apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugin-pipewire \
- libcanberra-gstreamer wxgtk-media \
+apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
+ libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
- mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 
+ mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
+
+apk add gvfs-fuse ntfs-3g gvfs-cdda gvfs-afp gvfs-mtp gvfs-smb gvfs-lang \
+ gvfs-afc gvfs-nfs gvfs-archive gvfs-dav gvfs-gphoto2 gvfs-avahi
 
 for u in $(ls /home); do for g in plugdev audio cdrom dialout video netdev; do addgroup $u $g; done;done
 
@@ -347,6 +342,20 @@ service wpa_supplicant restart
 
 service networkmanager restart
 
+```
+
+#### development
+
+```
+apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
+ patch patch-doc patchutils patchutils-doc diffutils diffutils-doc \
+ git git-cvs git-svn github-cli git-diff-highlight git-doc \
+ subversion subversion-doc mercurial mercurial-doc \
+ geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel \
+ geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser \
+ geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn \
+ geany-plugins-utils geany-lang \
+ terminator terminator-lang tmux screen meld meld-lang
 ```
 
 ## How to use this guide
