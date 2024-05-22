@@ -671,12 +671,23 @@ You can made a session monitor: `socat -,echo=0,icanon=0 unix-connect:qemuvm1soc
 
 * For 32-bit guests systems Intel 82801AA AC97 its recommended and could use http://www.linux-kvm.org/page/Sound .
 * For 64-bit guests systems Intel HDA must be used most of those provided base usage already.
-* USB 2.0 pass through can be configured from host to guest with variations of: -usb -device usb-ehci,id=ehci -device usb-host,bus=ehci.0,vendorid=1452`
+* USB 2.0 pass through can be configured from host to guest with variations of: `-usb -device usb-ehci,id=ehci -device usb-host,bus=ehci.0,vendorid=1452`
 
-For Windows 8.1 USB tablet is available only with USB 2.0 pass through (QEMU option: -device usb-ehci,id=ehci -device usb-tablet,bus=ehci.0
+For Windows 8.1 USB tablet is available only with USB 2.0 pass through (QEMU option: `-device usb-ehci,id=ehci -device usb-tablet,bus=ehci.0`
 The USB tablet device helps the Windows guest to accurately track mouse movements. Without it mouse movements will be jerky.
-Another device that can be presented to the Windows guest is the random number generator. Add QEMU option: -device virtio-rng-pci . Now install the viorng driver from the driver image.
-For Windows 10, to boot using UEFI the sys-firmware/edk2-ovmf is required on the host, then add QEMU option: -bios /usr/share/edk2-ovmf/OVMF_CODE.fd. to the qemu call. This option is essential for running Hyper-V guest images.
+Another device that can be presented to the Windows guest is the random number generator. Add QEMU option: `-device virtio-rng-pci` . Now install the viorng driver from the driver image.
+For Windows 10, to boot using UEFI the sys-firmware/edk2-ovmf is required on the host, then add QEMU option: `-bios /usr/share/edk2-ovmf/OVMF_CODE.fd`. to the qemu call. This option is essential for running Hyper-V guest images.
+
+#### Spice share clipbard
+
+using the SPICE guest agent you can shared the clipboard, you must install the SPICE guest tools from https://www.spice-space.org/download.html 
+and configure your VM to enable the SPICE guest agent:
+
+```
+-device virtio-serial-pci \
+-chardev spicevmc,id=vdagent,name=vdagent \
+-device virtserialport,chardev=vdagent,name=com.redhat.spice.0
+```
 
 ## see also
 
