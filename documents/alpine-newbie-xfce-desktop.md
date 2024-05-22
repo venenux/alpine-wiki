@@ -59,15 +59,16 @@ Programs such as a web browser runs on the OS, and web pages like
 this are handled by the web browser.
 
 About desktop? alpine is the Program combo that really runs in dockers, 
-becouse of that, the desktop part its not so targeted and focused.. 
+because of that, the desktop part its not so targeted and focused.. 
 Linux is just the kernel that handles and manages the hardware to the operating system
 
 #### how to install in single disc only
 
 * **1** download the image of the alpine ISO
     * i386 older 32bit use : http://dl-cdn.alpinelinux.org/alpine/v3.12/releases/x86_64/alpine-extended-3.12.0_rc1-x86.iso
-    * amd64 newer 64bit use : http://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64/alpine-extended-3.16.0_rc1-x86_64.iso
-    * amrv7 64bit modern use : http://dl-cdn.alpinelinux.org/alpine/v3.16/releases/armv7/alpine-standard-3.16.0_rc1-armv7.iso
+    * amd64 newer 64bit use : http://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-extended-3.19.0_rc1-x86_64.iso
+    * amrv7 or 64bit old use : http://dl-cdn.alpinelinux.org/alpine/v3.16/releases/armv7/alpine-standard-3.16.0_rc1-armv7.iso
+    * amrv8 or 64bit newers : http://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-standard-3.19.1-aarch64.iso
 * **2** dump into usb stick.. check the process to do here: [alpine-newbie-how-to-dumb-easyle-with-gui-to-usb.md](alpine-newbie-how-to-dumb-easyle-with-gui-to-usb.md)
 * **3** boot the usb stick from your computer.. this will depend of your vendor
 * **4** after boot, just login.. using "root" word
@@ -84,6 +85,8 @@ Linux is just the kernel that handles and manages the hardware to the operating 
 * **15** Disk Mode here just select the sys mode, we are installing to use as desktop in single disc, so all the data will be wiped and erased.
 
 If you must tune up we recommended to use virtual machine or check the best option at [alpine-newbie-install.md](alpine-newbie-install.md)
+
+All the 15 steps are the description of the installation process when you run `setup-alpine`
 
 ## preparation Xfce4 Alpine
 
@@ -103,9 +106,9 @@ If you dont have wired internet connection, check [lack of wireless setup](#lack
 1. deny access to the ssh root user, or well, get sure to deny such access
 2. setup and start the ssh service, this always be present in Alpine installs
 3. set the name of the computer, here we used `venenux-desktop`, please avoid symbols
-4. hardcoded and set the network connection, to first wired network device
-5. setup services of network to init at boot check [differences of hard coded setup](#differences-of-hard-coded-setup) section of this document
-6. configure root account
+4. setup services of network to init at boot check [differences of hard coded setup](#differences-of-hard-coded-setup) section of this document
+5. configure root account
+6. add the CSH shell and enable it
 7. create a remote connection limited account `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
 8. configure a default remote connection account `daru` as standard
 
@@ -120,38 +123,16 @@ hostname venenux-desktop
 echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
 echo "venenux-desktop" > /etc/hostname
 
-cat > /etc/hosts << EOF
-127.0.0.1 venenux-desktop localhost.localdomain localhost
-::1 localhost localhost.localdomain
-EOF
-
-cat > /etc/network/interfaces << EOF
-auto lo
-iface lo inet loopback
-
-auto eth0
-iface eth0 inet dhcp
-
-iface eth0 inet6 dhcp
-    pre-up echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_ra
-EOF
-
-rc-service networking restart
-
 rc-update add networking boot
 
 cat > /root/.cshrc << EOF
 unsetenv DISPLAY || true
 HISTCONTROL=ignoreboth
 EOF
-
 cp /root/.cshrc  /root/.bashrc  /root/.profile
-
  echo "root:toor" | chpasswd
 
-apk add tcsh
-
-add-shell '/bin/csh'
+apk add tcsh && add-shell '/bin/csh'
 
 adduser -D -g "" -u 998 -h /opt/daru -s /bin/csh daru
 
@@ -169,19 +150,12 @@ set history = 0
 set ignoreeof
 EOF
 cp /opt/daru/.cshrc /opt/daru/.bashrc
-
-apk add e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc
-
-apk add testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
-
 ```
 
-Those command put your alpine in "non minimalist mode" so means
-* manpages will be available, so you can check the operating system and gnu documetation
-* commands will work exactly as another linxu or mac, google results of your doubs will work
-* will reduce the environment of the system users and minimize the confortability of root account
-* will provide all the system tools to the devices management
-for more info of `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
+Those command put your alpine in "minimal user mode" so means only one user will 
+be able to login from remote using ssh, the normal user will be "general", but
+for more info of `daru`, check [the daru user explanation](#the-daru-user-explanation) 
+section of this document
 
 Next section will cover the suser management and programs support:
 
@@ -189,14 +163,23 @@ include(alpine-newbie-shells.md)
 
 #### configuration programs and repositories
 
-1. Setup main and community repositories of sources of programs
-2. update the local references of such repositories
-3. install main command line utilities man page manager and easy to use editor
+This will convert and configures your alpine installation into a more close 
+and working linux operating system, you will have:
+* manpages will be available, so you can check the operating system and gnu documetation
+* commands will work exactly as another linxu or mac, google results of your doubs will work
+* will provide elevation protected for users and minimize the confortability of root account
+* will provide all the system tools to the devices management
+The following commands are separated by sections (check [How to use this guide](#how-to-use-this-guide) ).
+
+1. Setup main and community repositories of sources of programs and update it
+2. install most common shell and command line manager
+3. install main command line utilities, man page and easy to use editor
 4. install string manipulation tools for the commands on the console
 5. install file downloaders and url handlers for command line administration
-6. install backend support for backend of archivers, will be need in any futher kind of install
-7. setup the pager for large outputs over the console
-8. install the support for languaje environment
+6. install support for backend of basic archivers and file manipulation
+7. install extra archiving tools and file manipulation tools
+8. add support for languaje environment and timezone
+9. install device information support and console management
 
 
 ``` bash
@@ -204,25 +187,29 @@ cat > /etc/apk/repositories << EOF
 http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
 http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
 EOF
-
 apk update
 
-apk add man-db man-pages nano nano-doc binutils binutils-doc coreutils coreutils-doc readline readline-doc
+apk add bash bash-doc bash-completion readline readline-doc dialog dialog-doc
 
-apk add sed sed-doc attr attr-doc dialog dialog-doc lsof less less-doc groff groff-doc
+apk add coreutils coreutils-doc man-db man-pages nano nano-doc binutils binutils-doc
 
-apk add wget wget-doc curl curl-doc bash bash-doc bash-completion terminus-font
+apk add sed sed-doc lsof lsof-doc less less-doc groff groff-doc gawk gawk-doc
 
-apk add zip p7zip xz tar cabextract cpio binutils lha acpi 
+apk add wget wget-doc curl curl-doc aria2 aria2-doc
 
-export PAGER=less
+apk add zip zip-doc p7zip p7zip-doc xz xz-doc tar tar-doc lha lha-doc attr attr-doc 
 
-apk add musl-locales musl-locales-lang
+apk add cpio cpio-doc lha lha-doc lz4 lz4-libs lz4-doc lz4-static
 
+apk add file file-doc arch-install-scripts arch-install-scripts-doc tree tree-doc
+
+apk add musl-locales musl-locales-lang tzdata tzdata-utils terminus-font
+
+apk add pciutils pciutils-doc usbutils usbutils-doc lshw lshw-doc
 ```
 
 The packages that have a "-doc" part handles the manpages.. you can 
-avoid those packages, if Alpine usage will be for GUI only.
+avoid those packages, if Alpine usage will be for GUI only or minimal setup.
 
 The packages of locales will be need as base for multi-lang enviroment.
 
@@ -230,12 +217,16 @@ If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tut
 
 #### setup system users
 
+Now we need an user, to use the system, the `root` account only will do delicate 
+or administrative task, **you never use anything under root unless setup things!**
+and you must to avoid any user elevation command, always run `su` for that!
+
 We will follow a protocol for better identification of all the commands 
 in further documents, the user will be called "general"; this is important 
 that it has does matter, what does not matter is for you cos you only "use".
 
-The other important part here is the groups, user will not have porper access 
-to resources becouse the OS manages the access using levels by groups. Of course 
+The other important part here is the groups, user will not have proper access 
+to resources because the OS manages the access using levels by groups. Of course 
 all of this only works using the proper policy kit software.
 
 1. install and setup advanced management of users and administration tool privilegies
@@ -249,7 +240,7 @@ all of this only works using the proper policy kit software.
 9. include this `general` user in the most used need groups to have proper access to resources
 
 ```
-apk add shadow shadow-doc shadow-uidmap bash bash-doc bash-completion bash-dev doas doas-doc
+apk add shadow shadow-doc shadow-uidmap bash bash-doc bash-dev doas doas-doc doas-sudo-shim
 
 cat > /tmp/tmpcs.tmp << EOF
 set history = 10000
@@ -292,9 +283,6 @@ EOF
 
 cat > /etc/login.defs << EOF
 USERGROUPS_ENAB yes
-#MAIL_DIR        /var/mail
-#MAIL_FILE      .mail
-#FAILLOG_ENAB		yes
 LOG_OK_LOGINS		no
 SYSLOG_SU_ENAB		yes
 SYSLOG_SG_ENAB		yes
@@ -599,6 +587,11 @@ and minimal support for editing.
 14. at this point logout and relogin from your current sesion to start to work
 
 ```
+
+apk add e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc xfsprogs xfsprogs-doc \
+ exfat-utils exfat-utils-doc f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc \
+ jfsutils jfsutils-doc parted parted-doc partimage partimage-doc testdisk testdisk-doc
+
 apk add gst-plugins-base gst-plugins-bad gst-plugins-bad-lang gst-plugins-ugly gst-plugins-ugly-lang gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire
 
 apk add libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang pipewire-pulse pipewire-zeroconf pipewire-lang
@@ -727,8 +720,12 @@ from the graphical desktop check [Internet required or offile iso](#internet-req
 The meaning of **"daru"** user is to **able to login to you from another computer by restrictions**.. 
 so no one can login with other user.. daru have a restricted shell and restricted commands.
 
-The **right way its to use SSH Key Pair, but that is so complicated for readers right now**, 
+The **right way its to use SSH Key Pair and limited hosts, but that is so complicated for new users**, 
 so using a restricted user for connections its enought untill that point.
+
+Alpine **developers dont understand** that **normal users first wants to see the things working**, 
+and later after understand the most relevenat for thems (desktop usage), 
+users can setup others things.. 
 
 ## Licensing clarifications
 

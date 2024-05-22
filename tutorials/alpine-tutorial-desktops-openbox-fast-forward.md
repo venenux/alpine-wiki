@@ -5,12 +5,13 @@ Alpine must be previously installed. For a WAYLAND crap desktop check [alpine-tu
 For XFCE4 check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
 
 * [How to use this guide](#how-to-use-this-guide)
-* [Preparation](#preparation-openbox-aline)
+* [Preparation](#preparation)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
 * [Instalacion OPENBOX Alpine](#instalacion-openbox-apine)
+    * [Login manager and user configurations](#login-manager-and-user-configurations)
     * [Session, Menu and Desktop configuration](#openbox-session-menu-and-desktop-configuration)
     * [Desktop multimedia and media devices](#desktop-multimedia-and-media-devices)
     * [Development](#development)
@@ -19,55 +20,44 @@ For XFCE4 check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-
 
 ## preparation Xfce4 Alpine
 
-**YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
+You must have already installed alpine, for wayland only check [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
+
+> **Warning** **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
+or configure a network connection check [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
+
+Main problem with alpine is that most old images of installation doe snot have the tools 
+installed to setup the wifi.. so you must have wired connection or setup a wifi manually!
 
 #### setup OS configuration
 
 Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
 
+> **Warning** For **didactic** processes, **the root password will be "toor"**, you can change it after
+
+Runs following commands as root user:
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
-
 rc-service sshd restart;rc-update add sshd default
-
-hostname venenux-desktop
-echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
-echo "venenux-desktop" > /etc/hostname
-
-cat > /etc/hosts << EOF
-127.0.0.1 venenux-desktop localhost.localdomain localhost
-::1 localhost localhost.localdomain
-EOF
-
-cat > /etc/network/interfaces << EOF
-auto lo
-iface lo inet loopback
-
-auto eth0
-iface eth0 inet dhcp
-
-iface eth0 inet6 dhcp
-    pre-up echo 0 > /proc/sys/net/ipv6/conf/eth0/accept_ra
-EOF
-
-rc-service networking restart;rc-update add networking boot
 
 cat > /root/.cshrc << EOF
 unsetenv DISPLAY || true
 HISTCONTROL=ignoreboth
 EOF
-
 cp /root/.cshrc  /root/.bashrc
-
  echo "root:toor" | chpasswd
 
-apk add tcsh
+hostname venenux-desktop
+echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
+echo "venenux-desktop" > /etc/hostname
+cat > /etc/hosts << EOF
+127.0.0.1 venenux-desktop localhost.localdomain localhost
+::1 localhost localhost.localdomain
+EOF
 
-add-shell '/bin/csh'
+apk add tcsh && add-shell '/bin/csh'
 
 adduser -D -g "" -u 998 -h /opt/daru -s /bin/csh daru
-
  echo "daru:daru" | chpasswd
 
 rm -f /opt/daru/*
@@ -92,10 +82,11 @@ apk update
 
 apk add man-db man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
+ file lz4 arch-install-scripts gawk tree pciutils usbutils lshw \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
  e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
  f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
- testdisk testdisk-doc partimage partimage-doc parted parted-doc util-linux zram-init
+ arch-install-scripts util-linux zram-init tzdata tzdata-utils
 
 sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
 setfont /usr/share/consolefonts/ter-132n.psf.gz
@@ -152,12 +143,13 @@ for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp ne
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-system-users)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
 
 #### setup hardware support
 
 ```
-apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc pciutils util-linux zram-init \
+apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc \
+ pciutils util-linux arch-install-scripts zram-init acpi-utils \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
@@ -169,7 +161,7 @@ rc-update add acpid
 rc-update add cpufreqd
 rc-update add fuse
 rc-update add bluetooth
-rc-update add chrony
+rc-update add chronyd
 rc-update add wpa_supplicant
 rc-update add networkmanager
 
@@ -187,26 +179,31 @@ rc-service cpufreqd restart
 
 ```
 
-For more details check  [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-software-graphical-fonts-and-languajes)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
 
 #### setup audio and video
 
+> **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
+
 ```
-apk add xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc  xf86-input-evdev libxinerama xrandr kbd setxkbmap \
- mesa xinit mesa-dri-gallium xf86-video-dummy xf86-video-modesetting xf86-video-vesa xf86-input-libinput
+apk add xinit xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
+ xf86-video-dummy xf86-video-vesa xf86-video-amdgpu xf86-video-noveau xf86-video-intel \
+ xf86-video-apm xf86-video-vmware xf86-video-ati xf86-video-nv xf86-video-openchrome \
+ xf86-video-r128 xf86-video-qxl xf86-video-sis xf86-video-s3 xf86-video-i128 xf86-video-i740 \
+ xf86-video-savage xf86-video-s3virge xf86-video-chips xf86-video-tdfx xf86-video-ast xf86-video-ark \
+ xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
+ mesa mesa-gl mesa-utils mesa-osmesa mesa-dri-gallium libxinerama xrandr kbd setxkbmap
 
 apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
- dbus dbus-x11 elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
- polkit polkit-openrc polkit-elogind udisks2 udisks2-lang \
- gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang \
- networkmanager-elogind linux-pam
+ dbus dbus-x11 udisks2 udisks2-lang \
+ gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
+
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 rc-update add dbus
 rc-update add elogind
 rc-update add polkit
-rc-update add lightdm
 
 apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi \
@@ -215,6 +212,8 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
 
 apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf sndio \
  pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez wireplumber-logind
+
+amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
 @audio - memlock 4096
@@ -234,24 +233,21 @@ rc-service alsa restart
 rc-service elogind restart
 
 rc-service polkit restart
-
-rc-service lightdm restart
-
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
 > **Note** check for some xf86-video packages like `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv`
 
-## instalacion OpenBox Alpine
+## Instalacion Desktop OpenBox Alpine
 
-Since Alpine 3.13 the mayor KGT apps desktop builds GTK3 for 32bit devices its better 
-to use alpine 3.10 or 3.12 that uses GTK2 for almost all the programs.
+Since Alpine 3.13 the LXDE/Openbox desktop its GTK3 for 32bit devices its better to use alpine 3.10 
+or 3.12 that uses GTK2 for almost all the programs, also most of the 32bit 
+laptops has problems with kernel 4.X so best are 3.X kernels.
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme
-
-apk add numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+ numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
 apk add openbox openbox-doc jgmenu jgmenu-doc pcmanfm lxsession xfce4-terminal xarchiver mousepad \
  xfce4-panel xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \
@@ -259,8 +255,19 @@ apk add openbox openbox-doc jgmenu jgmenu-doc pcmanfm lxsession xfce4-terminal x
  xfce4-panel-lang xfce4-clipman-plugin-lang xfce4-xkb-plugin-lang xfce4-screenshooter-lang \
  xfce4-taskmanager-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang \
  gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
- network-manager-applet network-manager-applet-lang vte3 \
  libreoffice libreoffice-gnome evince evince-lang evince-doc
+```
+
+At this point you already has a Openbox environment and can choose to launch from 
+the tty console by running `openbox-session` command, but that is just a generic form, 
+for a better end user implementation follows the next section commands.
+
+#### Login manager and user configurations
+
+```
+apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+ polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
+ network-manager-applet network-manager-applet-lang vte3
 
 rc-service networking restart
 
@@ -269,8 +276,13 @@ rc-service wpa_supplicant restart
 rc-service networkmanager restart
 
 rc-service lightdm restart
-
 ```
+
+> **Warning** : for alpine 3.14, 3.15 just works the login sesion but newers versions 
+suddently raises blank screens, just rerun the previous commands and get 
+sure your user follow all rules and is same name here in guide!
+
+On older versions (Alpine 3.12 or less) the xx-openrc packages dont exists!
 
 #### openbox session menu and desktop configuration
 
@@ -355,14 +367,16 @@ for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
 apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
-
-#### Desktop multimedia and media devices
+#### multimedia and hardware media device access for the users
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
  libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
- mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr 
+ mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
+
+apk add gvfs-fuse ntfs-3g gvfs-cdda gvfs-afp gvfs-mtp gvfs-smb gvfs-lang \
+ gvfs-afc gvfs-nfs gvfs-archive gvfs-dav gvfs-gphoto2 gvfs-avahi
 
 for u in $(ls /home); do for g in plugdev audio cdrom dialout video netdev; do addgroup $u $g; done;done
 
@@ -376,7 +390,6 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
-
 ```
 
 #### development
@@ -413,6 +426,8 @@ if you paste, the first line will be preceded by garbage, check always the first
 > **Warning** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
 and restart ssh `service sshd restart` becouse security implications.
 
+Done? return to [Preparation](#preparation-alpine) section of this document.
+
 #### hardware used
 
 | item             | minimal feature   | Extra recommendations              |
@@ -434,6 +449,7 @@ and restart ssh `service sshd restart` becouse security implications.
 | admin     | root                | toor     |
 | user      | general             | general  |
 
+Done? return to [Preparation](#preparation-alpine) section of this document.
 
 ## Licensing clarifications
 
