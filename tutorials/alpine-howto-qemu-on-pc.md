@@ -723,9 +723,6 @@ after is finished you can just **boot again but with no iso** boot:
 ```
 
 
-
-##
-
 ## Qemu usage
 
 We learned how to setup property the environment to run qemu 
@@ -900,7 +897,7 @@ qemu-img create -f raw -o preallocation=full vm1x86alpine318.raw 4G
  -cdrom alpine-extended-3.18.5-x86.iso -boot order=d
 ```
 
-The install alpine and later after alpine install, poweroff and again run:
+Then install alpine and later still as general user after alpine installed, poweroff and again run:
 
 ```
 /usr/bin/qemu-system-i386 \
@@ -916,7 +913,6 @@ The install alpine and later after alpine install, poweroff and again run:
  -device AC97 \
  -display none -nographic \
 ```
-
 
 #### emulation amd64 machines over amd64 using KVM and hugepages and nested emulation
 

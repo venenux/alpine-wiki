@@ -443,10 +443,15 @@ The RAW image file format is best for fast implementation, for best performance
 using a qcow2 image file, increase the cluster size when creating the qcow2 file, 
 around 2 Megs and also perform a preallocation like we done with RAW before.
 
-* `qemu-img create -f qcow2 -o cluster_size=2M,reallocation=full storagedisk1.img 10G`
+* `qemu-img create -f qcow2 -o cluster_size=2M,preallocation=full storagedisk1.img 10G`
 
 **Warning** this will make that the storage gain performance but this defeats 
-thin provisioning, also mayor cluster size will increase waste of storage.
+thin provisioning, also mayor cluster size will increase waste of storage, for 
+a faster creation you can use falloc allocation on modern versions as:
+
+* `qemu-img create -f qcow2 -o cluster_size=2M,preallocation=falloc storagedisk1.img 10G`
+
+All of **those commands created 10G disk sizes as noted at the end of the commands!**
 
 #### Tune up disk storage for QCOW formats
 
@@ -466,7 +471,7 @@ each qcow2 file**, that gets worse with snapshots. This will tune up.
 
 By example, for the 10G previously created images add to the qemu command VM this:
 
-* `-drive file=storagedisk1.img,if=none,l2_cache-size=1572864,cache_size=2097152,refcount-cache-size=262144,cache-clean-interval=700`
+* `-drive file=storagedisk1.img,l2_cache-size=1572864,cache_size=2097152,refcount-cache-size=262144,cache-clean-interval=700`
 
 The values here for the 10G QCOW2 disk1 were estimated from the calculated values, 
 so will cover also disk of 15G or 20G inclusivelly, the `cache-clean-interval=700` 
@@ -476,7 +481,8 @@ QEMU has a separate L2 cache for each qcow2 file, that gets worse with snapshots
 #### Storage device recommendations
 
 This depends of the virtual machine, over x86 by default uses SATA `ich9-ahci` 
-but for ARM you must specify based oon the machine to emulated, there is 
+only if Q35 is used as `-machine` argument, if not IDE will be used by default; 
+but for ARM you must specify based on the machine to emulated, there is 
 a option generic but guess (emulated OS) will need virtio modules on kernel.
 
 Also it depends of the virtualization, if you wil use file storage virtualization 
@@ -492,16 +498,37 @@ emulation **best option for performance but dont support huge amount of "disks"*
 is prefered for ARM and Amd64 emulation, can be used on any emulation if the 
 kernel of operating system support it!
 2. `-device ide-hd,drive=hd0` is the most compatible storage device front, use 
-it for older emulations. Will be a SATA similar to `ich9-ahci` if not specify in 
-the drive with `if=ide` so will be `-drive file=storagedisk1.img,if=ide,id=hd0` 
-so for older emulation with older OSs this could be best option.
+it for older emulations. Will be a SATA similar to `ich9-ahci` if Q35 machine is 
+used, for IDE must be `if=ide` so will be `-drive file=storagedisk1.img,if=ide,id=hd0` 
+so for older emulation with older OSs this is the best option.
 3. `-device virtio-scsi -device scsi-hd,drive=hd0` is newer virtio block device 
 for file storage emulation **best option for huge amount of "disks" but less 
 performance** is prefered for server cluster emulation, can be used on any emulation 
 if the kernel of operating system support it! Dont use it on older OSs.
 
+Those options mus be used in conjuction with a device bus, by example `-device ich9-achi` 
+before any of them! See some examples:
+
+```
+-device ich9-ahci,id=ahci \
+-device ide-hd,drive=hd0,bus=ahci.0 \
+-device ide-hd,drive=hd1,bus=ahci.1 \
+-device ide-cd,drive=cd0,bus=ahci.2 \
+-device ide-cd,drive=cd1,bus=ahci.3 \
+-drive file=vm1-windows2k3-disk0.img,format=qcow2,if=none,media=disk,aio=threads,index=0,id=hd0 \
+-drive file=vm1-windows2k3-disk1.img,format=qcow2,if=none,media=disk,aio=threads,index=1,id=hd1 \
+-drive file=/home/general/Isos/live-image-amd64.hybrid.iso,if=none,media=cdrom,aio=threads,index=2,id=cd0 \
+-drive file=/home/general/Downloads/windows-drivers-qemu-virtio-win-0.1.240-2023.iso,if=none,media=cdrom,aio=threads,index=3,id=cd1
+```
+
+Here we used `ich9` ACHI SATA with 4 drives, two first are hard disk drives and 
+seconds last are optical cd/dvd drives, `index` parameters indicates the order, 
+and the `id` indicates where is attached in combination with `bus` from PCI storage.
+Note that `if=none` must be parse to associated with the specific `bus=ahci.#`!
+
 With the `aio=threads` option is the preferred option when storing the VM image 
-file on an ext4 file system. With other file systems, `aio=native` must be used.
+file on an ext4 file system (real machine) and emulated (guest) are not linux etx4!. 
+With other file systems, `aio=native` must be used.
 
 More complex combinations can be made, inclusive just usage of one partition, 
 event a complete hard drive, or network mount drive also.
@@ -537,7 +564,7 @@ hardware-assisted opengl acceleration which in turn needs opengl support
 enabled if `-display xxx,gl=on` is enabled in the qemu display (sdl/gtk), 
 **recommended for both modern or older systems with support of opengl**
 but will require KVM support on host machine.
-3. `-device ramfb` very simple display device; ases a framebuffer stored 
+3. `-device ramfb` very simple display device; sets a framebuffer stored 
 in guest memory; does not have vga, support vgabios and uefivga; the 
 firmware initializes it and allows to use it as boot display (grub boot 
 menu, efifb, ...) without needing complex legacy VGA emulation. **Only 
@@ -546,7 +573,8 @@ recommended for SOC devices like older ARM boars emulation**
 does not have vga, supports vgabios, supports uefivga, and is linux focused; 
 firmware will setup a linear framebuffer as GOP anyway and never use any 
 legacy VGA features, so this device is **best option for UEFI related; 
-also this is best option for server virtualized implementation**.
+also this is best option for server virtualized implementation**. This 
+is the default in qemu if you dont specify any vga device!
 4. `-device xql-vga` mostly dated, it feature is multihead support to a 
 second display to remote connection, mostly for crap operating systems; 
 if supports vgabios, uefivga, VGA output and any guest OS will support it; 
@@ -576,7 +604,7 @@ For audio in order of best compatibilty to most improvement on modern hosted:
 1. `-device AC97` is enough for older or newer devices, it comes with 
 the mic and output at the same time, all the inputs and outputs are auto 
 mapped to the backend and provided without, this is the **best option 
-for emulation of 32 or 64 bits of ARM or X86 based computers and older OS**
+for emulation of 32 bits of X86 based computers and older OS** and 64bit linux!
 2. `-device intel-hda -device hda-duplex` the High definition audio, 
 that must be provided with a specific device way, the `hda-duplex` 
 **will provide only "line in" and "line out" sound, no mic allowed**.
@@ -584,9 +612,10 @@ that must be provided with a specific device way, the `hda-duplex`
 that must be provided with a specific device way, the `hda-micro` 
 **will provide only "mic in" and "line out" sound, no "line in" allowed**.
 4. `-device ich9-intel-hda` is the only **recommended device to the 
-emulation of modern propietary operating system** from Apple or M$.
+emulation of modern propietary operating system** from Apple or M$ if 
+you runs 64bit guest operating systems! Otherwise use AC97 emulation.
 5. `-device virtio-sound-pci` is the most recent feature of qemu, but 
-only supported for modern guest OSs, its not recommended on most cases 
+only supported for modern Linux guest OSs, its not recommended on most cases 
 becouse is too recent and is complete virtualized (more slow but featured).
 
 **IMPORTANT** On the host end (the VM not the host), available support include 
