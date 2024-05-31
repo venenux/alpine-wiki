@@ -357,7 +357,7 @@ wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php
 ln -s adminer-4.8.1.php /usr/share/webapps/adminer/index.php
 
 cat >> /etc/apache2/conf.d/adminer.conf << EOF
-Alias /manag/adminer /usr/share/webapps/adminer/
+Alias /adminer /usr/share/webapps/adminer/
 <Directory /usr/share/webapps/adminer/>
     Require all granted
     DirectoryIndex index.php
@@ -366,7 +366,10 @@ Alias /manag/adminer /usr/share/webapps/adminer/
 rc-service apache2 restart
 ```
 
-This configurations assumes you already runs all this guide!
+The administrator must use the exact URL
+`http://<ipaddress>/adminer/index.php` There are two reasons: there\'s
+no directory listing and there\'s no direct PHP index reference on the
+web server, all because of paranoid settings.
 
 #### Mysql Instalation and configuration
 

@@ -264,8 +264,8 @@ ln -s adminer-4.8.1.php /usr/share/webapps/adminer/index.php
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 
 cat > /etc/lighttpd/mod_adminer.conf << EOF
-alias.url += (  "/manag/adminer/" => "/etc/adminer/" )
-$HTTP["url"] =~ "^/manag/adminer/" {
+alias.url += (  "/adminer/" => "/usr/share/webapps/adminer" )
+$HTTP["url"] =~ "^/adminer/" {
     dir-listing.activate = "disable"
     index-file.names := ( "index.php", "index.html", "adminer-4.8.1.php" )
 }
@@ -275,16 +275,12 @@ itawxrc="";itawxrc=$(grep 'include "mod_adminer.conf' /etc/lighttpd/lighttpd.con
 
 sed -i -r 's#\#.*mod_alias.*,.*#    "mod_alias",#g' /etc/lighttpd/lighttpd.conf
 
-sed -i -r 's#.*include "mod_cgi.conf".*#   include "mod_cgi.conf"#g' /etc/lighttpd/lighttpd.conf
-
 checkssl="";checkssl=$(grep 'include "mod_adminer.conf' /etc/lighttpd/lighttpd.conf);[[ "$checkssl" != "" ]] && echo listo || sed -i -r 's#.*include "mod_cgi.conf".*#include "mod_cgi.conf"\ninclude "mod_adminer.conf"#g' /etc/lighttpd/lighttpd.conf
 
 rc-update add lighttpd default
 
 rc-service lighttpd restart
 ```
-
-This configurations assumes you already runs all this guide!
 
 The administrator must use the exact URL
 `http://<ipaddress>/adminer/index.php` There are two reasons: there\'s
