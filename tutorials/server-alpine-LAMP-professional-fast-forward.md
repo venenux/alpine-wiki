@@ -393,6 +393,8 @@ sed -i "s|.*max_allowed_packet\s*=.*|max_allowed_packet = 100M|g" /etc/my.cnf.d/
 
 sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/mysql/my.cnf
 sed -i "s|.*bind-address\s*=.*|bind-address=0.0.0.0|g" /etc/my.cnf.d/mariadb-server.cnf
+sed -i "s|.*skip-networking.*|#skip-networking|g" /etc/mysql/my.cnf
+sed -i "s|.*skip-networking.*|#skip-networking|g" /etc/my.cnf.d/mariadb-server.cnf
 
 rc-service mariadb restart
 
@@ -400,6 +402,8 @@ rc-update add mariadb
 ```
 
 For information and more deep setup check [../documents/server-alpine-mysql-professional.md](../documents/server-alpine-mysql-professional.md)
+
+> **Warning:** the configuration here is for quick access and fist development, security is minimal only! for secure configuration set to specific bind-address or if you dont want remote access uncomment skip-networking
 
 #### PostgreSQL instalation and configuration
 
