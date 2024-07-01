@@ -134,9 +134,9 @@ SULOG_FILE	/var/log/sulog
 SU_NAME		su
 EOF
 
-useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users,ping general
+useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,plugdev,games,users,ping general
 
-for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev plugdev games users ping; do addgroup $u $g; done;done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -146,7 +146,7 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 #### setup hardware support
 
 ```
-apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc \
+apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-netifnames eudev-openrc \
  pciutils util-linux arch-install-scripts zram-init acpi-utils \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
@@ -177,7 +177,7 @@ rc-service cpufreqd restart
 
 ```
 
-For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md)
 
 #### setup audio and video
 
@@ -197,8 +197,6 @@ apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 rc-update add dbus
-rc-update add elogind
-rc-update add polkit
 
 apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi \
@@ -224,10 +222,6 @@ rc-update add alsa
 rc-service dbus restart
 
 rc-service alsa restart
-
-rc-service elogind restart
-
-rc-service polkit restart
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -263,8 +257,6 @@ apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
  network-manager-applet network-manager-applet-lang vte3
 
 rc-service networking restart
-
-rc-service wpa_supplicant restart
 
 rc-service networkmanager restart
 
@@ -322,7 +314,7 @@ apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-de
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
- libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
+ libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
 
@@ -342,20 +334,6 @@ service wpa_supplicant restart
 
 service networkmanager restart
 
-```
-
-#### development
-
-```
-apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
- patch patch-doc patchutils patchutils-doc diffutils diffutils-doc \
- git git-cvs git-svn github-cli git-diff-highlight git-doc \
- subversion subversion-doc mercurial mercurial-doc \
- geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel \
- geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser \
- geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn \
- geany-plugins-utils geany-lang \
- terminator terminator-lang tmux screen meld meld-lang
 ```
 
 ## How to use this guide

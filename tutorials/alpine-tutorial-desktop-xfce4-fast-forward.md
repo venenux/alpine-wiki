@@ -79,11 +79,11 @@ EOF
 
 apk update
 
-apk add man-db man-pages nano binutils coreutils readline \
+apk add mandoc man-pages nano binutils coreutils readline \
  sed attr dialog lsof less groff wget curl terminus-font \
  file lz4 arch-install-scripts gawk tree pciutils usbutils lshw \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
- e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
+ e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils \
  f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
  arch-install-scripts util-linux zram-init tzdata tzdata-utils
 
@@ -135,14 +135,14 @@ SULOG_FILE	/var/log/sulog
 SU_NAME		su
 EOF
 
-useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users,ping general
+useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,plugdev,games,users,ping general
 
-for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev plugdev games users ping; do addgroup $u $g; done;done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md)
 
 #### setup hardware support
 
@@ -178,7 +178,7 @@ rc-service cpufreqd restart
 
 ```
 
-For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
+For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md)
 
 #### setup audio and video
 
@@ -201,8 +201,6 @@ apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 rc-update add dbus
-rc-update add elogind
-rc-update add polkit
 
 apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
  font-bitstream-type1 font-bitstream-100dpi font-bitstream-75dpi \
@@ -228,10 +226,6 @@ rc-update add alsa
 rc-service dbus restart
 
 rc-service alsa restart
-
-rc-service elogind restart
-
-rc-service polkit restart
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -249,6 +243,7 @@ apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-th
  numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
 apk add polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
+ libcanberra libcanberra-gtk3 libcanberra-gtk2 libcanberra-gstreamer libcanberra-pulse \
  xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad \
  xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \
  xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager \
@@ -265,13 +260,12 @@ for a better end user implementation follows the next section commands.
 #### Login manager and user configurations
 
 ```
-apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+apk add elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
  polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
  network-manager-applet network-manager-applet-lang vte3
 
-rc-service networking restart
-
-rc-service wpa_supplicant restart
+rc-update add dbus
+rc-update add lightdm
 
 rc-service networkmanager restart
 
@@ -294,7 +288,7 @@ apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-de
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
- libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer wxgtk-media wxgtk3-media wxgtk-lang \
+ libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
 
@@ -313,20 +307,6 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
-```
-
-#### development
-
-```
-apk add pkgconf make cmake gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc \
- patch patch-doc patchutils patchutils-doc diffutils diffutils-doc \
- git git-cvs git-svn github-cli git-diff-highlight git-doc \
- subversion subversion-doc mercurial mercurial-doc \
- geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel \
- geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser \
- geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn \
- geany-plugins-utils geany-lang \
- terminator terminator-lang tmux screen meld meld-lang
 ```
 
 ## How to use this guide
