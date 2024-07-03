@@ -103,6 +103,8 @@ If you dont have wired internet connection, check [lack of wireless setup](#lack
 
 #### setup OS configuration
 
+Runs following commands as root user:
+
 1. deny access to the ssh root user, or well, get sure to deny such access
 2. setup and start the ssh service, this always be present in Alpine installs
 3. set the name of the computer, here we used `venenux-desktop`, please avoid symbols
@@ -144,6 +146,7 @@ mkdir /opt/daru
 
 cat > /opt/daru/.cshrc << EOF
 unsetenv DISPLAY
+export PAGER=less
 set autologout = 6
 set prompt = "$ "
 set history = 0
@@ -189,19 +192,17 @@ http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)
 EOF
 apk update
 
-apk add bash bash-doc bash-completion readline readline-doc dialog dialog-doc
+apk add bash bash-doc bash-dev bash-completion readline readline-doc dialog dialog-doc
 
-apk add coreutils coreutils-doc man-db man-pages nano nano-doc binutils binutils-doc
+apk add coreutils coreutils-doc mandoc man-pages nano nano-doc binutils binutils-doc
 
 apk add sed sed-doc lsof lsof-doc less less-doc groff groff-doc gawk gawk-doc
 
 apk add wget wget-doc curl curl-doc aria2 aria2-doc
 
-apk add zip zip-doc p7zip p7zip-doc xz xz-doc tar tar-doc lha lha-doc attr attr-doc 
+apk add zip zip-doc p7zip p7zip-doc xz xz-doc tar tar-doc lha lha-doc attr attr-doc cpio cpio-doc lha lha-doc lz4 lz4-libs lz4-doc lz4-static
 
-apk add cpio cpio-doc lha lha-doc lz4 lz4-libs lz4-doc lz4-static
-
-apk add file file-doc arch-install-scripts arch-install-scripts-doc tree tree-doc
+apk add file file-doc arch-install-scripts arch-install-scripts-doc tree tree-doc apk add e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc
 
 apk add musl-locales musl-locales-lang tzdata tzdata-utils terminus-font
 
@@ -240,7 +241,7 @@ all of this only works using the proper policy kit software.
 9. include this `general` user in the most used need groups to have proper access to resources
 
 ```
-apk add shadow shadow-doc shadow-uidmap bash bash-doc bash-dev doas doas-doc doas-sudo-shim
+apk add shadow shadow-doc shadow-uidmap doas doas-doc doas-sudo-shim
 
 cat > /tmp/tmpcs.tmp << EOF
 set history = 10000
@@ -346,6 +347,8 @@ configure the graphical environment to property setup any desktop.
 ```
 apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux zram-init
 
+setup-devd udev
+
 rc-update add udev
 rc-update add acpid
 rc-update add cpufreqd
@@ -359,8 +362,6 @@ apk add xf86-video-vesa  xf86-video-modesetting xf86-video-qxl xf86-video-vmware
 apk add xf86-video-r128 xf86-video-s3virge xf86-video-apm xf86-video-i128 xf86-video-glint xf86-video-tdfx xf86-video-openchrome
 
 apk add xf86-video-intel xf86-video-amdgpu xf86-video-ati xf86-video-nouveau xf86-video-nv xf86-video-vesa
-
-setup-devd udev
 
 apk add libxinerama xrandr kbd setxkbmap xf86-input-evdev
 
@@ -501,7 +502,9 @@ currently ws the first and its the most complete desktop packaged in the repos.
 
 This means **no dbus** and no `XDG_RUNTIME_DIR` setup, the pipewrite can 
 be configured to assumed never will exits a graphical session running, 
-also the package `eudev` must be installed for alsa cards:
+also the package `eudev` must be installed for alsa cards.
+
+This method is not sure to work in almost all cases, so if fails just leave only alsa packages and setup alsa only!
 
 ```
 cp -a /usr/share/pipewire /etc
@@ -639,67 +642,6 @@ apk add libreoffice libreoffice-gnome evince evince-lang evince-doc
 ```
 
 The programs will appear in the Office menu category.
-
-## development
-
-This is only for those that dont want to download bunch of thing 
-when install some programs from sources. In any cae, modding and plugin hacks 
-will need this for minecraft or minetest hard hacker players.
-
-The most important tool for development is the VCS:  version control system.
-The most usefull too for GUI development is the IDE: intregrated development environment
-
-From this, there's the RAD, means Rapid Application Development and the 
-prefered way model for starting newbies.. 
-
-#### base console development
-
-1. install the minimal standard needs like make, cmake and gcc, pkg-config was superset by pkgconf
-2. install set of tools to merge or compare files
-3. install the most used version control service: git (GIT) VCS
-4. install the second most used version control service optionally: subversion (SVN) VCS
-5. install the so famous version control service: mercurial (HG) VCS
-6. install session terminal handler, so can save terminal sessions
-
-```
-apk add pkgconf make cmake cmake-bash-completion gcc gcc-gdc gcc-go g++ gcc-objc gcc-doc
-
-apk add patch patch-doc patchutils patchutils-doc diffutils diffutils-doc
-
-apk add git git-bash-completion git-zsh-completion git-cvs git-svn github-cli git-diff-highlight git-doc
-
-apk add subversion subversion-bash-completion subversion-zsh-completion subversion-yash-completion subversion-doc
-
-apk add mercurial mercurial-bash-completion mercurial-zsh-completion mercurial-doc
-
-apk add tmux screen
-```
-
-From this point you can work in console terminal all development task, 
-of course, each development will need specific need, but this ones installed 
-are always basic and mandatory (almost in all cases).
-
-Next section, will cover some usefully artifact like an IDE (Intregrated Development Environment):
-
-#### base gui development
-
-The most compatible and all availabe IDE is geany, **this powerful tool 
-is very poorly valued, since like everything in linux it must be configured 
-according to your interest**, unlike other java or python craps that comes
-already configured.
-
-In such case **Geany is as close to the Unix spirit** it featured: overview, 
-htmlpreview, compile, diff, CVS, colorpicker, htmlpicker, tabletools, codecleanup, 
-and much more.
-
-For terminal insteach of the usage of tmux or screen inside the already GUI, 
-we recommended the yet ready for similar purposes Terminator.
-
-```
-apk add geany geany-plugins-lang geany-plugins-addons geany-plugins-geanyextrasel geany-plugins-overview geany-plugins-geanyvc geany-plugins-treebrowser geany-plugins-tableconvert geany-plugins-spellcheck geany-plugins-shiftcolumn geany-plugins-utils geany-lang meld meld-lang
-
-apk add terminator terminator-lang
-```
 
 ##### differences of hard coded setup
 
