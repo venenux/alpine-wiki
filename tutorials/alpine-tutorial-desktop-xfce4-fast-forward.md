@@ -80,18 +80,23 @@ EOF
 apk update
 
 apk add mandoc man-pages nano binutils coreutils readline \
- sed attr dialog lsof less groff wget curl terminus-font \
+ sed attr dialog lsof less groff wget curl \
  file lz4 arch-install-scripts gawk tree pciutils usbutils lshw \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
  e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils \
  f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
  arch-install-scripts util-linux zram-init tzdata tzdata-utils
 
-sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
+apk add font-terminus
+
 setfont /usr/share/consolefonts/ter-132n.psf.gz
+
+sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
 
 rc-update add consolefont boot
 ```
+
+> **Warning**: `font-terminus` is ony since alpine v3.18, for older versions use `terminus-font`
 
 For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
 
@@ -135,9 +140,9 @@ SULOG_FILE	/var/log/sulog
 SU_NAME		su
 EOF
 
-useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,plugdev,games,users,ping general
+useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,plugdev,games,users general
 
-for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev plugdev games users ping; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev plugdev games users; do addgroup $u $g; done;done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
