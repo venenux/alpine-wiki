@@ -19,6 +19,7 @@ Linux is just the **kernel** that handles and manages the **hardware** to the op
 * [Feature Differences](#feature-differences)
 * [Installation](#installation)
     * [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)
+    * [alpine-newbie-developer-base.md](alpine-newbie-developer-base.md)
 * [Post install and Software Packages](#post-install-and-software-packages)
     * [About the repositories of programs](#about-the-repositories-of-programs)
     * [APK and package formats](#apk-and-package-formats)
@@ -47,7 +48,7 @@ In next sections you will find general information necessary to start in the Alp
 | [Alpine Newbie Install](alpine-newbie-install.md) | Those writings are more focused on "Follow these steps blindly" for beginners, those pages are specific general cases, by example on virtual-box ones. |
 | [Alpine Newbie Configs](alpine-newbie-configs.md) | Some post installation steps you might want to take |
 | [Alpine newbie Desktop](alpine-newbie-desktop.md) | As a minimal distribution, Alpine follows the rule of "upstream provided", this means that Alpine doesn't ship with any graphical environments neither specific integrated configurations for. So means, but, you can installed some Desktops and Window Managers but must configured by yourself. |
-| [Alpine newbie Develop](alpine-newbie-develop.md) | Alpine development stack: Alpine Linux is the most used Linux for deploying software, making it a good choice if you are a developer. |
+| [Alpine newbie Develop](alpine-newbie-developer-base.md) | Alpine development stack: Alpine Linux is the most used Linux for deploying software, making it a good choice if you are a developer. |
 
 ## Installation
 
@@ -62,6 +63,7 @@ use an alpine virtual-box install and understand the system before try more deep
 that is why we offered in newbie category the [Alpine Newbie Install](alpine-newbie-install.md) pages.
 
 1. [Alpine Newbie Prepare](alpine-newbie-prepare.md)
+    * [alpine-newbie-developer-base.md](alpine-newbie-developer-base.md)
 2. [Alpine Newbie Install](alpine-newbie-install.md)
     * [alpine-newbie-shells.md](alpine-newbie-shells.md)
 3. [alpine-newbie-xfce-desktop.md](alpine-newbie-xfce-desktop.md)
@@ -148,15 +150,17 @@ All the Development process are detailed for newbie users in the Alpine newbie d
     * [alpine-newbie-shells.md](alpine-newbie-shells.md)
 2. [Alpine newbie Desktop](alpine-newbie-desktop.md)
 3. [Alpine newbie Develop](alpine-newbie-develop.md)
+    * [alpine-newbie-developer-base.md](alpine-newbie-developer-base.md)
 4. [Alpine newbie developer: full stack web](alpine-newbie-develop-full-stack-web.md)
 5. [Alpine newbie developer: backend devel](alpine-newbie-develop-backend-developer.md)
 
 ##### Servers: deploy in production
 
 1. [Alpine newbie Console](alpine-newbie-console.md)
-2. [Alpine production deploy](alpine-production-deploy.md)
-3. [Alpine advanced hugepages](alpine-newbie-hugepages.md)
-4. [Alpine newbie qemu virtualization](alpine-newbie-qemu-virtualization.md)
+2. [Alpine-newbie-developer base](alpine-newbie-developer-base.md)
+3. [Alpine production deploy](alpine-production-deploy.md)
+4. [Alpine advanced hugepages](alpine-newbie-hugepages.md)
+5. [Alpine newbie qemu virtualization](alpine-newbie-qemu-virtualization.md)
 
 * Special documentation:
     * How to protect professinally servers [server-alpine-fail2ban-professional.md](server-alpine-fail2ban-professional.md)
