@@ -158,6 +158,7 @@ apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
 
+modprobe btusb && echo "btusb" >> /etc/modprobe
 setup-devd udev
 
 rc-update add udev

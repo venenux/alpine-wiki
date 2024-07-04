@@ -481,8 +481,8 @@ cat > /etc/security/limits.d/audio-limits.conf << EOF
 @pipewire - rtprio 95
 EOF
 
-apk add bluez bluez-openrc pipewire-spa-bluez
-
+apk add bluez bluez-deprecated bluez-openrc pipewire-spa-bluez
+modprobe btusb && echo "btusb" >> /etc/modprobe
 rc-update add bluetooth
 
 rc-service bluetooth start

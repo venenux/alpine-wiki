@@ -153,10 +153,11 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 ```
 apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-netifnames eudev-openrc \
  pciutils util-linux arch-install-scripts zram-init acpi-utils \
- fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-openrc \
+ fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-deprecated bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
 
+modprobe btusb && echo "btusb" >> /etc/modprobe
 setup-devd udev
 
 rc-update add udev
