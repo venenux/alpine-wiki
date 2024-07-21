@@ -2,6 +2,8 @@
   <img src="alpine/apine-logo-telegram-groups.jpg" alt="Alpine Linux" width="350" />
 </p>
 
+Termus's wiki said: **that you avoid YouTube tutorials, especially related to hacking. There a lot of clickbait targeted at inexperienced users**.
+
 # alpine_wiki
 
 This is a markdown based effort to provide non-minimalist documentation 
@@ -19,7 +21,7 @@ want an Alpine ready touse in 4 hours, you have two options:
 ### Tutorials and Docs
 
 1. [Newbies](documents/README.md), not mandatory but recommended you start to read the [Newbies documentation](documents/README.md).
-2. [Tutorials](tutorials/README.md), for impatients if you have computer or only a phone, read the [Tutorials](tutorials/README.md)
+2. [Tutorials](tutorials/README.md), for impatients if you havethat you avoid YouTube tutorials, especially related to hacking. There a lot of clickbait targeted at inexperienced users. computer or only a phone, read the [Tutorials](tutorials/README.md)
 
 ### About alpine
 
