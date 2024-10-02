@@ -109,8 +109,8 @@ Runs following commands as root user:
 2. setup and start the ssh service, this always be present in Alpine installs
 3. set the name of the computer, here we used `venenux-desktop`, please avoid symbols
 4. setup services of network to init at boot check [differences of hard coded setup](#differences-of-hard-coded-setup) section of this document
-5. configure root account
-6. add the CSH shell and enable it
+5. configure root account and update repositories
+6. add the CSH shell and enable it using community repositories
 7. create a remote connection limited account `daru`, check [the daru user explanation](#the-daru-user-explanation) section of this document
 8. configure a default remote connection account `daru` as standard
 
@@ -133,6 +133,12 @@ HISTCONTROL=ignoreboth
 EOF
 cp /root/.cshrc  /root/.bashrc  /root/.profile
  echo "root:toor" | chpasswd
+
+cat > /etc/apk/repositories << EOF
+http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+apk update
 
 apk add tcsh && add-shell '/bin/csh'
 

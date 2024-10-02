@@ -54,6 +54,13 @@ cat > /etc/hosts << EOF
 ::1 localhost localhost.localdomain
 EOF
 
+cat > /etc/apk/repositories << EOF
+http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main
+http://dl-4.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community
+EOF
+
+apk update
+
 apk add tcsh && add-shell '/bin/csh'
 
 adduser -D -g "" -u 998 -h /opt/daru -s /bin/csh daru
@@ -140,9 +147,9 @@ SULOG_FILE	/var/log/sulog
 SU_NAME		su
 EOF
 
-useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,plugdev,games,users general
+useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users general
 
-for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev plugdev games users; do addgroup $u $g; done;done
+for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users; do addgroup $u $g; done;done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
