@@ -188,7 +188,7 @@ The following commands are separated by sections (check [How to use this guide](
 6. install support for backend of basic archivers and file manipulation
 7. install extra archiving tools and file manipulation tools
 8. add support for languaje environment and timezone
-9. install device information support and console management
+9. install device information support and console management and logging daemon
 
 
 ``` bash
@@ -212,7 +212,7 @@ apk add file file-doc arch-install-scripts arch-install-scripts-doc tree tree-do
 
 apk add musl-locales musl-locales-lang tzdata tzdata-utils terminus-font
 
-apk add pciutils pciutils-doc usbutils usbutils-doc lshw lshw-doc
+apk add pciutils pciutils-doc usbutils usbutils-doc lshw lshw-doc rsyslog rsyslog-doc
 ```
 
 The packages that have a "-doc" part handles the manpages.. you can 
@@ -335,7 +335,7 @@ configure the graphical environment to property setup any desktop.
 1. install programs to manage devices dinamically by the OS and not admin user
 2. setup service for dynamic device manager at boot, energy management and cpu frecuency management
 3. install the graphical subsystem and modesetting multi GPU video card support
-4. install the programs that manages the 3D backend for graphics
+4. install the programs that manages the 3D backend for graphics and log support
 5. install set of need modules for basic GPU and dummy ones like virtual machines, avoid if not need.
 6. install set of need modules for 2D/3D specific GPU or video card not so older generation supported
 7. install set of need modules for 2D/3D common GPU or video card almost modern still supported
@@ -344,8 +344,8 @@ configure the graphical environment to property setup any desktop.
 10. generate the machine id identification hack for stupid shistemd linux standards
 11. activate the service of the bus cominucations, the policy rules and graphical login backend
 12. start the service of the bus cominucations, the policy rules and graphical login backend
-13. activate the service of the graphical frontend login manager
-14. start the service of the graphical frontend login manager
+13. activate the service of the graphical frontend login manager and syslog support
+14. start the service of sysloging and the graphical frontend login manager
 15. install support for abstract device filesystem representation using FUSE user space
 16. activate the service of abstract device filesystem representation using FUSE user space
 17. install software backend for usage of abstract device filesystem representation using FUSE user space
@@ -376,7 +376,7 @@ apk add xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-vmware 
 
 apk add linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia linux-firmware-i915 linux-firmware-intel
 
-apk add libxinerama xrandr kbd setxkbmap xinit xf86-input-evdev
+apk add libxinerama xrandr kbd setxkbmap xinit xf86-input-evdev rsyslog rsyslog-doc
 
 apk add dbus dbus-x11 elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
 
@@ -392,7 +392,10 @@ rc-service elogind restart
 
 rc-service polkit restart
 
+rc-update add rsyslog
 rc-update add lightdm
+
+rc-service rsyslog restart
 
 rc-service lightdm restart
 

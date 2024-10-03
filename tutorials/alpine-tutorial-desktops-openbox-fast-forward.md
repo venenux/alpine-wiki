@@ -161,7 +161,7 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 
 ```
 apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc \
- pciutils util-linux arch-install-scripts zram-init acpi-utils \
+ pciutils util-linux arch-install-scripts zram-init acpi-utils rsyslog \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-deprecated bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
  networkmanager networkmanager-lang networkmanager-openvpn networkmanager-openvpn-lang
@@ -169,6 +169,7 @@ apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-rule-generator
 modprobe btusb && echo "btusb" >> /etc/modprobe
 setup-devd udev
 
+rc-update add rsyslog
 rc-update add udev
 rc-update add acpid
 rc-update add cpufreqd
@@ -190,6 +191,7 @@ rc-service fuse restart
 
 rc-service cpufreqd restart
 
+rc-service rsyslog restart
 ```
 
 For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md)
