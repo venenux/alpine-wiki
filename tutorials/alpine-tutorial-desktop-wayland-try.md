@@ -238,6 +238,8 @@ rc-update add alsa
 rc-service dbus restart
 
 rc-service alsa restart
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -325,6 +327,8 @@ if [ -z "\${DISPLAY}" ] && [ "\${XDG_VTNR}" -eq 1 ]; then
 fi
 EOF
 for u in $(ls /home); do cp /tmp/.xinitrc /home/$u/.xinitrc;done
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 On older versions (Alpine 3.12 or less) the xx-openrc packages dont exists!
@@ -358,7 +362,6 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
-
 ```
 
 ## How to use this guide

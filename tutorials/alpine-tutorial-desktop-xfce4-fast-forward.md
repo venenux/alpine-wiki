@@ -243,6 +243,8 @@ rc-update add alsa
 rc-service dbus restart
 
 rc-service alsa restart
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -266,6 +268,8 @@ apk add polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
  xfce4-taskmanager-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang \
  gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
  libreoffice libreoffice-gnome evince evince-lang evince-doc
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 At this point you already has a desktop environment and can choose to launch from 

@@ -151,6 +151,8 @@ EOF
 useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users,ping general
 
 for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
@@ -374,6 +376,8 @@ sed -i -r 's|Clearlooks|Bear2|g' /etc/xdg/openbox/rc.mxl
 sed -i -r 's|.*root-menu.*|<action name="Execute"><command>jgmenu_run</command></action>|g' /etc/xdg/openbox/rc.xml
 
 for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 #### desktop integration and device media

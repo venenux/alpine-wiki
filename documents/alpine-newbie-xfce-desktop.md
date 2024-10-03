@@ -501,6 +501,8 @@ modprobe btusb && echo "btusb" >> /etc/modprobe
 rc-update add bluetooth
 
 rc-service bluetooth start
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 Now at this point we have audio and video configured, additionally we have 
@@ -558,6 +560,7 @@ that uses GTK2 for almost all the programs.
 5. start the display manager, now you can use a minimal XFCE4 desktop, continue for complete experience
 6. install cliboard manager, keyboard configurator, screensaver, screenshooter, and baterry manager
 7. install packages for multi lang environment of the XFCE4 desktop if need, if login, logout and relogin
+8. get sure of user session and permissions
 
 ```
 apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme mate-themes
@@ -573,7 +576,8 @@ rc-service lightdm restart
 apk add xfce4-clipman-plugin xfce4-xkb-plugin xfce4-screensaver xfce4-screenshooter xfce4-taskmanager xfce4-whiskermenu-plugin xfce4-battery-plugin
 
 apk add xfce4-panel-lang xfce4-clipman-plugin-lang xfce4-xkb-plugin-lang xfce4-screenshooter-lang xfce4-taskmanager-lang xfce4-whiskermenu-plugin-lang xfce4-battery-plugin-lang xfce4-power-manager-lang xfce4-settings-lang
- 
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 The XFCE4 desktop is the most complete in Alpine, MATE and others have almost complete packages, 
@@ -603,6 +607,7 @@ and minimal support for editing.
 12. reconfigure the interfaces so the network gui can then manage it
 13. start the network manager backend services, so the gui can manager then
 14. at this point logout and relogin from your current sesion to start to work
+15. get sure again of user session and permissions
 
 ```
 
@@ -643,6 +648,7 @@ service wpa_supplicant restart
 
 service networkmanager restart
 
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 ## Desktop Office suite
