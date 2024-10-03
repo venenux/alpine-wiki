@@ -194,18 +194,19 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 
 #### setup audio and video
 
-> **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
+> **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2 with wayland
 
 ```
-apk add xinit xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
- xf86-video-dummy xf86-video-vesa xf86-video-amdgpu xf86-video-noveau xf86-video-intel \
- xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
- mesa mesa-gl mesa-utils mesa-osmesa mesa-dri-gallium libxinerama xrandr kbd setxkbmap
+apk add mesa mesa-gl mesa-utils mesa-osmesa mesa-egl mesa-gles mesa-dri-gallium mesa-va-gallium libva-intel-driver intel-media-driver \
+ xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-vmware xf86-video-ati \
+ xf86-video-dummy xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
+ linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia linux-firmware-i915 linux-firmware-intel
 
 apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
  dbus dbus-x11 udisks2 udisks2-lang \
  gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
 
+modprobe fbcon && echo "fbcon" >> /etc/modprobe
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -239,7 +240,7 @@ rc-service alsa restart
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-> **Note** pure wayland will work only in modern gpu, `xf86-video-intel`, `xf86-video-amdgpu`, `xf86-video-noveau`, `xf86-video-ati` or `xf86-video-nv` may not work due crap wayland requirements
+> **Note** pure wayland will work only in modern OpenGL/VaPI capable gpu, that's why you never see here other models rather than intel, amd and nvidia
 
 ## Instalacion Desktop WAYLAND Alpine
 
@@ -251,7 +252,7 @@ a so reduced environment need 3D for mostly eye candy.. ironically thing!
 apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
  numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
-apk add xwayland 
+apk add xwayland \
  wayland wlroots foot sway sway-doc bemenu swaylock swaylockd swaybg swayidle \
  weston weston-backend-wayland weston-backend-x11 weston-backend-drm weston-backend-wayland weston-backend-headless \
  weston-doc weston-shell-desktop weston-desktop-x11 weston-clients weston-terminal \

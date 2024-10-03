@@ -359,17 +359,23 @@ rc-update add udev
 rc-update add acpid
 rc-update add cpufreqd
 
-apk add xorg-server xorg-server-xnest xorg-server-xephyr xorg-server-doc xorg-server-doc xf86-video-dummy xf86-video-modesetting xf86-input-libinput
+apk add xorg-server xorg-server-xnest xorg-server-doc xf86-video-modesetting xf86-input-libinput freeglut glew glu
 
-apk add mesa xinit mesa-dri-gallium mesa-osmesa mesa-egl mesa-gl mesa-gles freeglut glew glu
+apk add mesa mesa-gl mesa-utils mesa-osmesa mesa-egl mesa-gles mesa-dri-gallium mesa-va-gallium libva-intel-driver intel-media-driver
 
-apk add xf86-video-vesa  xf86-video-modesetting xf86-video-qxl xf86-video-vmware xf86-input-evdev xf86-input-synaptics
+apk add xf86-video-dummy xf86-video-vesa xf86-video-qxl xf86-input-evdev xf86-input-synaptics
 
-apk add xf86-video-r128 xf86-video-s3virge xf86-video-apm xf86-video-i128 xf86-video-glint xf86-video-tdfx xf86-video-openchrome
+apk add xf86-video-apm xf86-video-openchrome xf86-video-r128 xf86-video-sis
 
-apk add xf86-video-intel xf86-video-amdgpu xf86-video-ati xf86-video-nouveau xf86-video-nv xf86-video-vesa
+apk add xf86-video-i128 xf86-video-i740 xf86-video-savage xf86-video-s3virge xf86-video-chips xf86-video-tdfx
 
-apk add libxinerama xrandr kbd setxkbmap xf86-input-evdev
+apk add xf86-video-ast xf86-video-rendition xf86-video-ark xf86-video-siliconmotion xf86-video-fbdev
+
+apk add xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-vmware xf86-video-ati xf86-video-nv
+
+apk add linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia linux-firmware-i915 linux-firmware-intel
+
+apk add libxinerama xrandr kbd setxkbmap xinit xf86-input-evdev
 
 apk add dbus dbus-x11 elogind elogind-openrc elogind-lang polkit polkit-openrc polkit-elogind lightdm lightdm-lang lightdm-gtk-greeter 
 
@@ -396,7 +402,6 @@ rc-service fuse start
 rc-update add fuse
 
 apk add gvfs udisks2 udisks2-lang udisks2-doc gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
-
 ```
 
 If you are impatient: [.. use this guide named Fast Forward XFCE desktop](../tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md)
