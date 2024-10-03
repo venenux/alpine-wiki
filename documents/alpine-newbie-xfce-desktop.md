@@ -353,6 +353,7 @@ configure the graphical environment to property setup any desktop.
 ```
 apk add acpi alpine-conf eudev eudev-doc eudev-rule-generator eudev-openrc linux-firmware cpufreqd pciutils util-linux zram-init
 
+modprobe fbcon && echo "fbcon" >> /etc/modprobe
 setup-devd udev
 
 rc-update add udev

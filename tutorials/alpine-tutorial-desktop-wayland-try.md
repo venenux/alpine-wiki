@@ -265,6 +265,18 @@ inside and X11 or another wayland session, sway is a window manager and composit
 
 #### Login manager and user configurations
 
+If (after runs wayland) module auto-selection does not work, e.g. no mouse cursor under Sway, 
+manually selection might be needed to declare explilcy variables for current session:
+
+* `MESA_LOADER_DRIVER_OVERRIDE=crocus` for Intel's cards, all Intel Graphics up to Haswellsteam
+* `MESA_LOADER_DRIVER_OVERRIDE=r300` for AMD's Radeon R300, R400, and R500 GPUs.
+* `MESA_LOADER_DRIVER_OVERRIDE=r600` for AMD's Radeon R600 GPUs up to Northern Islands. Officially supported by AMD.
+* `MESA_LOADER_DRIVER_OVERRIDE=radeonsi` for AMD's Southern Island GPUs and later. Officially supported by AMD.
+* `MESA_LOADER_DRIVER_OVERRIDE=iris` for Intel's Iris modern GPUs and later.
+
+So we need to isntall the required login manager, lightdm does not officially support wayland 
+so you need to choose between GDM (for gtk) or SDDM (for QT) but you can use elogind to manage it:
+
 ```
 apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
  polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
@@ -277,12 +289,9 @@ rc-service networkmanager restart
 rc-service lightdm restart
 ```
 
-> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 and up will 
+> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 will 
 result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
-
-Wayland its on early stages.. so there is no login manager compatible, 
-this is cos wayland per ser its another way to run GUI, and 
-all the sesion and login GUI managers runs over Xorg.
+furter releases now supports session manager correctly!
 
 The wayland weston and sway configurations depens on your preferences, 
 the above commands just provide defaults to made those compositors able to run for users.

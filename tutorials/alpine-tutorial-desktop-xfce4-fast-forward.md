@@ -198,11 +198,11 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 > **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2
 
 ```
-apk add xinit xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc libxinerama xrandr kbd setxkbmap \
+apk add xinit xorg-server xorg-server-xnest xorg-server-xnest xorg-server-doc \
  xf86-video-vesa xf86-video-amdgpu xf86-video-nouveau xf86-video-intel \
  linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia linux-firmware-i915 linux-firmware-intel \
  xf86-video-apm xf86-video-vmware xf86-video-ati xf86-video-nv xf86-video-openchrome \
- xf86-video-r128 xf86-video-qxl xf86-video-sis xf86-video-s3 xf86-video-i128 xf86-video-i740 \
+ xf86-video-r128 xf86-video-qxl xf86-video-sis xf86-video-i128 xf86-video-i740 \
  xf86-video-savage xf86-video-s3virge xf86-video-chips xf86-video-tdfx xf86-video-ast \
  xf86-video-rendition xf86-video-ark xf86-video-siliconmotion xf86-video-fbdev \
  xf86-video-dummy xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
