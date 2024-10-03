@@ -265,21 +265,6 @@ apk add mate-polkit polkit-openrc polkit-elogind networkmanager-elogind linux-pa
  openbox openbox-doc jgmenu jgmenu-doc pcmanfm lxsession terminator xarchiver mousepad
 ```
 
-At this point you already has a Openbox environment and can choose to launch from 
-the tty console by running `openbox-session` command, but that is just a generic form, 
-for a better end user implementation follows the next section commands.
-
-```
-apk add mate-desktop mate-session-manager mate-panel sakura engrampa pluma \
- mate-themes mate-polkit mate-power-manager mate-settings-daemon \
- clipper mate-notification-daemon mate-screensaver mate-utils mate-system-monitor mate-menus \
- mate-control-center mate-control-center-lang caja caja-lang caja-extensions \
- mate-panel-lang mate-media mate-media-lang mate-screensaver-lang mate-utils-lang \
- mate-system-monitor-lang mate-applets mate-applets-lang mate-power-manager-lang mate-settings-daemon-lang \
- gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
- libreoffice libreoffice-gnome atril atril-lang atril-doc
-```
-
 #### Login manager and user configurations
 
 ```
@@ -303,6 +288,12 @@ On older versions (Alpine 3.12 or less) the xx-openrc packages dont exists!
 
 #### openbox session menu and desktop configuration
 
+Now can choose to launch from the tty console by running `openbox-session` command, 
+but that is just a generic form, using default config that is just outdated and not sync 
+with current isntalled applications.. lest pre-configure with minimal GTK applications 
+such as `pcmanfm` for desktop handler and file manager, `lxappearance` for gui configuration, 
+the 
+
 > **Warning** the `openbox-doc` package must be installed
 
 ```
@@ -312,14 +303,14 @@ cat > /etc/xdg/openbox/menu.xml << EOF
 
 <menu id="root-menu" label="Openbox 3">
   <item label="Terminal">
-    <action name="Execute"><execute>xfce4-terminal</execute></action>
+    <action name="Execute"><execute>terminator</execute></action>
   </item>
   <item label="Applicacions">
     <action name="Execute"><execute>jgmenu-run</execute></action>
   </item>
   <separator />
   <item label="Configure">
-    <action name="Execute"><execute>xfce4-settings-manager</execute></action>
+    <action name="Execute"><execute>lxappearance</execute></action>
   </item>
   <item label="Reload">
     <action name="Reconfigure" />
@@ -340,7 +331,7 @@ cat > /etc/skel/.config/jgmenu/jgmenurc << EOF
 stay_alive           = 0
 tint2_look           = 0
 position_mode        = pointer
-terminal_exec        = xfce4-terminal
+terminal_exec        = terminator
 terminal_args        = -e
 menu_width           = 200
 menu_padding_top     = 5
@@ -357,18 +348,21 @@ item_padding_x       = 4
 item_radius          = 0
 item_border          = 0
 sep_height           = 3
-font                = Sans 10
+font                = Sans 12
 icon_size            = 16
+EOF
+
+cat > /etc/skel/.config/jgmenu/append.csv << EOF
+Exit Openbox,openbox --exit,exit
+^sep()
 EOF
 
 for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/jgmenurc /home/$u/.config/jgmenu/jgmenurc; done
 
-sed -i -r 's|.*xfce-mcs-manager \&.*|xfce-mcs-manager \&|g' /etc/xdg/openbox/autostart
-
 sed -i -r 's|.*titleLayout.*|<titleLayout>NDLSIMC</titleLayout>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*keepBorder.*|<keepBorder>yes</keepBorder>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*animateIconify.*|<animateIconify>no</animateIconify>|g' /etc/xdg/openbox/rc.xml
-sed -i -r 's|[1-9]</size>|14</size>|g' /etc/xdg/openbox/rc.xml
+sed -i -r 's|[1-9]</size>|12</size>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|[1-9]</number>|1</number>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*drawContents.*|<drawContents>no</drawContents>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|<command>kfmclient.*|<command>pcmanfm</command>|g' /etc/xdg/openbox/rc.xml
@@ -378,12 +372,6 @@ sed -i -r 's|.*root-menu.*|<action name="Execute"><command>jgmenu_run</command><
 for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
 
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
-```
-
-#### desktop integration and device media
-
-```
-apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
 #### multimedia and hardware media device access for the users
@@ -409,6 +397,30 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
+```
+
+#### Optional desktop integration and device media improvement
+
+At this point you already has a Openbox environment and
+for a better end user implementation follows the next section commands.
+
+```
+apk add mate-desktop mate-session-manager mate-panel sakura engrampa pluma \
+ mate-themes mate-polkit mate-power-manager mate-settings-daemon \
+ clipper mate-notification-daemon mate-screensaver mate-utils mate-system-monitor mate-menus \
+ mate-control-center mate-control-center-lang caja caja-lang caja-extensions \
+ mate-panel-lang mate-media mate-media-lang mate-screensaver-lang mate-utils-lang \
+ mate-system-monitor-lang mate-applets mate-applets-lang mate-power-manager-lang mate-settings-daemon-lang \
+ gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
+ libreoffice libreoffice-gnome atril atril-lang atril-doc
+
+sed -i -r 's|.*xfce-mcs-manager \&.*|/usr/libexec/mate-settings-daemon \&|g' /etc/xdg/openbox/autostart
+```
+
+For 3th party applications and extra integration you need to install following packages:
+
+```
+apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
 ## How to use this guide
