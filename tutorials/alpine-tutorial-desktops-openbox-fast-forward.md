@@ -301,6 +301,9 @@ the
 sed -i '/pcmanfm/d' /etc/xdg/openbox/autostart 
 echo -e "pcmanfm --desktop &\n" >> /etc/xdg/openbox/autostart
 
+sed -i '/tint2/d' /etc/xdg/openbox/autostart 
+echo -e "tint2 &\n" >> /etc/xdg/openbox/autostart
+
 sed -i -r 's|.*titleLayout.*|<titleLayout>NDLSIMC</titleLayout>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*keepBorder.*|<keepBorder>yes</keepBorder>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*animateIconify.*|<animateIconify>no</animateIconify>|g' /etc/xdg/openbox/rc.xml
