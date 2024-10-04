@@ -553,7 +553,7 @@ cos is build using GTK3 only.
 On older or cheap devices, mostly for 32bit devices its better to use alpine 3.10 or 3.12 
 that uses GTK2 for almost all the programs.
 
-1. install base desktop software packages
+1. install base desktop software packages and desktop user management directories
 2. install base XFCE4 desktop packages, at this point, the system its ready for graphicall session
 3. install and setup the login manager programs and policy manager software
 4. setup the display login manager to start at boot
@@ -563,7 +563,7 @@ that uses GTK2 for almost all the programs.
 8. get sure of user session and permissions
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme mate-themes
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme mate-themes xdg-user-dirs-gtk
 
 apk add xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad network-manager-applet xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings
 

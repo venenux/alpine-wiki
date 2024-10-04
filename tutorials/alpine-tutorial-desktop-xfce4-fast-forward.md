@@ -256,10 +256,10 @@ or 3.12 that uses GTK2 for almost all the programs, also most of the 32bit
 laptops has problems with kernel 4.X so best are 3.X kernels.
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme xdg-user-dirs-gtk \
  numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
-apk add polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
+apk add polkit polkit-openrc polkit-elogind networkmanager-elogind linux-pam \
  libcanberra libcanberra-gtk3 libcanberra-gtk2 libcanberra-gstreamer libcanberra-pulse \
  xfce4 xfce4-session xfce4-panel xfce4-terminal xarchiver mousepad \
  xfwm4-themes xfce-polkit xfce4-skel xfce4-power-manager xfce4-settings \

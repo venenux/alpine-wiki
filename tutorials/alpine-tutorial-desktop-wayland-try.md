@@ -253,7 +253,7 @@ that only works with OpenGL and 3D acceleration, its pretty ilogical that
 a so reduced environment need 3D for mostly eye candy.. ironically thing!
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme xdg-user-dirs-gtk \
  numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
 apk add xwayland \

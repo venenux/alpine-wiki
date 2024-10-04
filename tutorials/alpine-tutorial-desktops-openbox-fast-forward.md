@@ -257,12 +257,13 @@ or 3.12 that uses GTK2 for almost all the programs, also most of the 32bit
 laptops has problems with kernel 4.X so best are 3.X kernels.
 
 ```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme xdg-user-dirs-gtk \
  numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
 
 apk add mate-polkit polkit-openrc polkit-elogind networkmanager-elogind linux-pam \
  libcanberra libcanberra-gtk3 libcanberra-gtk2 libcanberra-gstreamer libcanberra-pulse \
- openbox openbox-doc jgmenu jgmenu-doc pcmanfm lxsession terminator xarchiver mousepad
+ openbox openbox-doc tint2 jgmenu jgmenu-doc pcmanfm lxsession terminator xarchiver mousepad \
+ gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp
 ```
 
 #### Login manager and user configurations
@@ -297,67 +298,8 @@ the
 > **Warning** the `openbox-doc` package must be installed
 
 ```
-cat > /etc/xdg/openbox/menu.xml << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<openbox_menu xmlns="http://openbox.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://openbox.org/ file:///usr/share/openbox/menu.xsd">
-
-<menu id="root-menu" label="Openbox 3">
-  <item label="Terminal">
-    <action name="Execute"><execute>terminator</execute></action>
-  </item>
-  <item label="Applicacions">
-    <action name="Execute"><execute>jgmenu-run</execute></action>
-  </item>
-  <separator />
-  <item label="Configure">
-    <action name="Execute"><execute>lxappearance</execute></action>
-  </item>
-  <item label="Reload">
-    <action name="Reconfigure" />
-  </item>
-  <item label="Restart">
-    <action name="Restart" />
-  </item>
-  <separator />
-  <item label="Exit">
-    <action name="Exit" />
-  </item>
-</menu>
-</openbox_menu>
-EOF
-
-mkdir -p /etc/skel/.config/jgmenu/
-cat > /etc/skel/.config/jgmenu/jgmenurc << EOF
-stay_alive           = 0
-tint2_look           = 0
-position_mode        = pointer
-terminal_exec        = terminator
-terminal_args        = -e
-menu_width           = 200
-menu_padding_top     = 5
-menu_padding_right   = 1
-menu_padding_bottom  = 4
-menu_padding_left    = 1
-menu_radius          = 0
-menu_border          = 1
-menu_halign          = left
-sub_hover_action     = 1
-item_margin_y        = 2
-item_height          = 20
-item_padding_x       = 4
-item_radius          = 0
-item_border          = 0
-sep_height           = 3
-font                = Sans 12
-icon_size            = 16
-EOF
-
-cat > /etc/skel/.config/jgmenu/append.csv << EOF
-Exit Openbox,openbox --exit,exit
-^sep()
-EOF
-
-for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/jgmenurc /home/$u/.config/jgmenu/jgmenurc; done
+sed -i '/pcmanfm/d' /etc/xdg/openbox/autostart 
+echo -e "pcmanfm --desktop &\n" >> /etc/xdg/openbox/autostart
 
 sed -i -r 's|.*titleLayout.*|<titleLayout>NDLSIMC</titleLayout>|g' /etc/xdg/openbox/rc.xml
 sed -i -r 's|.*keepBorder.*|<keepBorder>yes</keepBorder>|g' /etc/xdg/openbox/rc.xml
@@ -369,9 +311,15 @@ sed -i -r 's|<command>kfmclient.*|<command>pcmanfm</command>|g' /etc/xdg/openbox
 sed -i -r 's|Clearlooks|Bear2|g' /etc/xdg/openbox/rc.mxl
 sed -i -r 's|.*root-menu.*|<action name="Execute"><command>jgmenu_run</command></action>|g' /etc/xdg/openbox/rc.xml
 
-for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
+cat > /etc/skel/.config/jgmenu/append.csv << EOF
+Exit Openbox,openbox --exit,exit
+^sep()
+EOF
 
+for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
+for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/jgmenurc /home/$u/.config/jgmenu/jgmenurc; done
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
+
 ```
 
 #### multimedia and hardware media device access for the users
@@ -397,30 +345,6 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
-```
-
-#### Optional desktop integration and device media improvement
-
-At this point you already has a Openbox environment and
-for a better end user implementation follows the next section commands.
-
-```
-apk add mate-desktop mate-session-manager mate-panel sakura engrampa pluma \
- mate-themes mate-polkit mate-power-manager mate-settings-daemon \
- clipper mate-notification-daemon mate-screensaver mate-utils mate-system-monitor mate-menus \
- mate-control-center mate-control-center-lang caja caja-lang caja-extensions \
- mate-panel-lang mate-media mate-media-lang mate-screensaver-lang mate-utils-lang \
- mate-system-monitor-lang mate-applets mate-applets-lang mate-power-manager-lang mate-settings-daemon-lang \
- gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda gvfs-gphoto2 gvfs-mtp \
- libreoffice libreoffice-gnome atril atril-lang atril-doc
-
-sed -i -r 's|.*xfce-mcs-manager \&.*|/usr/libexec/mate-settings-daemon \&|g' /etc/xdg/openbox/autostart
-```
-
-For 3th party applications and extra integration you need to install following packages:
-
-```
-apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
 ```
 
 ## How to use this guide
