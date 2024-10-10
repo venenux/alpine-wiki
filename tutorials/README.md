@@ -73,6 +73,9 @@ alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md
 * Virtualization
     * Qemu simple emulation with KVM [alpine-howto-qemu-on-pc.md](alpine-howto-qemu-on-pc.md)
     * Libvirt with qemu and KVM with hugepages [alpine-howto-libvirt-qemu-kvm-service.md](alpine-howto-libvirt-qemu-kvm-service.md)
+* Complete guides
+    * Alpine 3.14 + Apache2 + PHP 7 + MySQL + OSPOS4 [server-alpine-LAMP-ospos-314.md](server-alpine-LAMP-ospos-314.md)
+    * Alpine 3.20 + Apache2 + PHP 8.3 + MySQL + OSPOS3 [server-alpine-LAMP-ospos-320.md](server-alpine-LAMP-ospos-320.md)
 
 
 ## Convention for naming the files:
