@@ -21,9 +21,15 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 ## INSTALL
 
+
+alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md
+
+
 * Common methods for computers:
     * [Install from CD to HDD/SDD PC single boot only](alpine-install-from-cd-to-disk-pc-single-boot-only.md)
     * [Install from USB to HDD/SDD PC single boot only](alpine-install-from-usb-to-disk-pc-single-boot-only.md)
+* Customized ways:
+    * [Install from USB to HDD/SDD PC UEFI with custom partitions layout](alpine-install-from-usb-to-disk-pc-custom-partiton.md)
 * Serial console and sepcial devices:
     * [Install from USB to Serial PCENGINE APU single boot](alpine-install-from-cd-to-pcengine-apu-single-boot.md)
 * Networking setup, wifi or PXE boots:
