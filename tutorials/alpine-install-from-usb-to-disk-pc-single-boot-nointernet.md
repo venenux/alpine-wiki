@@ -12,6 +12,8 @@ And.. **after boot up the new operating system, you will put apk files to setup 
 
 > **Warning** This method only works for most modern pc vbeyond 2016 and recents.
 
+Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
+
 ## Requirements
 
 -   A usb stick to write the ISO source media file downloaded
@@ -94,6 +96,8 @@ you must perform these commands, that will:
 ```
 export BOOT_SIZE=500
 
+export SWAP_SIZE=4096
+
 setup-alpine
 ```
 
@@ -110,7 +114,7 @@ This will start some questions, these are in the following order:
 * SSH Options: Use `openssh` the package that already comes in the middle.
 * Alow root login: write `yes` cos we will changed later.
 * Enter the ssh URL: just write `none` or just hit enter
-* Disk Options: Use `sda` as the entire hard drive present will be used.
+* Disk Options: Use `sda` as the **entire hard drive present will be wiped**
 * Mode: Select `sys` to install the system on disk.
 
 After answering `sys` to the questions about the drive, and since there will only 
@@ -135,11 +139,18 @@ installed system will be booted.
 calmed down.. in Alpine all are made by the right way.. so **if user
 need a desktop.. user can install a desktop**
 
-## The wifi setup after install
+#### The wifi setup after install
 
-Please follo the guiude [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md), 
+Please follow the guide [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md), 
 you will need to download the needed packages manually from another device 
 and then but it on the installed Alpine computer using USBstorage external device.
+
+#### NOTES: offline mode
+
+If you cannot setup a internet connection you cannot install Alpine linux, 
+unless you used 64bit intel/amd and "extended" iso install media. Most of 
+the packages need to setup this procedure are not included in standard images, 
+specially those for ARM devices like RasberryPi ones becouse WIFi setup.
 
 ## How to use this guide
 
@@ -151,6 +162,10 @@ its important you shuold understand the way of the configuration in this guide.
 
 > **Warning**  Some Linux or/and Mac terminals have security cut/paste locks, so 
 if you paste, the first line will be preceded by garbage, check always the first char of your paste.
+
+Each portion of monospaced text means you must run it on the console, those lines 
+junted can be performed and paste as one command, separate lines canont be run 
+in bach mode.. so each separate line must be run alonside and wait output!
 
 ## Licensing clarifications
 

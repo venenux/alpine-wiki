@@ -122,7 +122,7 @@ This will start some questions, these are in the following order:
 
 ![](https://venenux.github.io/alpine-espanol/instalar/install-alpine-alpine-setup-3-setup-scripts.png)
 
-## After reboot
+#### Before reboot
 
 1.  **Before** rebooting, edit /boot/extlinux.conf.
     -  Add `SERIAL 0 115200` as the first line in the file.
@@ -145,6 +145,19 @@ This will start some questions, these are in the following order:
         the changes and try to figure out what went wrong
 7.  Cross your fingers and reboot. The system should boot properly with
     console on serial.
+
+#### The wifi setup after install
+
+Please follow the guide [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md), 
+you will need to download the needed packages manually from another device 
+and then but it on the installed Alpine computer using USBstorage external device.
+
+## NOTES: offline mode
+
+If you cannot setup a internet connection you cannot install Alpine linux, 
+unless you used 64bit intel/amd and "extended" iso install media. Most of 
+the packages need to setup this procedure are not included in standard images, 
+specially those for ARM devices like RasberryPi ones becouse WIFi setup.
 
 ## How to use this guide
 

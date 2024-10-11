@@ -134,6 +134,18 @@ installed system will be booted.
 calmed down.. in Alpine all are made by the right way.. so **if user
 need a desktop.. user can install a desktop**
 
+#### The wifi setup after install
+ 
+Please follow the guide [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md), 
+you will need to download the needed packages manually from another device 
+and then but it on the installed Alpine computer using USBstorage external device.
+
+#### NOTES: offline mode
+
+If you cannot setup a internet connection you cannot install Alpine linux, 
+unless you used 64bit intel/amd and "extended" iso install media. Most of 
+the packages need to setup this procedure are not included in standard images, 
+specially those for ARM devices like RasberryPi ones becouse WIFi setup.
 
 ## How to use this guide
 

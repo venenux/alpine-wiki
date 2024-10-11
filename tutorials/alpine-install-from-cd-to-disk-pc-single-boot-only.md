@@ -193,21 +193,6 @@ In a few minutes everything will be ready to use ofering a console when boot new
 
 ![](https://venenux.github.io/alpine-espanol/instalar/install-alpine-alpine-setup-3-setup-scripts.png)
 
-#### custom setup boot loader
-
-If the new local system was configured to run in `diskless` or `data` mode, or if you 
-choose do not install boot loader, and you do not want keep booting from the initial 
-(and possibly read-only) installation media, the boot system needs to be copied to 
-another device or partition or setup manually.
-
-The target partition may be identified using lsblk (after installing it with apk add lsblk) 
-and/or blkid, similar to previously identifying the initial installation media device.
-
-The procedure to copy the boot system is using setup-bootable
-
-Once everything is in place, but is you use `diskless` or `data` save your customized 
-configuration with `lbu commit` before rebooting.
-
 ## Finishing the installation
 
 After all of the scripts in the setup end, a "reboot" will be offered,
@@ -218,6 +203,18 @@ installed system will be booted.
 calmed down.. in Alpine all are made by the right way.. so **if user
 need a desktop.. user can install a desktop**
 
+#### The wifi setup after install
+
+Please follow the guide [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md), 
+you will need to download the needed packages manually from another device 
+and then but it on the installed Alpine computer using USBstorage external device.
+
+## NOTES: offline mode
+
+If you cannot setup a internet connection you cannot install Alpine linux, 
+unless you used 64bit intel/amd and "extended" iso install media. Most of 
+the packages need to setup this procedure are not included in standard images, 
+specially those for ARM devices like RasberryPi ones becouse WIFi setup.
 
 ## How to use this guide
 
