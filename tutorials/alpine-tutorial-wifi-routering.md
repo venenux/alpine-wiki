@@ -34,21 +34,21 @@ Most linux distros just configures `network-manager` package that oversimplified
 console setup is bit complicated but easyle covered, currently there is two options for, 
 the `wpa_supplicant` and the newer `iwd` from Intel, this last with less usage cases.
 
-| Software       | UI      | WEXT  | nl80211 | WEP  | WPA/2/3 | WORKING apk |
+| Software       | UI      | WEXT  | nl80211 | WEP  | WPA/2/3 | WORKING apk alpine version |
 | -------------- | ------- | ----- | ------- | ---- | ------- | ---------- |
-| wireless_tools | Console | Yes   | No      | Yes  | No      | [since 3.5](https://pkgs.alpinelinux.org/packages?name=wireless-tools&branch=v3.4) |
-| iw             | Console | No    | Yes     | Yes  | Yes     | [since 3.5](https://pkgs.alpinelinux.org/packages?name=iw&branch=v3.5) |
-| wpa_supplicant | Console | Yes   | Yes     | Yes  | Yes     | [since 3.0](https://pkgs.alpinelinux.org/packages?name=wpa_supplicant&branch=v3.3) |
+| wireless_tools | Console | Yes   | No      | Yes  | No      | [since 3.5](https://pkgs.alpinelinux.org/packages?name=wireless-tools&branch=v3.14) |
+| iw             | Console | No    | Yes     | Yes  | Yes     | [since 3.5](https://pkgs.alpinelinux.org/packages?name=iw&branch=v3.14) |
+| wpa_supplicant | Console | Yes   | Yes     | Yes  | Yes     | [since 3.0](https://pkgs.alpinelinux.org/packages?name=wpa_supplicant&branch=v3.14) |
 | iwd            | Console | Yes   | Yes     | No   | Yes     | [since 3.15](https://pkgs.alpinelinux.org/packages?name=iwd&branch=v3.15) |
-| network-manager | Con+Gui | Yes | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.4) |
-| connman        | Console | No    | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.4) |
+| network-manager | Con+Gui | Yes | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.14) |
+| connman        | Console | No    | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.14) |
 
 The `iwd` packages exits since 3.10 but only since 3.15 has support for right 
 autentications protocols. The package `networkmanager` and his applet are since 3.6 but 
 only working applet was noted since Alpine 3.12 due right setup of permissions.
 
 > **Note** the `networkmanager` and `connman` packages has wifi management but 
-are only frontend interfaces and relies heavily over the `iwd` or `wpa_supplicant`.
+are only frontend interfaces and relies heavily over the `iwd` or `wpa_supplicant` backends.
 
 The `iwd` claims to be the future of wireless networking on linux, but even this 
 has unfinished issues, it **still doesn't cover the vast amount of configurations 
@@ -63,7 +63,7 @@ nowadays this is easily handled by installing the firmware packages and only few
 recents represents minor problems, such instalation is partialy covered as necesary.
 
 > **Warning** if in our telegram channel you called "driver" to a module kernel, you 
-will be punished.. **a driver is a person that drive a car! ok?**
+will be punished.. **a driver is a person that drive a car! right?**
 
 ### 1 - software requirements and network lack
 
@@ -162,8 +162,8 @@ source repository:
 
 ### 2 - Install the packages
 
-Wireless need a special packages, the pacakge `iwd` is available since 3.10 but 
-ther are two problems: 
+Wireless need a special packages, the package `iwd` is available since 3.10 but 
+ther are two problems for Alpine Linux since 3.10 to 3.15 releases: 
 
 1. It depends on dbus the is not included in all ISOS/IMG install images.
 2. Work only on common laptops/desktops: https://gitlab.alpinelinux.org/alpine/aports/-/issues/13048#note_305688** 
@@ -174,15 +174,16 @@ So yeah.. we will use the old and fiable methods, **later we will provide anothe
 apk add wireless-tools wpa_supplicant linux-firmware util-linux
 ```
 
-Those are the minimal packages to work, if you already have wired method internet, 
-just install all the need packages as:
+Those are the minimal packages to work, `linux-firmware` is a huge package because at this point 
+we dont know witch firmwares will need for your wifi card so if you already have wired method internet, 
+just install all the need packages (otherwise you must download a huge amount of packages as `linux-firmware-xxx` etc):
 
 ```
-apk add wireless-tools wpa_supplicant dbus-libs libnl3 pcsc-lite-libs linux-firmware util-linux
+apk add wireless-tools wpa_supplicant dbus-libs libnl3 pcsc-lite-libs linux-firmware util-linux arch-install-scripts
 ```
 
 > **Warning** since Alpine 3.15 the `rfkill` program is at `util-linux-misc` package, and not 
-in the `util-linux` package cos was splited so you must install it in recent alpine versions.
+in the `util-linux` package cos was splited so we forced with `arch-install-scripts` package!
 
 ### 3 - configure wireless devices
 
@@ -235,22 +236,19 @@ setup is then:
 # recommended, for idetification check wikipedia ISO/IEC country code list
 country=VE
 
-# this depends of the alpine package configuration, just use it as is:
+# this depends of the alpine package configuration, just use it as is or use /run for:
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 
 # wpa_supplicant initiates scanning of the wifi's (SSID AP) and 
-# if no APs matching to the currently enabled in configuration are found, 
-# a new network (IBSS or AP mode operation) may be initialized if configured
 # the option 0 is only for special wired and option 2 for specifics purposes
 # e.g., with ndiswrapper to enable operation with hidden SSIDs and optimized roaming
 ap_scan=1
 
 # Automatic scan for SSID and chosse one if routers are not 100% online
-# autoscan is like bgscan but on disconnected or inactive state
 # but ignored if If sched_scan_plans are configured and supported by the driver
-# here a delay of 60 seconds will be used on each scan.. if you only have one SSID
+# here a delay of 120 seconds will be used on each scan.. if you only have one SSID
 # and if you only have good signal (over 80%) just put this to 300
-autoscan=periodic:120
+autoscan=periodic:160
 
 # Disable automatic offloading of scan requests (sched_scan) by the module kernel
 disable_scan_offload=1
@@ -273,7 +271,7 @@ network={
         psk=eec720af4bf770f83e9cd7d425d1ced46e0ca7e2df9be8745e4a16f810677ce4
     # this tell to wpa to use this before the other that have priority=2 or priority=1
         priority=3
-    # this is an indentification, can be a str4ing name short but no symbols allowed
+    # this is an indentification, can be a string name short but no symbols allowed
         id_str="mywifi"
 }
 ```
@@ -284,7 +282,7 @@ So then the configuration for a password WPA/WPA2 wifi will be:
 country=VE
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 ap_scan=1
-autoscan=periodic:120
+autoscan=periodic:160
 disable_scan_offload=1
 mac_addr=0
 preassoc_mac_addr=0
