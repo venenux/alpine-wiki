@@ -45,9 +45,9 @@ alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md
 
 * Complete desktops, means the programs are integrated and sync using XDG desktop compliant environment:
     * XFCE4 desktop guide: [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
-    * WAYLAND desktop guide: [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
 * Window managers means the desktop its not integrated, each program has their own environment but can tuned:
-    * Openbox desktop guide: [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
+    * XORG OPENBOX guide: [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
+    * WAYLAND LABWC guide: [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
 * Issues:
     * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
     * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)

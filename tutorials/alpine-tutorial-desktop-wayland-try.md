@@ -1,37 +1,26 @@
 # Alpine WAYLAND desktop setup: FF version
 ===========================================================
 
-Alpine must be previously installed. This will install a new fashioned desktop, for more traditional check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
+Alpine must be previously installed. This will install a light modern desktop, 
+for more traditional check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md)
 
 * [How to use this guide](#how-to-use-this-guide)
-* [Preparation](#preparation)
+* [Preparation](#preparation-alpine)
     * [setup OS configuration](#setup-os-configuration)
     * [setup system users](#setup-system-users)
     * [setup hardware support](#setup-hardware-support)
     * [setup audio and video](#setup-audio-and-video)
-* [Instalacion Desktop WAYLAND Alpine](#instalacion-desktop-wayland-apine)
-    * [Login manager and user configurations](#login-manager-and-user-configurations)
-    * [multimedia and device enhanced](#multimedia-and-device-enhanced)
 * [Licensing clarifications](#licensing-clarifications)
 * [See also](#see-also)
 
 ## preparation Alpine
 
-You must have already installed alpine, and wayland only works well in few GPU cards, for stable desktop use XFCE check [alpine-tutorial-desktop-xfce4-fast-forward.md](alpine-tutorial-desktop-xfce4-fast-forward.md)
-
-> **Warning** **YOU MUST HAVE DIRECT WIRED INTERNET, if not ask for an ISO from VenenuX:** [https://t.me/alpine_linux/762](https://t.me/s/alpine_linux/762)
-or configure a network connection check [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
-
-Main problem with alpine is that most old images of installation doe snot have the tools 
-installed to setup the wifi.. so you must have wired connection or setup a wifi manually!
-
-#### setup OS configuration
+> **Warning** **YOU MUST HAVE DIRECT WIRED INTERNET, if not** configure 
+a wireless network connection as [alpine-tutorial-wifi-routering.md](alpine-tutorial-wifi-routering.md)
 
 Feels lost here? check [How to use this guide](#how-to-use-this-guide) section of this document
 
-> **Warning** For **didactic** processes, **the root password will be "toor"**, you can change it after
-
-Runs following commands as root user:
+#### setup OS configuration
 
 ```
 sed -i -r 's|#PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config
@@ -40,17 +29,6 @@ rc-service sshd restart;rc-update add sshd default
 cat > /root/.cshrc << EOF
 unsetenv DISPLAY || true
 HISTCONTROL=ignoreboth
-EOF
-
-cp /root/.cshrc  /root/.bashrc
- echo "root:toor" | chpasswd
-
-hostname venenux-desktop
-echo 'hostname="venenux-desktop"' > /etc/conf.d/hostname 
-echo "venenux-desktop" > /etc/hostname
-cat > /etc/hosts << EOF
-127.0.0.1 venenux-desktop localhost.localdomain localhost
-::1 localhost localhost.localdomain
 EOF
 
 cat > /etc/apk/repositories << EOF
@@ -85,31 +63,31 @@ EOF
 
 apk update
 
-apk add man-db man-pages nano binutils coreutils readline \
- sed attr dialog lsof less groff wget curl \
- file lz4 arch-install-scripts gawk tree pciutils usbutils lshw \
+apk add mandoc man-pages nano binutils coreutils readline \
+ sed attr dialog lsof less groff wget curl terminus-font \
+ file lz4 gawk tree pciutils usbutils lshw tzdata tzdata-utils \
  zip p7zip xz tar cabextract cpio binutils lha acpi musl-locales musl-locales-lang \
- e2fsprogs e2fsprogs-doc btrfs-progs btrfs-progs-doc exfat-utils exfat-utils-doc \
- f2fs-tools f2fs-tools-doc dosfstools dosfstools-doc xfsprogs xfsprogs-doc jfsutils jfsutils-doc \
- arch-install-scripts util-linux zram-init tzdata tzdata-utils
+ e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils \
+ arch-install-scripts util-linux docs
 
 apk add font-terminus
 
-setfont /usr/share/consolefonts/ter-132n.psf.gz
+setfont /usr/share/consolefonts/ter-120n.psf.gz
 
-sed -i "s#.*consolefont.*=.*#consolefont="ter-132n.psf.gz"#g" /etc/conf.d/consolefont
+sed -i "s#.*consolefont.*=.*#consolefont="ter-120n.psf.gz"#g" /etc/conf.d/consolefont
 
 rc-update add consolefont boot
 ```
 
-> **Warning**: `font-terminus` is ony since alpine v3.18, for older versions use `terminus-font`
-
-For more extended info check [../../newbie/alpine-newbie-xfce-desktop.md](../../newbie/alpine-newbie-xfce-desktop.md#setup-os-configuration)
-
 #### setup system users
 
 ```
-apk add shadow shadow-uidmap doas musl-locales musl-locales-lang
+apk add bash shadow shadow-uidmap shadow-login doas lang musl-locales
+
+cat > /etc/doas.d/apkgeneral.conf << EOF
+permit nopass general as root cmd apk
+permit keepenv daru as root
+EOF
 
 cat > /tmp/tmp.tmp << EOF
 set history = 10000
@@ -121,7 +99,7 @@ cat /tmp/tmp.tmp > /etc/skel/.cshrc
 cat /tmp/tmp.tmp > /etc/skel/.bashrc
 
 cat > /etc/skel/.Xresources << EOF
-Xft.antialias: 0
+Xft.antialias: 1
 Xft.rgba:      rgb
 Xft.autohint:  0
 Xft.hinting:   1
@@ -149,16 +127,21 @@ EOF
 useradd -m -U -c "" -G wheel,input,disk,floppy,cdrom,dialout,audio,video,lp,netdev,games,users,ping general
 
 for u in $(ls /home); do for g in disk lp floppy audio cdrom dialout video lp netdev games users ping; do addgroup $u $g; done;done
+
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
+
+echo "general:general" | chpasswd
 ```
 
-> **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
+> **Warning** your user name must be `general` here password is `general`, you can put a "human name" as you wish, later and change password later.
 
 For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../documents/alpine-newbie-xfce-desktop.md#setup-system-users)
 
 #### setup hardware support
 
 ```
-apk add acpi acpid acpid-openrc alpine-conf eudev eudev-doc eudev-netifnames eudev-openrc \
+apk add acpi acpid acpid-openrc alpine-conf \
+ eudev eudev-doc eudev-rule-generator eudev-openrc \
  pciutils util-linux arch-install-scripts zram-init acpi-utils rsyslog \
  fuse fuse-exfat-utils fuse-exfat avfs pcre2 cpufreqd bluez bluez-deprecated bluez-openrc \
  wpa_supplicant dhcpcd chrony macchanger wireless-tools iputils linux-firmware \
@@ -196,19 +179,16 @@ For more details check  [../../documents/alpine-newbie-xfce-desktop.md](../../do
 
 #### setup audio and video
 
-> **Note** on alpine 3.14 gtk3 will force xorg dependencies.. for 3.16 will use gtk4 and SDL2 with wayland
+> **Note** on olders alpine gtk3 will force xorg dependencies.. for 3.16+ will use gtk4 and SDL2
 
 ```
-apk add mesa mesa-gl mesa-utils mesa-osmesa mesa-egl mesa-gles mesa-dri-gallium mesa-va-gallium libva-intel-driver intel-media-driver \
- xf86-video-amdgpu xf86-video-nouveau xf86-video-intel xf86-video-vmware xf86-video-ati \
- xf86-video-dummy xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
+apk add mesa mesa-gl mesa-utils mesa-osmesa mesa-egl mesa-gles \
+ mesa-dri-gallium mesa-va-gallium libva-intel-driver intel-media-driver \
+ xf86-video-intel libva-intel-driver intel-media-driver \
+ xf86-video-amdgpu xf86-video-nouveau xf86-video-ati \
+ xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
  linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia linux-firmware-i915 linux-firmware-intel
-
-apk add libxinerama xrandr kbd setxkbmap bluez bluez-openrc \
- dbus dbus-x11 udisks2 udisks2-lang \
- gvfs gvfs-fuse gvfs-archive gvfs-dav gvfs-nfs gvfs-lang
-
-modprobe fbcon && echo "fbcon" >> /etc/modprobe
+ dbus dbus-x11 udisks2 udisks2-lang
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -222,6 +202,12 @@ apk add font-noto-all ttf-dejavu ttf-linux-libertine ttf-liberation \
 apk add alsa-lib alsa-utils alsa-plugins alsa-tools alsaconf sndio \
  pipewire pipewire-pulse pipewire-alsa pipewire-spa-bluez wireplumber-logind
 
+modprobe snd-pcm-oss
+modprobe snd-mixer-oss
+sed -i '/snd-pcm-oss/d' /etc/modules
+sed -i '/snd-mixer-oss/d' /etc/modules
+echo -e "snd-pcm-oss\nsnd-mixer-oss" >> /etc/modules
+rc-service alsa restart
 amixer sset Master unmute;  amixer sset PCM unmute;  amixer set Master 100%;  amixer set PCM 100%
 
 cat > /etc/security/limits.d/audio-limits.conf << EOF
@@ -239,116 +225,180 @@ rc-service dbus restart
 
 rc-service alsa restart
 
-for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
 > **Warning** your user name must be `general`, you can put a "human name" as you wish, later.
 
-> **Note** pure wayland will work only in modern OpenGL/VaPI capable gpu, that's why you never see here other models rather than intel, amd and nvidia
+## Instalation of WAYLAND graphical base
 
-## Instalacion Desktop WAYLAND Alpine
-
-At the moment of alpine 3.16 and wayland development, this mayor shit is 
-that only works with OpenGL and 3D acceleration, its pretty ilogical that 
-a so reduced environment need 3D for mostly eye candy.. ironically thing!
-
-```
-apk add gtk-update-icon-cache hicolor-icon-theme paper-gtk-theme adwaita-icon-theme xdg-user-dirs-gtk \
- numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 numix-themes-metacity numix-themes-openbox numix-themes-xfce4-notifyd numix-themes-xfwm4
-
-apk add xwayland \
- wayland wlroots foot sway sway-doc bemenu swaylock swaylockd swaybg swayidle \
- weston weston-backend-wayland weston-backend-x11 weston-backend-drm weston-backend-wayland weston-backend-headless \
- weston-doc weston-shell-desktop weston-desktop-x11 weston-clients weston-terminal \
- weston-xwayland weston-shell-desktop weston-shell-fullscreen weston-cms-static
-```
-
-At this point you already has a waylan environment and can choose beetween weston and sway, 
-just login into and start your desktop, weston is just the first implementation, can be run 
-inside and X11 or another wayland session, sway is a window manager and compositor.
-
-#### Login manager and user configurations
-
-If (after runs wayland) module auto-selection does not work, e.g. no mouse cursor under Sway, 
-manually selection might be needed to declare explilcy variables for current session:
-
-* `MESA_LOADER_DRIVER_OVERRIDE=crocus` for Intel's cards, all Intel Graphics up to Haswellsteam
-* `MESA_LOADER_DRIVER_OVERRIDE=r300` for AMD's Radeon R300, R400, and R500 GPUs.
-* `MESA_LOADER_DRIVER_OVERRIDE=r600` for AMD's Radeon R600 GPUs up to Northern Islands. Officially supported by AMD.
-* `MESA_LOADER_DRIVER_OVERRIDE=radeonsi` for AMD's Southern Island GPUs and later. Officially supported by AMD.
-* `MESA_LOADER_DRIVER_OVERRIDE=iris` for Intel's Iris modern GPUs and later.
-
-So we need to isntall the required login manager, lightdm does not officially support wayland 
-so you need to choose between GDM (for gtk) or SDDM (for QT) but you can use elogind to manage it:
+**Wayland relies on the GPU/KMS, so then only some chips will work and limited**
+to AMD (radeonHD+ only), Intel (HDgraphics/UHD/Iris) and nVidia (NV40 to NV170 only)
+but Nvidia displays only support own framebuffer code (since 554.10) so performance
+may vary in alpine linux. Some VMWARE and MAtrox gpu support KMS but unneficient.
 
 ```
-apk elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+apk add gtk-update-icon-cache xdg-user-dirs \
+ xdg-desktop-portal-gtk xdg-desktop-portal-wlr \
+ hicolor-icon-theme paper-gtk-theme adwaita-icon-theme \
+ numix-icon-theme numix-themes numix-themes-gtk2 numix-themes-gtk3 \
+ numix-themes-metacity
+
+apk add xwayland wayland-libs-server wlr-randr wayland wlroots \
+ foot sway sway-doc bemenu wmenu grim swaylock swaylockd swaybg swayidle \
+ weston weston-backend-wayland weston-backend-x11 weston-backend-drm \
+ weston-backend-wayland weston-backend-headless weston-shell-desktop \
+ weston-desktop-x11 weston-clients weston-terminal \
+ weston-xwayland weston-shell-desktop weston-shell-fullscreen \
+```
+
+At this point you have graphics support but no desktop or session installed.
+
+#### Login manager and session configurations
+
+Only GDM, SDDM and GREETD fully supports wayland:
+
+```
+apk add elogind elogind-openrc greetd greetd-gtkgreet cage \
  polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
- network-manager-applet network-manager-applet-lang vte3
+ network-manager-applet network-manager-applet-lang vte3 shadow-login
+
+cat > /etc/greetd/config.toml << EOF
+[terminal]
+vt = next
+switch = true
+[default_session]
+command = "cage -s -m extend -- gtkgreet"
+user = greetd
+EOF
+cat > /etc/conf.d/greetd << EOF
+cfgfile="/etc/greetd/config.toml"
+# supervisor=supervise-daemon
+rc_need=elogind
+EOF
+
+addgroup greetd video
+
+rc-update add elogind
+rc-update add polkit
+rc-update add greetd
 
 rc-service networking restart
 
 rc-service networkmanager restart
 
-rc-service lightdm restart
+rc-service elogind restart
+
+rc-service polkit restart
+
+rc-service greetd restart
 ```
 
-> **Warning** : for alpine 3.14, 3.15 just works the login sesion for sway, maybe 3.16 will 
-result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
-furter releases now supports session manager correctly!
+> **Warning** : some older alpines result in a blank screen, check https://github.com/swaywm/sway/pull/3634#issuecomment-462779163
 
-The wayland weston and sway configurations depens on your preferences, 
-the above commands just provide defaults to made those compositors able to run for users.
-
-If want autologin with TTY use this script to your system users:
+#### Installing LABWC as desktop and configure it
 
 ```
-for u in $(ls /home); do mkdir -p /home/$u/.config/sway/ && cp /etc/sway/config /home/$u/.config/sway/config ;done
+apk add labwc labwc-doc dunst redshift grim wl-clipboard clipman wvkbd wtype \
+ wdisplays kanshi swayimg zathura zathura-ps zathura-pdf-poppler \
+ wlogout swaybg swaylock-effects swaylockd wlsunset \
+ waybar font-jetbrains-mono font-jetbrains-mono-nl wezterm-fonts \
+ nwg-launchers  lavalauncher wayvnc wf-recorder \
+ foot-themes foot-extra-terminfo foot-bash-completion foot-fish-completion
 
-for u in $(ls /home); do touch /home/$u/.config/weston.ini;done
-
-cat > /etc/skel/.profile << EOF
-    if test -z "\${XDG_RUNTIME_DIR}"; then
-      export XDG_RUNTIME_DIR=/tmp/\$(id -u)-runtime-dir
-      if ! test -d "\${XDG_RUNTIME_DIR}"; then
-        mkdir "\${XDG_RUNTIME_DIR}"
-        chmod 0700 "\${XDG_RUNTIME_DIR}"
-      fi
-    fi
+mkdir -p /etc/xdg/labwc
+touch /etc/xdg/labwc/autostart 
+sed -i '/swaybg/d' /etc/xdg/labwc/autostart 
+echo -e "swaybg -c 000000 -o \* &\n" >> /etc/xdg/labwc/autostart
+sed -i '/waybar/d' /etc/xdg/labwc/autostart 
+echo -e "waybar &\n" >> /etc/xdg/labwc/autostart
+sed -i '/nemo\.desktop\.wm/d' /etc/xdg/labwc/autostart
+echo -e 'gsettings set org.nemo.desktop show-desktop-icons false >/dev/null 2>&1&\n' >> /etc/xdg/labwc/autostart
+sed -i '/gnome\.desktop\.wm/d' /etc/xdg/labwc/autostart
+echo -e 'gsettings set org.gnome.desktop.wm.preferences button-layout "menu:minimize,maximize,close" >/dev/null 2>&1 &\n' >> /etc/xdg/labwc/autostart
+cat > /etc/xdg/labwc/environment << EOF
+QT_QPA_PLATFORMTHEME=gtk2
+XDG_SESSION_TYPE=wayland
+XDG_SESSION_DESKTOP=labwc
+XDG_CURRENT_DESKTOP="labwc:wlroots"
+QT_QPA_PLATFORM=wayland
+GDK_BACKEND="wayland,x11"
+SDL_VIDEODRIVER="wayland,x11"
+_JAVA_AWT_WM_NONREPARENTING=1
 EOF
-for u in $(ls /home); do cp /etc/skel/.profile /home/$u/ ;done
 
-cat > /tmp/.xinitrc << EOF
-if [ -z "\${DISPLAY}" ] && [ "\${XDG_VTNR}" -eq 1 ]; then
-  if [ "\$(fgconsole 2>/dev/null || echo -1)" -eq 1 ]; then
-    dbus-run-session -- sway
-    export SWAYSOCK=/run/user/$(id -u)/sway-ipc.$(id -u).$(pgrep -x sway).sock
-  fi
-fi
+cat > /etc/skel/.config/jgmenu/append.csv << EOF
+Exit Session,labwc --exit,exit
+^sep()
 EOF
-for u in $(ls /home); do cp /tmp/.xinitrc /home/$u/.xinitrc;done
-
+for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/append.csv /home/$u/.config/jgmenu/append.csv; done
+cat > /etc/skel/.config/Trolltech.conf << EOF
+[Qt]
+style=GTK+
+EOF
+for u in $(ls /home); do mkdir -p /home/$u/.config && cp /etc/skel/.config/Trolltech.conf /home/$u/.config/Trolltech.conf; done
+for u in $(ls /home); do mkdir -p /home/$u/.config/labwc; done
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
-```
-
-On older versions (Alpine 3.12 or less) the xx-openrc packages dont exists!
-
-#### desktop integration and device media
 
 ```
-apk add xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-lang xdg-desktop-portal-gtk xdg-desktop-portal-gtk-lang
+
+* SFWBar is best but not packaged yet, we used waybar with font awesome as icons
+* Kanshi to use profiles ouput on multiple screens hotplug by randr (wlr-randr)
+* mako is a notification daemon as simple as dunst is
+* wvkbd is a on screen keyboar for wayland, equivalent of xvkbd
+* Clickclack not yet packaged, haptic feedback and audio feedback for key press
+* wtype is the xdotool equivalent for wayland
+* hawck not yet packaget, hack key preset and redefine their action to new key
+* wshowkeys display key peset on screen, ideal for screen recording
+* lavalauncher is a MAcosx like bar laucher of butons, like wbar does
+* wayvnc for remote desktop sesion support for wayland
+* swaylock-effects is a lock screen manager with image and widget support
+* swaylockd ensures that swaylock/swaylockdeffects runs property (bugs free)
+* SimpleScreenRecorder is compatible with wayland and X11 but heavyle
+* wf-recorder is more configurable for batch process and uses ffmpeg commands
+* Luminance not packaget yet, GTK control brightness of displays with DDC/CI
+* gammastep on edge only..  GTK control brightness of displays with DDC/CI
+* mpvpaper on edge only, allows you to play videos with mpv as your wallpaper
+* swaybg will set background color or walpaper manager
+* Firefox is the only web browser that supports native wayland
+* waydroit not packaged yet will allow to boot full androit systems
+
+
+```
+
+#### LABWC menu configuration
+
+```
+mkdir -p /etc/xdg/labwc
+cat > /etc/xdg/labwc/menu.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<openbox_menu>
+<menu id="root-menu" label="Openbox 3">
+  <item label="Terminal">
+    <action name="Execute"><execute>foot</execute></action>
+  </item>
+  <item label="Applicacions">
+    <action name="Execute"><execute>jgmenu-run --at-pointer</execute></action>
+  </item>
+  <item label="Exit">
+    <action name="Exit" />
+  </item>
+</menu>
+</openbox_menu>
+EOF
+
 ```
 
 #### multimedia and hardware media device access for the users
 
 ```
 apk add gst-plugins-base gst-plugins-bad gst-plugins-ugly gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
- libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer \
+ apk-gtk3 libcanberra-gtk3 libcanberra-gtk2 libcanberra-gstreamer libcanberra-pulse \
+ qt5-qtwayland qt5-qtbase-x11 qt6-qtbase-x11 qt6-qtwayland gtk+3.0-demo gtk4.0-demo \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
  mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
 
-apk add gvfs-fuse ntfs-3g gvfs-cdda gvfs-afp gvfs-mtp gvfs-smb gvfs-lang \
- gvfs-afc gvfs-nfs gvfs-archive gvfs-dav gvfs-gphoto2 gvfs-avahi
+apk add gvfs gvfs-fuse ntfs-3g gvfs-archive gvfs-mtp gvfs-lang gvfs-nfs \
+ gvfs-smb gvfs-cdda gvfs-afp gvfs-afc gvfs-dav gvfs-gphoto2 gvfs-avahi
 
 for u in $(ls /home); do for g in plugdev audio cdrom dialout video netdev; do addgroup $u $g; done;done
 
@@ -374,7 +424,7 @@ all new(next) lines are made by just enter. the terminal will detect if must exe
 **If you have another computer or gui**, try to use SSH client like putty or just in terminal (MAC or Linux) do:
 
 1. at the Alpine installation: `sed -i 's|.*PermitRootLogin.*|PermitRootLogin yes|g' /etc/ssh/sshd_config;service sshd restart`
-2. at the other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
+2. then from other OS just connect: `ssh -l root <ip>` change "`<ip>`" with the address of your device.
 3. copy each separated by empty line, block of command, copy only blocks separate by empty line
 4. and paste each separated by empty line block in the remnote (ssh), do not paste all the blocks at same time!
 
@@ -384,19 +434,24 @@ if you paste, the first line will be preceded by garbage, check always the first
 > **Warning** after finish, rerun: `sed -i -r 's|.*PermitRootLogin.*|PermitRootLogin no|g' /etc/ssh/sshd_config`
 and restart ssh `service sshd restart` becouse security implications.
 
+**If you runs locally on same computer** all commmands must be run as root unless pointed in the guide
+
+1. type string by string each line of command and runs each line one by one
+2. because you still dont have graphical interfaces you must type by hand each line and runs by hit enter key
+
 Done? return to [Preparation](#preparation-alpine) section of this document.
 
 #### hardware used
 
 | item             | minimal feature   | Extra recommendations              |
 | ---------------- | ----------------- | ---------------------------------- |
-| RAM MB           | 1Gb DDR1          | 6Gb DDR3, web browsers consumes so much |
-| CPU              | intel Dual Core   | Not necesary                       |
-| RAM CPU          | 2Mb (L2) 4kb/L1   |  |
-| GPU              | intel G41         | Radeon X1200 For web browsers and modern apps will be need |
+| RAM MB           | 4Gb DDR3          | 8Gb DDR3, opengl support need it   |
+| CPU              | intel Core2       | i3/i5/i7/Ryzen                     |
+| RAM CPU          | 2Mb (L2) 4kb/L1   |                                    |
+| GPU              | intel 630         | RadeonHD, Iris/Arc, nVidia GX      |
 | RAM GPU          | 256Mb             | 1Gb For web browsers and modern apps will be need |
-| Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed |
-| ARCH             | 32bits (i386/arm6)| 64bits (amd64) mandatory for most modern apps unfortunatelly |
+| Storage          | 120Gb HDD WD      | 256Gb SSD are mandatory for speed  |
+| ARCH             | 64bits (amd64)    | 64bits (amd64) mandatory for most  |
 | Audio            | AC 97             | HD audio and HDMI audio are a mess |
 
 #### usernames
