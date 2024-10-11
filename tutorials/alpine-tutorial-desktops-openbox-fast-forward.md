@@ -250,9 +250,30 @@ At this point you have graphics support but no desktop or session installed.
 WE have LightDM and GREETD:
 
 ```
-apk add elogind elogind-openrc lightdm lightdm-lang lightdm-gtk-greeter \
+apk add elogind elogind-openrc greetd greetd-gtkgreet cage \
  polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
  network-manager-applet network-manager-applet-lang vte3 shadow-login
+
+cat > /etc/greetd/config.toml << EOF
+[terminal]
+vt = next
+switch = true
+[default_session]
+command = "cage -s -m extend -- gtkgreet"
+user = greetd
+EOF
+cat > /etc/conf.d/greetd << EOF
+cfgfile="/etc/greetd/config.toml"
+# supervisor=supervise-daemon
+rc_need=elogind
+EOF
+cat > /etc/greetd/environments <<EOF
+dbus-run-session -- openbox-session
+dbus-run-session -- labwc
+dbus-run-session -- sway
+EOF
+
+addgroup greetd video
 
 rc-update add elogind
 rc-update add polkit
@@ -266,13 +287,13 @@ rc-service elogind restart
 
 rc-service polkit restart
 
-rc-service lightdm restart
+rc-service greetd restart
 ```
 
 #### Installing OPENBOX as desktop adn configure it
 
 ```
-apk add openbox openbox-doc dunst redshift scrot parcellite
+apk add openbox openbox-doc dunst redshift scrot clipper
  arandr xrandr gpicview zathura zathura-ps zathura-pdf-poppler \
  lxsession  libxinerama kbd setxkbmap \
  tint2  font-jetbrains-mono font-jetbrains-mono-nl wezterm-fonts \
@@ -310,18 +331,19 @@ sed -i -r 's|<command>kfmclient.*|<command>pcmanfm</command>|g' /etc/xdg/openbox
 sed -i -r 's|Clearlooks|Bear2|g' /etc/xdg/openbox/rc.mxl
 sed -i -r 's|.*root-menu.*|<action name="Execute"><command>jgmenu_run</command></action>|g' /etc/xdg/openbox/rc.xml
 
+mkdir -p /etc/skel/.config
+mkdir -p /etc/skel/.config/jgmenu
 cat > /etc/skel/.config/jgmenu/append.csv << EOF
 Exit Session,openbox --exit,exit
 ^sep()
 EOF
-for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/append.csv /home/$u/.config/jgmenu/append.csv; done
+for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp -f /etc/skel/.config/jgmenu/append.csv /home/$u/.config/jgmenu/append.csv; done
 cat > /etc/skel/.config/Trolltech.conf << EOF
 [Qt]
 style=GTK+
 EOF
-for u in $(ls /home); do mkdir -p /home/$u/.config && cp /etc/skel/.config/Trolltech.conf /home/$u/.config/Trolltech.conf; done
+for u in $(ls /home); do mkdir -p /home/$u/.config && cp -f /etc/skel/.config/Trolltech.conf /home/$u/.config/Trolltech.conf; done
 for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
-for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/jgmenurc /home/$u/.config/jgmenu/jgmenurc; done
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
 
 ```
@@ -337,6 +359,9 @@ cat > /etc/xdg/openbox/menu.xml << EOF
   <item label="Terminal">
     <action name="Execute"><execute>terminator</execute></action>
   </item>
+  <item label="PcmanFM">
+    <action name="Execute"><execute>pcmanfm</execute></action>
+  </item>
   <item label="Applicacions">
     <action name="Execute"><execute>jgmenu-run --at-pointer</execute></action>
   </item>
@@ -346,6 +371,8 @@ cat > /etc/xdg/openbox/menu.xml << EOF
 </menu>
 </openbox_menu>
 EOF
+for u in $(ls /home); do mkdir -p /home/$u/.config/openbox && cp /etc/xdg/openbox/menu.xml /home/$u/.config/openbox/menu.xml; done
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 
 ```
 
@@ -373,6 +400,40 @@ service networking restart
 service wpa_supplicant restart
 
 service networkmanager restart
+```
+
+#### desktop improvements
+
+```
+mkdir -p /etc/skel/.config/jgmenu/
+cat > /etc/skel/.config/jgmenu/jgmenurc << EOF
+stay_alive           = 0
+tint2_look           = 0
+position_mode        = pointer
+terminal_exec        = xfce4-terminal
+terminal_args        = -e
+menu_width           = 200
+menu_padding_top     = 5
+menu_padding_right   = 1
+menu_padding_bottom  = 4
+menu_padding_left    = 1
+menu_radius          = 0
+menu_border          = 1
+menu_halign          = left
+sub_hover_action     = 1
+item_margin_y        = 2
+item_height          = 20
+item_padding_x       = 4
+item_radius          = 0
+item_border          = 0
+sep_height           = 3
+font                = Sans 10
+icon_size            = 16
+EOF
+
+for u in $(ls /home); do mkdir -p /home/$u/.config/jgmenu && cp /etc/skel/.config/jgmenu/jgmenurc /home/$u/.config/jgmenu/jgmenurc; done
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
+
 ```
 
 ## How to use this guide

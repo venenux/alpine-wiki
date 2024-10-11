@@ -275,6 +275,11 @@ cfgfile="/etc/greetd/config.toml"
 # supervisor=supervise-daemon
 rc_need=elogind
 EOF
+cat > /etc/greetd/environments <<EOF
+dbus-run-session -- labwc
+dbus-run-session -- sway
+dbus-run-session -- openbox-session
+EOF
 
 addgroup greetd video
 
@@ -326,6 +331,8 @@ SDL_VIDEODRIVER="wayland,x11"
 _JAVA_AWT_WM_NONREPARENTING=1
 EOF
 
+mkdir -p /etc/skel/.config
+mkdir -p /etc/skel/.config/jgmenu
 cat > /etc/skel/.config/jgmenu/append.csv << EOF
 Exit Session,labwc --exit,exit
 ^sep()
@@ -335,7 +342,7 @@ cat > /etc/skel/.config/Trolltech.conf << EOF
 [Qt]
 style=GTK+
 EOF
-for u in $(ls /home); do mkdir -p /home/$u/.config && cp /etc/skel/.config/Trolltech.conf /home/$u/.config/Trolltech.conf; done
+for u in $(ls /home); do mkdir -p /home/$u/.config && cp -f /etc/skel/.config/Trolltech.conf /home/$u/.config/Trolltech.conf; done
 for u in $(ls /home); do mkdir -p /home/$u/.config/labwc; done
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
 
@@ -385,6 +392,8 @@ cat > /etc/xdg/labwc/menu.xml << EOF
 </menu>
 </openbox_menu>
 EOF
+for u in $(ls /home); do mkdir -p /home/$u/.config/labwc && cp /etc/xdg/labwc/menu.xml /home/$u/.config/labwc/menu.xml; done
+for u in $(ls /home); do chown -R $u:$u /home/$u; done
 
 ```
 
