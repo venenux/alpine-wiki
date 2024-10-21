@@ -122,7 +122,7 @@ installed Alpine linux to later mount and use as source media CDROM repository:
 
 1. You of course must have already installed Alpine linux
 2. Put the already USB in to a port and try to mount in `/media/cdrom`
-    * You must guess witch device is your USB sctick, use `blkid` command to identify then
+    * You must guess which device is your USB stick, use `blkid` command to identify then
     * The output of the command will show some string, your usb **label** will appears
     * Note the path device of your indentification USB, its the first one like `/dev/sdg`
 3. Now mount the USB media as the iso, like `mount /dev/sdg1 /media/cdrom -t vfat` if not then try `/dev/sdg1`
@@ -137,7 +137,7 @@ installed Alpine linux to later mount the ISO and use as source media repository
 
 1. You of course must have already installed Alpine linux
 2. Put the already USB in to a port and try to mount in `/mnt`
-    * You must guess witch device is your USB sctick, use `blkid` command to identify then
+    * You must guess which device is your USB sctick, use `blkid` command to identify then
     * The output of the command will show some string, your usb **label** will appears
     * Note the path device of your indentification USB, its the first one like `/dev/sdg`
 3. Now mount the USB media as the iso, like `mount /dev/sdg1 /mnt -t vfat`
@@ -175,7 +175,7 @@ apk add wireless-tools wpa_supplicant linux-firmware util-linux
 ```
 
 Those are the minimal packages to work, `linux-firmware` is a huge package because at this point 
-we dont know witch firmwares will need for your wifi card so if you already have wired method internet, 
+we dont know which firmwares will need for your wifi card so if you already have wired method internet, 
 just install all the need packages (otherwise you must download a huge amount of packages as `linux-firmware-xxx` etc):
 
 ```
@@ -196,7 +196,7 @@ rfkill list
 ```
 
 This will show you the current names of the devices only if are wireless, also will show 
-you bluetooh mixed ones, so be care with the name of witch device will you use.
+you bluetooh mixed ones, so be care with the name of which device will you use.
 
 * This document will assume the device named `wlan0` from such command.
 * At the output if the line `Soft blocked` says `no` the device can be used or activated.
