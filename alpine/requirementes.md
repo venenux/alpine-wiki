@@ -2,8 +2,8 @@
 This page will tell you what requirements you will need to use the
 [Alpine Linux](about.md) operating system.
 
-* [Hardware requirements](#hardware-requirements)
-* [Software requirements](#software-requirements)
+* [Hardware requirements](requirementes.md#hardware-requirements)
+* [Software requirements](requirementes.md#software-requirements)
 
 # Hardware requirements
 
@@ -12,10 +12,10 @@ of devices, from the popular PC machine to video game consoles like the
 Game Boy Advance and the 3DS, and as such you must check the following
 of your machine:
 
-- [Architecture](#architecture)
-- [Memory](#memory)
-- [Storage](#storage)
-- [Peripherals](#peripherals)
+- [Architecture](requirementes.md#architecture)
+- [Memory](requirementes.md#memory)
+- [Storage](requirementes.md#storage)
+- [Peripherals](requirementes.md#peripherals)
 
 ## Architectures
 
@@ -125,10 +125,10 @@ Realtek Semiconductor only if your device are so so recent.
 
 # Software requirements
 
-- [Media](#media)
-- [Booting](#booting)
-- [Storage](#storage)
-- [Firmware](#firmware)
+- [Media](requirementes.md#media)
+- [Booting](requirementes.md#booting)
+- [Storage](requirementes.md#storage)
+- [Firmware](requirementes.md#firmware)
 
 ## Media
 
@@ -225,14 +225,14 @@ For more information check the [alpine/copyright.md](copyright.md)
 * [README (index)](README.md)
 * [README (main)](../README.md)
 
-* [Hardware requirements](#hardware-requirements)
-    - [Architecture](#architecture)
-    - [Memory](#memory)
-    - [Storage](#storage)
-    - [Peripherals](#peripherals)
-* [Software requirements](#software-requirements)
-    - [Media](#media)
-    - [Booting](#booting)
-    - [Storage](#storage)
-    - [Firmware](#firmware)
+* [Hardware requirements](requirementes.md#hardware-requirements)
+    - [Architecture](requirementes.md#architecture)
+    - [Memory](requirementes.md#memory)
+    - [Storage](requirementes.md#storage)
+    - [Peripherals](requirementes.md#peripherals)
+* [Software requirements](requirementes.md#software-requirements)
+    - [Media](requirementes.md#media)
+    - [Booting](requirementes.md#booting)
+    - [Storage](requirementes.md#storage)
+    - [Firmware](requirementes.md#firmware)
 
