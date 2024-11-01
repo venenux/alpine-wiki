@@ -6,22 +6,15 @@ Termus's wiki said: **that you avoid YouTube tutorials, especially related to ha
 
 # alpine_wiki
 
-This is a markdown based effort to provide non-minimalist documentation 
-for a minimalist operating system named [Alpine Linux](alpine/about.md), 
-a Linux distribution [with base on musl libc](alpine/base-with-muslc-and-busybox.md#base-with-muslc) 
-and [defaults commands to Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox), 
-with option to change that!
+This is a markdown-based effort to provide a non-minimalist documentation 
+for the minimalist operating system [Alpine Linux](alpine/about.md);
+a Linux distribution based upon the [Musl LibC](alpine/base-with-muslc-and-busybox.md#base-with-muslc) 
+and defaults commands to [Busybox](alpine/base-with-muslc-and-busybox.md#defaults-to-busybox)
+but not limited to only those options.
 
-**Where to start? Check the next section.** Ok but if you are impatient and 
-want an Alpine ready touse in 4 hours, you have two options:
+Where to start? Check the [Tutorials and Docs](#tutorials-and-docs) section. [This is not an official project](alpine/copyright.md)
 
-1. [.. this link...](newbie/alpine-newbie-xfce-desktop.md) a single explanatory article that installs a complete desktop, too much text, then;
-2. [.. use this link...](tutorials/alpine-tutorial-desktop-xfce4-fast-forward.md) but if you want to avoid the explanations and just go all the way... use this other one that is multilanguage
-
-### Tutorials and Docs
-
-1. [Newbies](documents/README.md), not mandatory but recommended you start to read the [Newbies documentation](documents/README.md).
-2. [Tutorials](tutorials/README.md), for impatients if you havethat you avoid YouTube tutorials, especially related to hacking. There a lot of clickbait targeted at inexperienced users. computer or only a phone, read the [Tutorials](tutorials/README.md)
+How to contribute to this project? Check the [How to contribute](#how-to-contribute) section.
 
 ### About alpine
 
@@ -29,11 +22,16 @@ want an Alpine ready touse in 4 hours, you have two options:
 * [Comparison with other distros](alpine/comparison-with-other-distros.md)
 * [Alpine Linux Releases](alpine/releases.md)
 
+### Tutorials and Docs
+
+1. [Newbies](documents/README.md), not mandatory but recommended you start to read the [Newbies documentation](documents/README.md).
+2. [Tutorials](tutorials/README.md), for impatients if you havethat you avoid YouTube tutorials, especially related to hacking. There a lot of clickbait targeted at inexperienced users. computer or only a phone, read the [Tutorials](tutorials/README.md)
+
 ### Social network and contact
 
 - 🗯 IRC
-  -  `##alpine_telegram_english`
-  -  `##alpine_telegram_espanol`
+  - 💬 `##alpine_telegram_english`
+  - 💬 `##alpine_telegram_espanol`
 - 📱 Telegram https://t.me/alpine_linux
   - 🇬🇧 https://t.me/alpine_linux_english
   - 🇷🇺 https://t.me/alpine_linux_pycckuu (dual english russian, low activity)
