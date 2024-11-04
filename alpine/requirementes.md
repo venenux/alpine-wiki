@@ -2,8 +2,8 @@
 This page will tell you what requirements you will need to use the
 [Alpine Linux](about.md) operating system.
 
-* [Hardware requirements](#hardware-requirements)
-* [Software requirements](#software-requirements)
+* [Hardware requirements](requirementes#hardware-requirements)
+* [Software requirements](requirementes#software-requirements)
 
 # Hardware requirements
 
@@ -12,10 +12,10 @@ of devices, from the popular PC machine to video game consoles like the
 Game Boy Advance and the 3DS, and as such you must check the following
 of your machine:
 
-- [Architecture](#architecture)
-- [Memory](#memory)
-- [Storage](#storage)
-- [Peripherals](#peripherals)
+- [Architecture](requirementes#architecture)
+- [Memory](requirementes#memory)
+- [Storage](requirementes#storage)
+- [Peripherals](requirementes#peripherals)
 
 ## Architectures
 
@@ -29,20 +29,23 @@ supported by Alpine:
 | Supported Arch | since   | until   | Meaning of installation and target architecture                                                            |
 | -------------- | ------- | ------- | ---------------------------------------------------------------------------------------------------------- |
 | x86\_64        | all     | current | The popular AMD64 compatible 64-bit x86 based machines, i386 is not recommended for newer/latest hardware. |
-| x86            | all     | current | The all popular 32 bit intel (i386 pc 32bit) and x86\_64 with 32bit compatible (i686 pc 64bit amd64)      |
-| ppc64le        | v3.6    | current | For the PowerPC devices with pure little-endian mode, mostly for POWER8 and POWER9                       |
+| x86            | all     | v3.17   | The all popular 32 bit intel (i386 pc 32bit) and x86\_64 with 32bit compatible (i686 pc 64bit amd64)       |
+| ppc64le        | v3.6    | current | For the PowerPC devices with pure little-endian mode, mostly for POWER8 and POWER9                         |
 | armhf          | v3.0    | current | The newer ARM hard-float for newer, more powerful 32-bit devices alongside 64-bit. Including video games\! |
 | armv7          | v3.9    | current | The 32-bit ARM only execution state of the ARMv7 devices machines. Including video game consoles\!         |
 | aarch64        | v3.5    | current | The 64-bit ARM only execution state of the ARMv8 device machines. Like Rasberri's                          |
 | ppc64le        | v3.6    | current | for 64-bit big-endian PowerPC and Power ISA processors like some MAC computers.                            |
-| s390x          | v3.6    | v3.15.0 | For the Super powered IBM mainframes, especially IBM Z and IBM LinuxONE servers.                           |
+| s390x          | v3.6    | v3.15   | For the Super powered IBM mainframes, especially IBM Z and IBM LinuxONE servers.                           |
 
 #### CPU
 
 * Intel
     * Core i3 8121U are supported from alpine v3.6 to v3.14 only.
+    * From 486 to pentium/pentiumII/pentium3 supported up to v3.16 only
 * AMD
-    * AMD Semprom are pretty slower with recent kernels, so its practically not supported, use older versions of alpine or own build kernel
+    * Semprom are pretty slower with recent kernels, so its practically not supported, use older versions of alpine or own build kernel
+    * DX*SX 486 supported up to alpine v3.16 only
+    * K5 and K6 supported up to alpine v3.16 only
 
 ## Memory
 
@@ -53,8 +56,8 @@ minimum sizes for:
 | Target Arch | Mim RAM to start | Min RAM to install | Min RAM for GUI | Best for GUI work |
 | ----------- | ---------------- | ------------------ | --------------- | ----------------- |
 | x86\_64     | 512 Megs         | 512 Megs           | 3 Gigs          | 8 Gigs            |
-| x86\_32     | 128 Megs         | 256 Megs           | 2 Gigs          | 3 Gigs            |
-| ppc64le     | 128 Megs         | 256 Megs           | 2 Gigs          | 8 Gigs            |
+| x86\_32     | 128 Megs         | 256 Megs           | 1 Gigs          | 4 Gigs            |
+| ppc64le     | 128 Megs         | 256 Megs           | 1 Gigs          | 8 Gigs            |
 | armhf       | 256 Megs         | 512 Megs           | 2 Gigs          | 6 Gigs            |
 | armv7       | 256 Megs         | 512 Megs           | 2 Gigs          | 6 Gigs            |
 | aarch64     | 256 Megs         | 512 Megs           | 2 Gigs          | 8 Gigs            |
@@ -125,10 +128,10 @@ Realtek Semiconductor only if your device are so so recent.
 
 # Software requirements
 
-- [Media](#media)
-- [Booting](#booting)
-- [Storage](#storage)
-- [Firmware](#firmware)
+- [Media](requirementes#media)
+- [Booting](requirementes#booting)
+- [Storage](requirementes#storage)
+- [Firmware](requirementes#firmware)
 
 ## Media
 
@@ -225,14 +228,14 @@ For more information check the [alpine/copyright.md](copyright.md)
 * [README (index)](README.md)
 * [README (main)](../README.md)
 
-* [Hardware requirements](#hardware-requirements)
-    - [Architecture](#architecture)
-    - [Memory](#memory)
-    - [Storage](#storage)
-    - [Peripherals](#peripherals)
-* [Software requirements](#software-requirements)
-    - [Media](#media)
-    - [Booting](#booting)
-    - [Storage](#storage)
-    - [Firmware](#firmware)
+* [Hardware requirements](requirementes#hardware-requirements)
+    - [Architecture](requirementes#architecture)
+    - [Memory](requirementes#memory)
+    - [Storage](requirementes#storage)
+    - [Peripherals](requirementes#peripherals)
+* [Software requirements](requirementes#software-requirements)
+    - [Media](requirementes#media)
+    - [Booting](requirementes#booting)
+    - [Storage](requirementes#storage)
+    - [Firmware](requirementes#firmware)
 
