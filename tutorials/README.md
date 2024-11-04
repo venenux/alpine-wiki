@@ -19,13 +19,14 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 The **Guides are fast documents** with only direct ways to do a particular task
 with Alpine Linux, that expects a minimal knowledge from reader to perform actions. 
 
+* Issues:
+    * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
+    * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
+
 ## INSTALL
 
-
-alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md
-
-
 * Common methods for computers:
+    * [Install from USB to PC x86/x64 without internet](alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md)
     * [Install from CD to HDD/SDD PC single boot only](alpine-install-from-cd-to-disk-pc-single-boot-only.md)
     * [Install from USB to HDD/SDD PC single boot only](alpine-install-from-usb-to-disk-pc-single-boot-only.md)
 * Customized ways:
@@ -48,9 +49,8 @@ alpine-install-from-usb-to-disk-pc-single-boot-nointernet.md
 * Window managers means the desktop its not integrated, each program has their own environment but can tuned:
     * XORG OPENBOX guide: [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md)
     * WAYLAND LABWC guide: [alpine-tutorial-desktop-wayland-try.md](alpine-tutorial-desktop-wayland-try.md)
-* Issues:
-    * At the point of 2022/v3.16 **[all the gvfs handlers are broken in Alpine](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14183)**
-    * Alpine its not stable to use as desktop, developers [only solve issues to current or mayor version upgrades, not LTS due "community" nature of packages](https://gitlab.alpinelinux.org/alpine/aports/-/issues/14182#note_262134)
+* Tips and features for **better desktop integration** and features
+    * Window managers tune and features: [alpine-tutorial-gui-sessions-wm-tunning-and-improvements.md](alpine-tutorial-gui-sessions-wm-tunning-and-improvements.md)
 * Power management
     * APC UPS configuration [alpine-howto-apcupsd-service.md](alpine-howto-apcupsd-service.md)
 * Emulation
