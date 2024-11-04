@@ -252,13 +252,13 @@ This guide will:
 ```
 apk add elogind elogind-openrc shadow-login greetd greetd-gtkgreet cage \
  mesa mesa-gl mesa-utils mesa-osmesa mesa-egl mesa-gles \
- mesa-dri-gallium mesa-va-gallium libva-intel-driver intel-media-driver \
+ mesa-dri-gallium mesa-va-gallium libva-intel-driver \
  xf86-video-intel xf86-video-amdgpu xf86-video-nouveau xf86-video-ati \
  xf86-input-evdev xf86-video-modesetting xf86-input-libinput \
  linux-firmware-amdgpu linux-firmware-radeon linux-firmware-nvidia \
  linux-firmware-i915 linux-firmware-intel font-noto-all ttf-dejavu \
  polkit polkit-openrc polkit-elogind  networkmanager-elogind linux-pam \
- labwc xwayland wayland-libs-server wayland wlroots  weston-desktop-x11
+ labwc xwayland wayland-libs-server wayland wlroots weston-desktop-x11 \
  weston weston-backend-wayland weston-backend-x11 weston-backend-drm \
  weston-backend-wayland weston-backend-headless weston-shell-desktop \
  weston-clients wlogout font-jetbrains-mono wezterm-fonts \
