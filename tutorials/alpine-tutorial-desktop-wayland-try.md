@@ -348,31 +348,9 @@ for u in $(ls /home); do chown -R $u:$u /home/$u; done
 
 ```
 
-* SFWBar is best but not packaged yet, we used waybar with font awesome as icons
-* Kanshi to use profiles ouput on multiple screens hotplug by randr (wlr-randr)
-* mako is a notification daemon as simple as dunst is
-* wvkbd is a on screen keyboar for wayland, equivalent of xvkbd
-* Clickclack not yet packaged, haptic feedback and audio feedback for key press
-* wtype is the xdotool equivalent for wayland
-* hawck not yet packaget, hack key preset and redefine their action to new key
-* wshowkeys display key peset on screen, ideal for screen recording
-* lavalauncher is a MAcosx like bar laucher of butons, like wbar does
-* wayvnc for remote desktop sesion support for wayland
-* swaylock-effects is a lock screen manager with image and widget support
-* swaylockd ensures that swaylock/swaylockdeffects runs property (bugs free)
-* SimpleScreenRecorder is compatible with wayland and X11 but heavyle
-* wf-recorder is more configurable for batch process and uses ffmpeg commands
-* Luminance not packaget yet, GTK control brightness of displays with DDC/CI
-* gammastep on edge only..  GTK control brightness of displays with DDC/CI
-* mpvpaper on edge only, allows you to play videos with mpv as your wallpaper
-* swaybg will set background color or walpaper manager
-* Firefox is the only web browser that supports native wayland
-* waydroit not packaged yet will allow to boot full androit systems
-
-
-```
-
 #### LABWC menu configuration
+
+> **Warning** not yet working (only works natual menu) we need a normal way to make a menu root dinamically!
 
 ```
 mkdir -p /etc/xdg/labwc

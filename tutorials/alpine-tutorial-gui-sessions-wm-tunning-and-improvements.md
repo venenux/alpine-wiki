@@ -8,7 +8,7 @@ the widelly compatible with any gpu, the second one only for modern GPU capable
 of 3D, this last is NOT LIGHT just is faster cos it uses all the advanced 
 features of GPUs.
 
-## Desktop features and improvements
+# Desktop features and improvements
 
 ### desktop integration and device media improvement
 
@@ -71,6 +71,8 @@ the `engrampa` for archiving and compression tool cos
 are forced in junction with `caja` and provides better integration 
 with propietary archived/compresed files.
 
+### Tune up openbox with mate backgrounds
+
 This document assume you used [alpine-tutorial-desktops-openbox-fast-forward.md](alpine-tutorial-desktops-openbox-fast-forward.md) 
 guide, so this just continue and change the settings no matter what are present. 
 
@@ -92,55 +94,12 @@ apk add mate-desktop mate-session-manager mate-panel sakura engrampa pluma \
 sed -i -r 's|.*xfce-mcs-manager \&.*|/usr/libexec/mate-settings-daemon \&|g' /etc/xdg/openbox/autostart
 ```
 
-#### Why not just install MATE
+### openbox session improved menu and desktop configuration
 
-Installing MATE will add a layer of complexity, **we just use the daemon sync 
-for settings and the polkit for security elevation**, session handler is managed 
-by the openbox itselft, the virtual filesystems are handled by the gvfs package 
-software, and the **powermanager is the only thing you will be forced to use if 
-your bare metal computer is a laptop** (that can be avoid if you configured couple 
-of backends programs as fdpowerdown).
-
-Also we do not use by default the panel, but here we will configure it for 
-older non modern users, you just can avoid the panel configuration cos we 
-already have the GJmenu handler for.
-
-Unfortunatelly Alpine packagers do not have any GUI exec launcher.. so the panel 
-will provide this, unless you like to have a lof of stupid terminal windows 
-opened to just launch programs being a stupid geek old school and wasting 
-lof of threats of execution and mem ram.
-
-### Reasons and justifications
-
-* Most of tools and integration here were using MATE ones, this cos are the 
-only tools that does no use client side decorations (GTK-CSD) and integrates 
-very well and provided advanced usage, most close to the GNOME ones that are 
-currently well developed but too stupidity eye candy and does not integrated to 
-most older or newer rest of programs.
-* By the same reason we used polkit and settings daemon from MATE also 
-if were used the ones from XFCE this will install more depends, the MATE ones 
-already uses GTK/GIO packages from GNOME and FXCE will install the sames but 
-plus install also others from itselft, so its nonsense.
-* We used `engrampa` by the same previous reason, its based on `file-roller` 
-that is the archiving tool with best support for non-free archivers, the 
-light well knowed `xarchiver` is too poor in such support and the rest are 
-made in QT framework that will force lot of dependencies and poor GTK integration.
-* We used `caja` cos web browsers only understand `caja`, `thunar` and `nautilus` 
-as filemanagers with pinting focus of downloaded file, you can change by `pcmanfm` 
-but file pointing will be limited if you manage huge amount of files in same 
-directory (forced to use find tool event just click on the web browser after 
-file downloading).
-* For image viewer and document viewer you can use `atril` and `eom` but those 
-are the best cos supports virtual file systems, the `gpicview` package is 
-very light but does not support any virtual file system, in the same line is 
-the document viewer, there is `zathura` that two more packages to support ps/pdf 
-files for extra dependencies.
-
-> **Warning** the `openbox-doc` package must be installed, just run `apk add openbox-doc`
-
-#### openbox session improved menu and desktop configuration
 
 ```
+apk add jgmenu mate-control-center terminator
+
 cat > /etc/xdg/openbox/menu.xml << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu xmlns="http://openbox.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://openbox.org/ file:///usr/share/openbox/menu.xsd">
@@ -218,9 +177,79 @@ for u in $(ls /home); do mkdir -p /home/$u/.config/openbox; done
 for u in $(ls /home); do chown -R $u:$u /home/$u; done
 ```
 
+
+#### Why not just install MATE
+
+Installing MATE will add a layer of complexity, **we just use the daemon sync 
+for settings and the polkit for security elevation**, session handler is managed 
+by the openbox itselft, the virtual filesystems are handled by the gvfs package 
+software, and the **powermanager is the only thing you will be forced to use if 
+your bare metal computer is a laptop** (that can be avoid if you configured couple 
+of backends programs as fdpowerdown).
+
+Also we do not use by default the panel, but here we will configure it for 
+older non modern users, you just can avoid the panel configuration cos we 
+already have the GJmenu handler for.
+
+Unfortunatelly Alpine packagers do not have any GUI exec launcher.. so the panel 
+will provide this, unless you like to have a lof of stupid terminal windows 
+opened to just launch programs being a stupid geek old school and wasting 
+lof of threats of execution and mem ram.
+
+#### Reasons and justifications
+
+* Most of tools and integration here were using MATE ones, this cos are the 
+only tools that does no use client side decorations (GTK-CSD) and integrates 
+very well and provided advanced usage, most close to the GNOME ones that are 
+currently well developed but too stupidity eye candy and does not integrated to 
+most older or newer rest of programs.
+* By the same reason we used polkit and settings daemon from MATE also 
+if were used the ones from XFCE this will install more depends, the MATE ones 
+already uses GTK/GIO packages from GNOME and FXCE will install the sames but 
+plus install also others from itselft, so its nonsense.
+* We used `engrampa` by the same previous reason, its based on `file-roller` 
+that is the archiving tool with best support for non-free archivers, the 
+light well knowed `xarchiver` is too poor in such support and the rest are 
+made in QT framework that will force lot of dependencies and poor GTK integration.
+* We used `caja` cos web browsers only understand `caja`, `thunar` and `nautilus` 
+as filemanagers with pinting focus of downloaded file, you can change by `pcmanfm` 
+but file pointing will be limited if you manage huge amount of files in same 
+directory (forced to use find tool event just click on the web browser after 
+file downloading).
+* For image viewer and document viewer you can use `atril` and `eom` but those 
+are the best cos supports virtual file systems, the `gpicview` package is 
+very light but does not support any virtual file system, in the same line is 
+the document viewer, there is `zathura` that two more packages to support ps/pdf 
+files for extra dependencies.
+
+> **Warning** the `openbox-doc` package must be installed, just run `apk add openbox-doc`
+
 # Wayland shit session tips
 
 Wayland is so crap becouse nothig great work under and forced 3d gpu usage
+
+### List of some wayland based apps equivalents
+
+* SFWBar is best but not packaged yet, we used waybar with font awesome as icons
+* Kanshi to use profiles ouput on multiple screens hotplug by randr (wlr-randr)
+* mako is a notification daemon as simple as dunst is
+* wvkbd is a on screen keyboar for wayland, equivalent of xvkbd
+* Clickclack not yet packaged, haptic feedback and audio feedback for key press
+* wtype is the xdotool equivalent for wayland
+* hawck not yet packaget, hack key preset and redefine their action to new key
+* wshowkeys display key peset on screen, ideal for screen recording
+* lavalauncher is a MAcosx like bar laucher of butons, like wbar does
+* wayvnc for remote desktop sesion support for wayland
+* swaylock-effects is a lock screen manager with image and widget support
+* swaylockd ensures that swaylock/swaylockdeffects runs property (bugs free)
+* SimpleScreenRecorder is compatible with wayland and X11 but heavyle
+* wf-recorder is more configurable for batch process and uses ffmpeg commands
+* Luminance not packaget yet, GTK control brightness of displays with DDC/CI
+* gammastep on edge only..  GTK control brightness of displays with DDC/CI
+* mpvpaper on edge only, allows you to play videos with mpv as your wallpaper
+* swaybg will set background color or walpaper manager
+* Firefox is the only web browser that supports native wayland
+* waydroit not packaged yet will allow to boot full androit systems
 
 ### Wayland environments and need variables
 
@@ -294,6 +323,64 @@ rc-service polkit restart
 
 rc-service greetd restart
 ```
+
+### Solving issues with wayland crap
+
+> **wARNING** : YOU ALREADY MUST HAD THE VARIABLES ALREADY POINTED AT [Wayland environments and need variables](#Wayland-environments-and-need-variables)
+
+Wayland is broken by design: **A crash in the window manager takes down all 
+running applications**; It offloads a lot of work to each and every window 
+manager. As a result, the same basic features get implemented differently in 
+different window managers, with different behaviors and bugs 
+
+> **Warning** so what works on desktop environment "A" will or will not necessarily work 
+in desktop environment B (e.g., often you hear that something "works in Wayland", 
+even though it only really works on Gnome and KDE, not in all Wayland implementations). 
+The best example is that apps using older GTK2/QT4 are not Wayland-ready and will fails!
+This summarizes it very well: https://gitlab.freedesktop.org/wayland/wayland/-/issues/233
+
+#### 1 - running root apps is not possible
+
+Also take in consideration that it is not possible to start graphical apps 
+under the root account from terminal when using `su` or any similar command. 
+Apps which use polkit to request administrator permissions for just certain 
+operations and only when needed are not affected (they are not started as root 
+right away). The discussion is ongoing about the best approach to take, see 
+bug [1274451 at https://bugzilla.redhat.com/show_bug.cgi?id=1274451](https://bugzilla.redhat.com/show_bug.cgi?id=1274451)
+
+#### 2 - Games are only X11 mostly so maybe wont work
+
+It is no longer possible for an app to change monitor resolution. Usually 
+this was done by games to increase performance. **Unfortunatelly there is no 
+Wayland-based games cos wayland is only specs for compositing** spo it will 
+use a different approach (scaling its output that means more work for gpu!!). 
+But for X11 games (running through XWayland) this solution is not available. 
+
+This results in a number of different types of behavior, based on how the game 
+is written/developed: the game might be fixed in the desktop resolution, 
+or rendered as a small centered image with black bars around it, or crash on 
+startup, or something different. See bug [1289714 https://bugzilla.redhat.com/show_bug.cgi?id=1289714](https://bugzilla.redhat.com/show_bug.cgi?id=1289714)
+
+#### 3 Some trick to debug wayshit
+
+* Wayland session should have `WAYLAND_DISPLAY` variable set:
+
+`echo $WAYLAND_DISPLAY`
+
+If the output should be `wayland-0` to be correct! X11 ones shoudl not set!
+
+* You can try to run the app while unsetting `DISPLAY` environment variable:
+
+`DISPLAY='' command`
+
+If the application runs OK, it should be using Wayland natively.
+
+* You can run the app with `WAYLAND_DEBUG=1` environment variable:
+
+`WAYLAND_DEBUG=1 command`
+
+If you see loads of output (compared standard run), is using Wayland natively.
+
 
 ## How to use this guide
 
