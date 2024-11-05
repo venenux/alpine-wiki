@@ -18,9 +18,9 @@ apk add shadow shadow-uidmap shadow-login doas \
  gst-plugins-good gst-plugins-good-gtk gst-plugin-pipewire \
  libcanberra-gtk2 libcanberra-gtk3 libcanberra-gstreamer \
  mediainfo ffmpeg ffmpeg-doc ffmpeg-libs lame lame-doc rtkit rtkit-doc \
- mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman
+ mpv mpv-doc deadbeef deadbeef-lang libxinerama xrandr cairo pango pixman \
  gvfs gvfs-fuse gvfs-archive gvfs-afp gvfs-afp gvfs-afc gvfs-cdda \
- ntfs-3g gvfs-afc gvfs-nfs gvfs-archive gvfs-dav gvfs-gphoto2 gvfs-avahi
+ ntfs-3g gvfs-afc gvfs-nfs gvfs-archive gvfs-dav gvfs-gphoto2 gvfs-avahi \
  gvfs-gphoto2 gvfs-mtp libreoffice libreoffice-gnome \
  zathura zathura-ps zathura-pdf-poppler zathura-djvu zathura-cb
 
