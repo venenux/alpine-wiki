@@ -98,6 +98,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
   -name "vm1x86alpine310" \
   -cpu n270 -machine pc \
   -bios /usr/share/qemu/bios-256k.bin \
+  -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
   -device ide-hd,drive=hd0 -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none \
   -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3122-:22 \
   -device pci-ohci -device nec-usb-xhci \
@@ -108,6 +109,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
 
 * the `-cpu n270 -machine pc` forces 32bit most compatible SSE2 cpu on defualt i440fx and PIIX3
 * the `-bios /usr/share/qemu/bios-256k.bin` is optional featured, only for 32bit machines without EFI implementation
+* the `-device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom` accelerates starup cos missing entropy
 * the `-device ide-hd,drive=hd0 -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none` storage using SATA most compatible
 * the `-device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3122-:22` allows sync network access and ssh on 3222
 * the `-device pci-ohci` enables USB 1.1 that allows to use older USB devices or emulate such bus, but only one device
@@ -217,6 +219,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
   -name "vm2arm64alpine319" \
   -cpu cortex-a35 -machine virt 
   -bios /usr/share/AAVMF/QEMU_EFI.fd \
+  -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
   -device virtio-scsi -device scsi-hd,drive=hd0 -drive file=vm2arm64alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none \
   -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3222-:22 \
   -device pci-ohci -device nec-usb-xhci \
@@ -227,6 +230,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
 
 * the `-cpu cortex-a35 -machine virt` are the most compatible ARM 64bit cpu and machine, for best compatibility to any ARM activty
 * the `-bios /usr/share/AAVMF/QEMU_EFI.fd` is mandatory, all ARM machines has their own bios/way so we use most common for 64bit
+* the `-device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom` accelerates starup cos missing entropy
 * the `-device virtio-scsi` just add new base backend, teh scsi is the most compatible but with degraded performance
 * the `-device scsi-hd,drive=hd0 -drive file=vm2arm64alpine-vitualdisk1-file.raw,id=hd0,format=raw,if=none` improved SATA
 * the `-device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3222-:22` allows sync network access and ssh on 3222
@@ -331,6 +335,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
   -name "vm1x86alpine310" \
   -cpu n270 -machine pc \
   -bios /usr/share/qemu/bios-256k.bin
+  -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
   -device virtio-blk -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none \
   -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3122-:22 \
   -device pci-ohci -device nec-usb-xhci \
@@ -340,6 +345,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
 ```
 
 * the `-cpu n270 -machine pc` forces 32bit most compatible SSE2 cpu on defualt i440fx and PIIX3
+* the `-device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom` accelerates starup cos missing entropy
 * the `-bios /usr/share/qemu/bios-256k.bin` is optional featured, only for 32bit machines without EFI implementation
 * the `-device virtio-scsi` just add new base backend, teh scsi is the most compatible but with degraded performance
 * the `-device scsi-hd,drive=hd0 -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none` improved SATA
@@ -457,6 +463,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
   -m 1024 \
   -name "vm2arm7alpine319" \
   -cpu cortex-a7 -machine virt -bios /usr/share/OVMF/QEMU_EFI.fd \
+  -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
   -device virtio-scsi -device scsi-hd,drive=hd0 -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none \
   -device rtl8139,netdev=nd1 -netdev user,id=nd1 \
   -device pci-ohci -device nec-usb-xhci \
@@ -466,6 +473,7 @@ run **again but with minimal set of devices hardware like sound and usb** as:
 ```
 
 * the `-cpu n270 -machine pc` forces 32bit most compatible SSE2 cpu on defualt i440fx and PIIX3
+* the `-device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom` accelerates starup cos missing entropy
 * the `-device virtio-scsi` just add new base backend, this just feature kernel integration
 * the `-device scsi-hd,drive=hd0 -drive file=vm1x86alpine-disk1.raw,id=hd0,format=raw,if=none` improved hda
 * the `-device rtl8139,netdev=nd1 -netdev user,id=nd1` allows sync network access for internet browsing
@@ -905,6 +913,7 @@ qemu-img create -f raw -o preallocation=full vm1x86alpine318.raw 4G
  -m 2048 -mem-path /dev/hugepages \
  -name "computerint1alpine318" -rtc base=localtime \
  -cpu host -machine pc -accel kvm \
+ -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
  -drive file=vm1x86alpine318.raw,id=hd0,format=raw \
  -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3222-:22 \
  -device pci-ohci -device nec-usb-xhci \
@@ -921,7 +930,7 @@ Then install alpine and later still as general user after alpine installed, powe
  -m 2048 -mem-path /dev/hugepages \
  -name "computerint1alpine318" -rtc base=localtime \
  -cpu n270 -machine pc,hpet=true,acpi=on -accel kvm \
- -object iothread,id=iot0 \
+ -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
  -drive file=vm1x86alpine318.raw,id=hd0,format=raw \
  -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3222-:22 \
  -device pci-ohci -device nec-usb-xhci \
@@ -985,6 +994,7 @@ qemu-img create -f raw -o preallocation=full vm1x64alpine318.raw 4G
  -m 4096 -mem-path /dev/hugepages \
  -name "computerint2alpine318" -rtc base=localtime \
  -cpu qemu64 -machine q35 -accel kvm \
+ -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
  -device virtio-blk-pci,drive=hd0 -drive file=vm1x64alpine318.raw,id=hd0,format=raw,if=none \
  -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3223-:22 \
  -device pci-ohci -device nec-usb-xhci \
@@ -1002,7 +1012,7 @@ As user general, emulation of amd64 machine boot after alpine install:
  -m 2048 -mem-path /dev/hugepages \
  -name "computerint2alpine318" -rtc base=localtime \
  -cpu host -machine q35 -accel kvm \
- -object iothread,id=iot0 \
+ -device virtio-rng-pci,rng=rng0 -object rng-random,id=rng0,filename=/dev/urandom \
  -device virtio-blk-pci,iothread=iot0,drive=hd0 -drive file=vm1x86alpine318.raw,id=hd0,format=raw,if=none \
  -device rtl8139,netdev=nd1 -netdev user,id=nd1,restrict=off,hostfwd=tcp::3222-:22 \
  -device pci-ohci -device nec-usb-xhci \
