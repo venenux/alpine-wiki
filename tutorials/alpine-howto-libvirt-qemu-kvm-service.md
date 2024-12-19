@@ -114,6 +114,7 @@ sed -i 's|.*tls_no_verify_certificate =.*|tls_no_verify_certificate = 1|g' /etc/
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 chown -R root:qemu /etc/qemu
 chmod 640 /etc/qemu/bridge.conf
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 ```
 
 ##### running as unique web service

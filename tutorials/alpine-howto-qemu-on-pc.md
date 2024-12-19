@@ -22,6 +22,7 @@ since i286+DX math co-procesor. The amd64 is the 64bit and is not same as ia64.
 * load and setup the tun module
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
+* set uid execution of bridge helper to allow to create tun devices
 * added/create our user to run the virtual machines (prevents lack of security)
 * added the user to qemu group to property create virtualmachines with access
 
@@ -33,11 +34,13 @@ EOF
 
 apk update && apk add qemu qemu-img qemu-system-i386 qemu-modules wget
 
-grep tun /etc/modules|| echo tun >> /etc/modules
+grep tun /etc/modules|| echo tun >> /etc/modules && modprobe tun
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -134,6 +137,7 @@ so you must download manually and installed forced.
 * load and setup the tun module
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
+* set uid execution of bridge helper to allow to create tun devices
 * added/create our user to run the virtual machines (prevents lack of security)
 * added the user to qemu group to property create virtualmachines with access
 
@@ -149,11 +153,13 @@ apk add --allow-untrusted aavmf-0.0.202302-r0.apk
 
 apk update && apk add qemu qemu-img qemu-system-aarch64 qemu-modules wget aavmf
 
-grep tun /etc/modules|| echo tun >> /etc/modules
+grep tun /etc/modules|| echo tun >> /etc/modules && modprobe tun
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -246,6 +252,7 @@ computer no matter if you use or not similar architecture)
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
 * added/create our user to run the virtual machines (prevents lack of security)
+* set uid execution of bridge helper to allow to create tun devices
 * added the user to qemu group to property create virtualmachines with access
 
 ```
@@ -256,11 +263,13 @@ EOF
 
 apk update && apk add qemu qemu-img qemu-system-x86_64 qemu-modules wget
 
-grep tun /etc/modules|| echo tun >> /etc/modules
+grep tun /etc/modules|| echo tun >> /etc/modules && modprobe tun
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -355,6 +364,7 @@ Cortex CPUs are mostly 64bit only except ARMv6 and ARMv7. For those use aarch64.
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
 * added/create to our user to run the virtual machines (prevents lack of security)
+* set uid execution of bridge helper to allow to create tun devices
 * added the user to qemu group to property create virtualmachines with access
 
 ```
@@ -365,11 +375,13 @@ EOF
 
 apk update && apk add qemu qemu-img qemu-system-arm qemu-modules wget ovmf
 
-grep tun /etc/modules|| echo tun >> /etc/modules
+grep tun /etc/modules|| echo tun >> /etc/modules && modprobe tun
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -484,6 +496,7 @@ similar architecture. By example run aarch64 over ARM machine or i386 over amd64
 * loading kvm module if still not loaded
 * allow user of qemu group to manage briged devices
 * change permissions of the configurations
+* set uid execution of bridge helper to allow to create tun devices
 * added/create to our user to run the virtual machines (prevents lack of security)
 * added the user to the qemu group to property create virtualmachines with devices access
 * added the user to the kvm group to property access hardware virtualization support
@@ -500,6 +513,7 @@ apk add qemu-img qemu-system-i386 qemu-modules wget
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
+rmmod tun && rmmod vhost_net && rmmod vhost && modprobe vhost_net && modprobe tun
 
 /bin/bash -c [  -z '$(grep -i intel /proc/cpuinfo|head -n1)' ] && echo AMD  || modprobe kvm_intel nested=1 && echo "options kvm_intel nested=Y">/etc/modprobe.d/kvm_intel.conf
 
@@ -509,6 +523,7 @@ modprobe kvm
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -672,6 +687,7 @@ modprobe kvm
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general
 
@@ -861,6 +877,7 @@ modprobe kvm
 
 sed -i 's|.*allow br.*|allow br0|g' /etc/qemu/bridge.conf
 chown -R root:qemu /etc/qemu && chmod 640 /etc/qemu/bridge.conf
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 adduser -S -D -g '' -s /bin/bash -h /home/general general && adduser general qemu && adduser general kvm
 
@@ -932,6 +949,7 @@ apk add qemu qemu-img qemu-system-x86_64 qemu-modules wget
 
 grep tun /etc/modules|| echo tun >> /etc/modules
 grep vhost_net /etc/modules|| echo vhost_net >> /etc/modules
+chmod u+s /usr/lib/qemu/qemu-bridge-helper
 
 /bin/bash -c [  -z '$(grep -i intel /proc/cpuinfo|head -n1)' ] && echo AMD  || modprobe kvm_intel nested=1 && echo "options kvm_intel nested=Y">/etc/modprobe.d/kvm_intel.conf
 /bin/bash -c [  -z '$(grep -i amd /proc/cpuinfo|head -n1)' ] && echo INTEL  || modprobe kvm_amd nested=1 && echo "options kvm_amd nested=Y">/etc/modprobe.d/kvm_intel.conf
