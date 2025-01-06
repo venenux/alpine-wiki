@@ -39,7 +39,7 @@ the `wpa_supplicant` and the newer `iwd` from Intel, this last with less usage c
 | wireless_tools | Console | Yes   | No      | Yes  | No      | [since 3.5](https://pkgs.alpinelinux.org/packages?name=wireless-tools&branch=v3.14) |
 | iw             | Console | No    | Yes     | Yes  | Yes     | [since 3.5](https://pkgs.alpinelinux.org/packages?name=iw&branch=v3.14) |
 | wpa_supplicant | Console | Yes   | Yes     | Yes  | Yes     | [since 3.0](https://pkgs.alpinelinux.org/packages?name=wpa_supplicant&branch=v3.14) |
-| iwd            | Console | Yes   | Yes     | No   | Yes     | [since 3.15](https://pkgs.alpinelinux.org/packages?name=iwd&branch=v3.15) |
+| iwd            | Console | No   | Yes     | No   | Yes     | [since 3.15](https://pkgs.alpinelinux.org/packages?name=iwd&branch=v3.15) |
 | network-manager | Con+Gui | Yes | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.14) |
 | connman        | Console | No    | Yes    | Yes  | Yes     | [since 3.12](https://pkgs.alpinelinux.org/packages?name=network-manager-applet&branch=v3.14) |
 
