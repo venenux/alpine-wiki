@@ -7,6 +7,7 @@ The problem with webmin is that does not support officially the Alpine Linux,
 so basically the workaround is to trick the system into thinking it's Geento!
 
 This material is copyright, check [LICENSE](#license) at the end of the document!
+and you can also watch the mckaygerhard's video also at https://t.me/alpine_linux/1402
 
 * [Install alpine linux](#install-alpine-linux)
 * [1 - Environment](#1---setup-environment)
@@ -17,14 +18,19 @@ This material is copyright, check [LICENSE](#license) at the end of the document
 * [How to use this guide](#how-to-use-this-guide)
 * [LICENSE](#LICENSE)
 
-This document will not explain anything; you must to obey, as must be cos just works and works very well, please if you dont know check [How to use this guide](#how-to-use-this-guide) section before starts:
+This document will not explain anything; you must to obey, as must be cos just works 
+and works very well, please if you dont know check [How to use this guide](#how-to-use-this-guide) 
+section before starts:
 
 ## Install alpine linux
 
 > **Warning**: if you already have alpine running just foward to [0 - Environment](#0---setup-environment) part!
 
 Those commands are for any distro, it will create a disk and runs a virtual 
-machine to install Alpine Linux 3.20 as base system OS for webmin setup:
+machine to install Alpine Linux 3.20 as base system OS for webmin setup.
+
+You can use alpine 3.13, to 3.21, or edge... any alpine will work since 3.13 
+to install webmin system. In this part we use 3.20 but any other version still work!
 
 ```
 mkdir -p /home/general/VM/alpine320 && cd /home/general/VM/alpine320
@@ -82,7 +88,7 @@ apk update
 apk add openssl perl perl-net-ssleay perl-io-socket-ssl perl-io-tty \
  perl-datetime perl-datetime-timezone perl-datetime-locale attr diffutils \
  at dcron man-pages nano binutils coreutils readline shared-mime-info \
- grep gawk sed attr dialog lsof less groff wget curl terminus-font \
+ grep gawk sed attr dialog lsof less groff procps wget curl terminus-font \
  file findutils gawk tree pciutils usbutils lshw tzdata tzdata-utils \
  zip unzip p7zip xz tar cabextract cpio binutils lha gzip lz4 \
  ethtool musl-locales musl-locales-lang  arch-install-scripts util-linux \
@@ -98,18 +104,23 @@ rc-update add consolefont boot
 Webmin does not have a way to automate the installation, but at the end 
 of the document we have a full automation way.
 
-First we download, extracted the files, later invoke setup and answer the questions:
+This download, extracted the files, invoke setup and answer the questions; 
+please if you dont know how check [How to use this guide](#how-to-use-this-guide) 
+section, otherwise runs all of the following commands as root user:
+**this part will install minimal WEBMIN, in the [4 - Full automated way](#4---full-automated-way) section 
+section there are ionstructions for FULL WEBMIN install with all the need tools**, 
+this section si the mosft faster, and you can watch the video https://t.me/alpine_linux/1402
 
 ```
 apk add aria2
 
 cd /tmp
 
-aria2c https://github.com/webmin/webmin/releases/download/2.202/webmin-2.202.tar.gz
+aria2c https://github.com/webmin/webmin/releases/download/2.202/webmin-2.202-minimal.tar.gz
 
-gunzip webmin-2.202.tar.gz
+gunzip webmin-2.202-minimal.tar.gz
 
-tar xf webmin-2.202.tar
+tar xf webmin-2.202-minimal.tar
 
 webmin-2.202/setup.sh /usr/share/webapps/webmin
 ```
@@ -135,16 +146,17 @@ check it using the command `ip add | grep inet` (use the second lines)
 
 ## 4 - Configuration for modules
 
-The installation only provides core functionality of webmin, to get full power 
+The installation only provides core functionality of webmin, but for full power 
 or not have problems before installing the most basic modules we still need to 
 install some additional packages, this avoid problems when you try to install 
-extra modules of the webmin system:
+extra modules of the webmin system, so please if you dont know check [How to use this guide](#how-to-use-this-guide) 
+section, otherwise runs all of the following commands as root user:
 
 ```
 apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
- proute2 netpbm poppler-utils libjpeg-turbo-utils
+ iproute2 netpbm poppler-utils libjpeg-turbo-utils
 
 cat > /etc/doas.d/apkgeneral.conf << EOF
 permit nopass general as root cmd apk
@@ -182,7 +194,8 @@ Following packages does not have any alternative in Alpine repositories
 
 This is a ful automated install using expect tk script, please if you dont know 
 how to runs the bach of the commands here check [How to use this guide](#how-to-use-this-guide) 
-cos each empty line means "wait the outpot of the command just pre executed":
+cos each empty line means "wait the outpot of the command just pre executed". 
+This part will install the FULL WEBMIN rerlease with all need tools for future modules:
 
 ```
 cat > /etc/apk/repositories << EOF
@@ -200,10 +213,10 @@ apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
  file findutils gawk tree pciutils usbutils lshw tzdata tzdata-utils \
  zip unzip p7zip xz tar cabextract cpio binutils lha gzip lz4 \
  ethtool musl-locales musl-locales-lang  arch-install-scripts util-linux \
- docs iproute2-minimal psmisc net-tools lsof curl wget apkbuild-cpan
+ docs iproute2-minimal psmisc net-tools lsof curl wget apkbuild-cpan \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
- proute2 netpbm poppler-utils libjpeg-turbo-utils aria2 expect
+ iproute2 netpbm poppler-utils libjpeg-turbo-utils aria2 expect
 
 cd /tmp && aria2c https://github.com/webmin/webmin/releases/download/2.202/webmin-2.202.tar.gz && tar xzf webmin-2.202.tar.gz
 
@@ -214,8 +227,8 @@ spawn "/tmp/webmin-2.202/setup.sh /usr/share/webapps/webmin"
 expect "Config file directory " {send "\r"}
 expect "Log file directory " {send "\r"}
 expect "Full path to perl (default /usr/bin/perl):" {send "\r"}
-#expect "Operating system:" {send "102\r"}
-#expect "Version:" {send "5.10\r"}
+expect "Operating system:" {send "87\r"}
+expect "Version:" {send "3.20\r"}
 expect "Web server port (default 10000):" {send "\r"}
 expect "Login name (default admin):" {send "admin\r"}
 expect "Login password:" {send "admin\r"}
