@@ -147,6 +147,7 @@ check it using the command `ip add | grep inet` (use the second lines)
 ## 4 - Configuration for modules
 
 The installation only provides core functionality of webmin, but for full power 
+like ipv6 support, filesystem or raid detection, user management, module addition, 
 or not have problems before installing the most basic modules we still need to 
 install some additional packages, this avoid problems when you try to install 
 extra modules of the webmin system, so please if you dont know check [How to use this guide](#how-to-use-this-guide) 
@@ -156,7 +157,7 @@ section, otherwise runs all of the following commands as root user:
 apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
- iproute2 netpbm poppler-utils libjpeg-turbo-utils
+ iproute2 netpbm poppler-utils libjpeg-turbo-utils perl-socket6
 
 cat > /etc/doas.d/apkgeneral.conf << EOF
 permit nopass general as root cmd apk
@@ -216,7 +217,7 @@ apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
  docs iproute2-minimal psmisc net-tools lsof curl wget apkbuild-cpan \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
- iproute2 netpbm poppler-utils libjpeg-turbo-utils aria2 expect
+ iproute2 netpbm poppler-utils libjpeg-turbo-utils aria2 expect perl-socket6
 
 cd /tmp && aria2c https://github.com/webmin/webmin/releases/download/2.202/webmin-2.202.tar.gz && tar xzf webmin-2.202.tar.gz
 
