@@ -5,6 +5,7 @@ it helps to manage easyle user, services and inclusivelly remote machines!
 
 The problem with webmin is that does not support officially the Alpine Linux, 
 so basically the workaround is to trick the system into thinking it's Geento!
+There is a **open issue for https://github.com/webmin/webmin/issues/2353 support it!**
 
 This material is copyright, check [LICENSE](#license) at the end of the document!
 and you can also watch the mckaygerhard's video also at https://t.me/alpine_linux/1402
@@ -15,6 +16,7 @@ and you can also watch the mckaygerhard's video also at https://t.me/alpine_linu
 * [3 - Configuration for modules](#3---configuration-for-modules)
     * [Problems and fails](#problems-and-fails)
 * [4 - Full automated way](#4---full-automated-way)
+* [5 - basic webmin modules]()
 * [How to use this guide](#how-to-use-this-guide)
 * [LICENSE](#LICENSE)
 
@@ -157,7 +159,7 @@ section, otherwise runs all of the following commands as root user:
 apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
- iproute2 netpbm poppler-utils libjpeg-turbo-utils perl-socket6
+ iproute2 netpbm poppler-utils libjpeg-turbo-utils perl-socket6 libqrencode-tools
 
 cat > /etc/doas.d/apkgeneral.conf << EOF
 permit nopass general as root cmd apk
@@ -189,7 +191,7 @@ Following packages does not have any alternative in Alpine repositories
 * libauthen-pam-perl : used to sync webmin users with system users, by the use of PAM.
 * libdigest-sha-perl, libdigest-md5-perl : used to calcular other SHA/MD5 checksums
 * libtime-piece-perl, libtime-hires-perl : uses to format and sync the time settings
-* libencode-detect-perl, libsocket6-perl, lynx, qrencode : enconde and decode qr
+* libencode-detect-perl, : enconde and decode qr
 
 ## 4 - Full automated way
 
@@ -207,13 +209,13 @@ EOF
 apk update
 
 apk add doas bash shadow shadow-uidmap musl-locales musl-locales-lang \
- openssl perl perl-net-ssleay perl-io-socket-ssl perl-io-tty \
+ openssl perl perl-net-ssleay perl-io-socket-ssl perl-io-tty binutils \
  perl-datetime perl-datetime-timezone perl-datetime-locale attr diffutils \
  at dcron man-pages nano binutils coreutils readline shared-mime-info \
  grep gawk sed attr dialog lsof less groff wget curl terminus-font \
  file findutils gawk tree pciutils usbutils lshw tzdata tzdata-utils \
- zip unzip p7zip xz tar cabextract cpio binutils lha gzip lz4 \
- ethtool musl-locales musl-locales-lang  arch-install-scripts util-linux \
+ zip unzip p7zip xz tar cabextract cpio lha gzip lz4 libqrencode-tools \
+ ethtool musl-locales musl-locales-lang arch-install-scripts util-linux \
  docs iproute2-minimal psmisc net-tools lsof curl wget apkbuild-cpan \
  e2fsprogs btrfs-progs exfat-utils f2fs-tools dosfstools xfsprogs jfsutils zfs \
  acpi patch coreutils mdadm e2fsprogs-extra attr smartmontools doas-sudo-shim \
@@ -237,8 +239,8 @@ expect "Password again:" {send "admin\r"}
 expect "Use SSL (y/n):" {send  "n\r"}
 expect "Start Webmin at boot time (y/n):" {send  "n\r"}
 EOF
-
 expect /tmp/webmin.exp && rm /tmp/webmin.exp
+service webmin restart
 
 cat > /etc/doas.d/apkgeneral.conf << EOF
 permit nopass general as root cmd apk
