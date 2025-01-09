@@ -189,8 +189,8 @@ openssl req -x509 -days 1460 -nodes -newkey rsa:4096 \
 chmod 640 /etc/ssl/certs/localhost.pem
 chown apache:www-data /etc/ssl/certs/localhost.pem
 
-sed -i -r 's#^SSLCertificateKeyFile.*/etc/#\#SSLCertificateKeyFile /etc/#g' /etc/apache2/conf.d/ssl.conf
-sed -i -r 's#^SSLCertificateFile.*/etc/#SSLCertificateFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#^SSLCertificateKeyFile.*/etc/.*#\#SSLCertificateKeyFile /etc/#g' /etc/apache2/conf.d/ssl.conf
+sed -i -r 's#^SSLCertificateFile.*/etc/.*#SSLCertificateFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
 sed -i -r 's#^SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
 sed -i -r 's#\#.*SSLCertificateChainFile.*#SSLCertificateChainFile /etc/ssl/certs/localhost.pem#g' /etc/apache2/conf.d/ssl.conf
 
