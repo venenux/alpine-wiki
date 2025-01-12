@@ -1,9 +1,11 @@
-# Linux + Apache2 + Mysql + Php
+# Linux + Apache2 + Mysql + Php8
 
 The recommendation its to use apache2 behind a reverse proxy setup, such like 
 lighttpd or hiawatta servers. This version will only use PHP 8.0, for users with 
-olders alpine from 3.8 use document [server-alpine-LAMP-php5-fast-forward.md](server-alpine-LAMP-php5-fast-forward.md)
-for php7 alpine from 3.12 use document [server-alpine-LAMP-php7-fast-forward.md](server-alpine-LAMP-php7-fast-forward.md)
+olders alpine like 3.8 use document [server-alpine-LAMP-php5-fast-forward.md](server-alpine-LAMP-php5-fast-forward.md)
+for php7 alpine 3.12 use document [server-alpine-LAMP-php7-fast-forward.md](server-alpine-LAMP-php7-fast-forward.md)
+for most moderd alpines up to 3.20 [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md)
+
 
 * [1 - Apache2](#1-apache2)
     * [Apache2 Status special page](#apache2-status-special-page)
@@ -216,9 +218,9 @@ rc-service apache2 restart
 
 The php packages in alpine are only one version at time.
 
-> **Warning** Those instructions are for **php 8.2 and alpine 3.20 an up** if you runs 
-> olders alpine from 3.14 up to 3.16 use document [server-alpine-LAMP-php8-fast-forward.md](server-alpine-LAMP-php8-fast-forward.md)
+> **Warning** Those instructions are for **php8.0 and alpine 3.12/3.14/3.16** if you runs 
 > olders alpine from 3.8 use document [server-alpine-LAMP-php5-fast-forward.md](server-alpine-LAMP-php5-fast-forward.md)
+> for most moderd alpines up to 3.20 [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md)
 
 #### php install
 
@@ -235,32 +237,33 @@ The php packages in alpine are only one version at time.
 7. install the php apache2 module package
 
 ```
-apk add php82-opcache php82-openssl php82-json php82-bcmath php82-mbstring php82-bz2 \
- php82-ctype php82-dev php82-dom php82-enchant php82-fileinfo php82-shmop php82-simplexml \
- php82-tokenizer php82-sysvmsg php82-sysvsem php82-sysvshm php82-xml php82-xmlreader \
- php82-xmlwriter php82-xsl php82-zip php82-tidy php82-calendar
+apk add php8-opcache php8-openssl php8-json php8-bcmath php8-mbstring php8-bz2 php8-calendar \
+ php8-ctype php8-dev php8-dom php8-enchant php8-fileinfophp8-shmop php8-simplexml php8-tidy \
+ php8-tokenizer php8-sysvmsg php8-sysvsem php8-sysvshm php8-xml php8-xmlreader php8-xmlrpc \
+ php8-xmlwriter php8-xsl php8-zip
 
-apk add php82-iconv php82-intl php82-gettext php82-pspell
+apk add php8-iconv php8-intl php8-gettext php8-pspell php8-recode
 
-apk add php82-exif php82-gd php82-pcntl php82-gmp php82-litespeed
+apk add php8-exif php8-gd php8-pcntl php8-gmp php8-litespeed
 
-apk add php82-ftp php82-ldap php82-imap php82-session php82-snmp php82-sockets
+apk add php8-ftp php8-ldap php8-imap php8-session php8-snmp php8-sockets
 
-apk add php82 php82-sockets php82-curl php82-pear php82-phar php82-doc php82-embed php82-posix 
+apk add php8 php8-sockets php8-curl php8-pear php8-phar php8-doc php8-embed php8-posix 
 
-apk add php82-fpm
+apk add php8-fpm
 
-apk add php82-cgi
+apk add php8-cgi
 
-apk add php82-dba php82-mysqli php82-mysqlnd php82-odbc php82-pgsql php82-sodium php82-sqlite3
+apk add php8-dba php8-mysqli php8-mysqlnd php8-odbc php8-pgsql php8-sodium php8-sqlite3
 
-apk add php82-pdo php82-pdo_dblib php82-pdo_mysql php82-pdo_odbc php82-pdo_pgsql php82-pdo_sqlite
+apk add php8-pdo php8-pdo_dblib php8-pdo_mysql php8-pdo_odbc php8-pdo_pgsql php8-pdo_sqlite
 
-apk add php82-apache2
+apk add php8-apache2
 ```
 
-> **Warning** Those instructions are for **php 8.2 and alpine 3.20 an up** if you runs 
-> olders alpine from 3.14 up to 3.16 use document [server-alpine-LAMP-php8-fast-forward.md](server-alpine-LAMP-php8-fast-forward.md)
+> **Warning** Those instructions are for **php8 and alpine 3.16+** if you runs 
+> olders alpine from 3.8 use document [server-alpine-LAMP-php5-fast-forward.md](server-alpine-LAMP-php5-fast-forward.md)
+> for most moderd alpines up to 3.20 [server-alpine-LAMP-professional-fast-forward.md](server-alpine-LAMP-professional-fast-forward.md)
 
 #### configuration of php
 
@@ -295,19 +298,19 @@ sed -i -r 's#^max_input_time =.*#max_input_time = 90#g' /etc/php*/php.ini
 2. Set into configuration file paths for socket and pid, **WARNING** MUST BE EQUAL to openrc defined!
 3. Set into configuration file owner for apache2 and mode, **WARNING** MUST BE EQUAL to openrc defined!
 4. eable the line of event module uncommenting and disable the line of prefork module by commenting
-5. add the php fpm service and activate the apache2 service **WARNING** since alpine v3.18 its php82 not php8
+5. add the php fpm service and activate the apache2 service **WARNING** since alpine v3.16 its php8 not php7
 6. start the php fpm service
 7. now here you will choose the way to handle php:
     * add the handler into apache2 configuration for php using module and restart apache2
     * add the handler into apache2 configuration for php using fpm and restart apache2
 
 ```
-mkdir -p /var/run/php82-fpm/
-chown apache:www-data /var/run/php82-fpm
+mkdir -p /var/run/php8-fpm/
+chown apache:www-data /var/run/php8-fpm
 
-sed -i -r 's|^.*listen =.*|listen = /run/php82-fpm/php-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
-sed -i -r 's|^pid =.*|pid = /run/php82-fpm/php-fpm.pid|g' /etc/php*/php-fpm.conf
-sed -i -r 's|^pidfile=.*|pidfile=/run/php82-fpm/php-fpm.pid|g' /etc/init.d/php82-fpm
+sed -i -r 's|^.*listen =.*|listen = /run/php8-fpm/php-fpm.sock|g' /etc/php*/php-fpm.d/www.conf
+sed -i -r 's|^pid =.*|pid = /run/php8-fpm/php-fpm.pid|g' /etc/php*/php-fpm.conf
+sed -i -r 's|^pidfile=.*|pidfile=/run/php8-fpm/php-fpm.pid|g' /etc/init.d/php8-fpm
 
 sed -i -r 's|^user = .*|user = apache|g' /etc/php*/php-fpm.conf
 sed -i -r 's|^user = .*|user = apache|g' /etc/php*/php-fpm.d/www.conf
@@ -320,19 +323,19 @@ sed -i -r 's|^.*listen.group = .*|listen.group = www-data|g' /etc/php*/php-fpm.d
 sed -i -r 's|^.*listen.mode = .*|listen.mode = 0660|g' /etc/php*/php-fpm.conf
 sed -i -r 's|^.*listen.mode = .*|listen.mode = 0660|g' /etc/php*/php-fpm.d/www.conf
 
-sed -i -r 's|.*LoadModule.*modules/mod_mpm_event.so.*|#LoadModule mpm_event_module modules/mod_mpm_event.so|g' /etc/apache2/httpd.conf
-sed -i -r 's|.*LoadModule.*modules/mod_mpm_prefork.so.*|LoadModule mpm_prefork_module modules/mod_mpm_prefork.so|g' /etc/apache2/httpd.conf
+sed -i -r 's|.*LoadModule.*modules/mod_mpm_event.so.*|LoadModule mpm_event_module modules/mod_mpm_event.so|g' /etc/apache2/httpd.conf
+sed -i -r 's|.*LoadModule.*modules/mod_mpm_prefork.so.*|#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so|g' /etc/apache2/httpd.conf
 
-rc-update add php-fpm82
+rc-update add php8-fpm
 rc-update add apache2
 
-rc-service php-fpm82 start
+rc-service php8-fpm start
 
 mv /etc/apache2/conf.d/php5-module.conf /etc/apache2/conf.d/php5-module.conf.disabled
 cat > /etc/apache2/conf.d/php5-fpm.conf << EOF
 <FilesMatch \\.php\$>
    <If "-f %{REQUEST_FILENAME}">
-    SetHandler "proxy:unix:/run/php82-fpm/php-fpm.sock|fcgi://localhost"
+    SetHandler "proxy:unix:/run/php8-fpm/php-fpm.sock|fcgi://localhost"
    </If>
 </FilesMatch>
 EOF
@@ -359,10 +362,10 @@ Adminer permits to manage any kind of database, including odbc, postgresql and m
 ```
 mkdir -p /usr/share/webapps/adminer
 
-wget https://github.com/pematon/adminer/releases/download/v4.12/adminer-4.12.php -O /usr/share/webapps/adminer/adminer-4.12.php
+wget https://github.com/adminerevo/adminerevo/releases/download/v4.8.2/adminer-4.8.2.php -O /usr/share/webapps/adminer/adminer-4.8.2.php
 
 rm -rf /usr/share/webapps/adminer/index.php
-ln -s adminer-4.12.php /usr/share/webapps/adminer/index.php
+ln -s adminer-4.8.2.php /usr/share/webapps/adminer/index.php
 
 cat > /etc/apache2/conf.d/adminer.conf << EOF
 Alias /adminer /usr/share/webapps/adminer/
@@ -454,7 +457,7 @@ psql -U postgres
 2. configure the MDBtools ODBC module in the system for MDB M$ databases
 
 ```
-apk add unixodbc psqlodbc freetds mdbtools-odbc 
+apk add unixodbc psqlodbc freetds
 
 odbcinst -u -d -n PostgreSQL 
 cat > /tmp/tmppg.tmp << EOF
@@ -479,15 +482,6 @@ Driver		= /usr/lib/libtdsodbc.so.0
 CPTimeout	= 
 CPReuse		= 
 odbcinst -i -d -f /tmp/tmptds.tmp
-
-odbcinst -u -d -n MDBTools
-cat > /tmp/tmpmdb.tmp << EOF
-[MDBTools]
-Description	= MDB modules for ODBC
-Driver		= /usr/lib/odbc/libmdbodbc.so
-CPTimeout	= 
-CPReuse		= 
-odbcinst -i -d -f /tmp/tmpmdb.tmp
 ```
 
 > **Warning** the packages for mysql and sqlite are `sqliteodbc` and `mariadb-connector-odbc` but only available for edge.
