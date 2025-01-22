@@ -124,6 +124,8 @@ gunzip webmin-2.202-minimal.tar.gz
 
 tar xf webmin-2.202-minimal.tar
 
+mkdir -p /usr/share/webapps
+
 webmin-2.202/setup.sh /usr/share/webapps/webmin
 ```
 
@@ -180,7 +182,7 @@ service sshd restart
 ```
 
 Now everithing will be using the "general" user, so RUNS "su -l general" 
-or LOGIN WITH general USER, this user will have the power to install packages 
+or LOGIN WITH general USER (same password so obvious), this user will have the power to install packages 
 and also restart services as super user. Also will be from now the only user 
 to get access using ssh to the machine.
 
