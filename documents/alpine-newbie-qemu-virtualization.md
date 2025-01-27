@@ -224,7 +224,7 @@ are same or similar architecture**, some examples:
 | ---------- | ------ | ------ | ------ | ------ | ------- | ------------ |
 | i386       | KVM(*) | KVM(*) | TCG    | TCG    | TCG     | only if common hardware is present, otherwise TCG |
 | amd64      | KVM(*) | KVM(*) | TCG    | TCG    | TCG     | only if common hardware and host is more recent rather guess, otherwise will be TCG |
-| armv6      | TCG    | TCG    | KVM(*) | KVM(*) | KVM(*)  | only if host is a more recent cpu rather than guest |
+| armv6      | TCG    | TCG    | KVM(*) | TCG(*) | TCG(*)  | only if host is a more recent cpu rather than guest |
 | armv7      | TCG    | TCG    | KVM    | KVM    | KVM(*)  | only if common hardware and host is more recent rather guess, otherwise will be TCG |
 | aarch64    | TCG    | TCG    | KVM    | KVM    | KVM(*)  | only if common hardware is present, otherwise TCG |
 
@@ -238,6 +238,10 @@ so by example we cannot emulate SSE4 from a host that does not have SSE4 flags o
 by example for emulation of i386 guess over i386 host, if the guess is a pentium4 the 
 host cpu must be as minimun pentium4, if you already has a pentium3 and wants to emulate 
 a pentium4 you will be very limited then!
+
+On marks (*) of ARM archs, linux kernel has dropped support for allowing 32-bit Arm 
+systems to host KVM guests as of the 5.7 kernel, and was thus removed from QEMU as 
+well. Running 32-bit guests on a 64-bit Arm host remains supported.
 
 #### Checking Virtualization Hardware support
 
