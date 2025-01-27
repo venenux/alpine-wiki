@@ -405,6 +405,59 @@ that will bring improved performance, because will use direc hardware of the hos
 but also including RAM access mapping,  To run again or terminate such command you will 
 need to kill in another console!
 
+### Qemu and USB combinations
+
+USB is a combinations of host adapter and devices attached, the host adapter of 
+the guest machine can be a qemu device or a passthrought device from real host machine.
+
+#### Picking a host adapter
+
+Dont use `-usb` command line switch, it adds usb controllers matching the 
+emulated hardware platform. So by ex for the 'pc' machine type it adds 
+the `piix3-usb-uhci` (supporting usb1) but for the 'q35' machine type 
+it adds `usb-ehci` (for usb2 devices) with uhci companions (for usb1 devices).
+For other emulating systems like ARM mostly will use `usb-ehci`.
+
+There are other best options:
+
+1. `-device qemu-xhci,id=usb` This is the most modern way, use it with any 
+virtual machine of linux hosts with kernel 3.2+ or modern operating systems.
+2. `-device nec-usb-xhci,id=usb` This is the most compatible way, use it with any 
+virtual machine of linux hosts with kernel 2.6+ if previously dont work.
+
+When using xhci you should better not use -usb, because you would get two usb 
+busses then, it will requires naming the usb host adapter and specifying the 
+usb bus when adding usb devices if you want avoid qemu picking a random usb bus:
+`-device qemu-xhci,id=usb0 -device usb-tablet,bus=usb0.0  -device usb-mouse,bus=usb0.0`
+
+**To create a host adapter with 8 ports**: `-device qemu-xhci,p2=8,p3=8` the `p2` 
+specifies the number of usb2 ports (which support usb1 too), and `p3` specifies 
+the number of usb3 ports. It is possible to assign different counts here. 
+When using `-device qemu-xhci,p2=8,p3=4` you'll get an xhci adapter where 
+ports 1-4 support both usb2 and usb3 and ports 5-8 are usb2-only. Can be used 
+to force a usb3-capable usb device into usb2 mode by plugging it into 
+a usb2-only xhci port. There should rarely be a need to actually do that in 
+practice though.
+
+**Recommendations for MAC and BSD setups:** `-device nec-usb-xhci,msi=Off` with 
+also `-device isa-applesmc,osk="<yoursetup>" -smbios type=2`
+
+#### Using usb storage device from host real hardware
+
+You need the path to real device, so recommendations if that users that launch 
+the command must be into the disk and/or usb group so can access such devices 
+then lauch with example:
+
+1. First add the USB host (host inside the gues machine)
+using as `-device qemu-xhci,id=usb1` (or `nec-usb-xhci`)
+2. Then add the backend to the host where the storage will 
+be as `-device usb-storage,bus=usb1.0,drive=ud1`
+3. Last then indicate the drive of the host machine to the guest 
+as: `-drive if=none,id=usbstick,format=raw,file=/dev/sde`
+
+Where the `/dev/sde` is the device path in the host real linux of the real 
+usb stick plugged in to pass to the guest virtual machine
+
 ### Qemu and network configurations
 
 Network configurations are the first way to configure communication support 
@@ -436,8 +489,8 @@ but will require complete file size allocation.
 
 #### Creation of disk images
 
-* RAW format: `qemu-img create -f raw -o preallocation=full storagedisk0.raw 10G`
-* Qcow2 format: `qemu-img create -f qcow2 -o cluster_size=512k storagedisk1.img 10G`
+* RAW format: `qemu-img create -f raw storagedisk0.raw 10G`
+* Qcow2 format: `qemu-img create -f qcow2 storagedisk1.img 10G`
 
 The RAW image file format is best for fast implementation, for best performance 
 using a qcow2 image file, increase the cluster size when creating the qcow2 file, 
@@ -502,9 +555,11 @@ it for older emulations. Will be a SATA similar to `ich9-ahci` if Q35 machine is
 used, for IDE must be `if=ide` so will be `-drive file=storagedisk1.img,if=ide,id=hd0` 
 so for older emulation with older OSs this is the best option.
 3. `-device virtio-scsi -device scsi-hd,drive=hd0` is newer virtio block device 
-for file storage emulation **best option for huge amount of "disks" but less 
+for file storage emulation **best option for huge amount of "disks" with enought 
 performance** is prefered for server cluster emulation, can be used on any emulation 
 if the kernel of operating system support it! Dont use it on older OSs.
+
+#### multiple storage usage on ide or sata
 
 Those options mus be used in conjuction with a device bus, by example `-device ich9-achi` 
 before any of them! See some examples:
@@ -528,7 +583,7 @@ Note that `if=none` must be parse to associated with the specific `bus=ahci.#`!
 
 With the `aio=threads` option is the preferred option when storing the VM image 
 file on an ext4 file system (real machine) and emulated (guest) are not linux etx4!. 
-With other file systems, `aio=native` must be used.
+With other file systems with linux as guest and host, `aio=native` must be used.
 
 More complex combinations can be made, inclusive just usage of one partition, 
 event a complete hard drive, or network mount drive also.
