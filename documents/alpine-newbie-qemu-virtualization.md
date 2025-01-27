@@ -557,7 +557,7 @@ kernel of operating system support it!
 it for older emulations. Will be a SATA similar to `ich9-ahci` if Q35 machine is 
 used, for IDE must be `if=ide` so will be `-drive file=storagedisk1.img,if=ide,id=hd0` 
 so for older emulation with older OSs this is the best option.
-3. `-device virtio-scsi -device scsi-hd,drive=hd0` is newer virtio block device 
+3. `-device virtio-scsi -device scsi-hd,drive=hd0` is newer virtio scsi device 
 for file storage emulation **best option for huge amount of "disks" with enought 
 performance** is prefered for server cluster emulation, can be used on any emulation 
 if the kernel of operating system support it! Dont use it on older OSs.
