@@ -42,6 +42,9 @@ to support it.
 The **Device pass through** is where the device is actually given access to the 
 underlying hardware. This can be as simple as exposing a single USB device on the 
 host system to the guest or dedicating a video card in a PCI slot to the exclusive.
+Take into consideration that this is not the same as pass a device like storage, 
+is parsing directly device address so then virtual host can use and manage it 
+directly so hardware will be in used by the virtual machien as a real one.
 
 #### packages in alpine
 
@@ -471,7 +474,7 @@ TODO
 
 ### Qemu and disk image storages
 
-Best options for are RAW and COW, this last the Qcow2.
+Best options for are RAW and QCOW, this last the Qcow2.
 
 * Image file is more flexible, but slower rather than raw file format
 * Both supports snapshots, but Qcow2 writes snapshot directly.
@@ -559,21 +562,53 @@ for file storage emulation **best option for huge amount of "disks" with enought
 performance** is prefered for server cluster emulation, can be used on any emulation 
 if the kernel of operating system support it! Dont use it on older OSs.
 
+With the `aio=threads` option is the preferred option when storing the VM image 
+file on an ext4 file system (real machine) and emulated (guest) are not linux etx4!. 
+With other file systems with linux as guest and host, `aio=native` must be used.
+
+#### Storage drive disk cache modes
+
+Disk cache tricks and tips only will work for Linux hosts, cos disk write 
+is related and close to the filesystem where the guest disk virtual machine 
+is placed, unless you use VirtIO-Scsi and real disk by passthrouth.
+
+| `cache=`     | Host Page Cache | Disk Write Cache | Description                           |
+| ------------ | --------------- | ---------------- | ------------------------------------- |
+| none         | disabled        | enabled          | best writes, performance and safety   |
+| writethrough | enabled         | disabled         | best reads, performance and safety    |
+| writeback    | enabled         | enabled          | fastest, less safest on power outage  |
+| directsync   | disabled        | disabled         | safest but slowest                    |
+| unsafe       | enabled         | enabled          | dont flush data, fastest and unsafest |
+
+The caches write modes need the barrier-passing feature. That feature is 
+enabled by default on Ext4 since kernels 3.0 only, others filesystems like 
+the now famoust Btrfs will not support it.
+
+The caches write modes are for use with RAW formats, but you can use it also 
+with QCow2 by creating such files with `preallocation=falloc` or `preallocation=full`
+options (qemu-img command) for storage image file.
+
+1. RAW, ISO or QCOW2/full img files under Ext4 can be used with `cache=writethrough`
+2. QCOW2(falloc) or QCOW(metadata) img files can be used with `cache=writeback`
+3. ISO or QCOW2(metadata) img fles can be used with `cache=none`
+4. Direct or passthrouth (real hardware used on virtuals) must use `cache=none`
+
 #### multiple storage usage on ide or sata
 
-Those options mus be used in conjuction with a device bus, by example `-device ich9-achi` 
-before any of them! See some examples:
+This is best for older hardware or most compatible layer, with enought performance.
+Any drive must be attached to a drive bus, SATA ich9 `-device ich9-achi` is 
+used here for this example:
 
 ```
 -device ich9-ahci,id=ahci \
--device ide-hd,drive=hd0,bus=ahci.0 \
--device ide-hd,drive=hd1,bus=ahci.1 \
--device ide-cd,drive=cd0,bus=ahci.2 \
--device ide-cd,drive=cd1,bus=ahci.3 \
--drive file=vm1-windows2k3-disk0.img,format=qcow2,if=none,media=disk,aio=threads,index=0,id=hd0 \
--drive file=vm1-windows2k3-disk1.img,format=qcow2,if=none,media=disk,aio=threads,index=1,id=hd1 \
--drive file=/home/general/Isos/live-image-amd64.hybrid.iso,if=none,media=cdrom,aio=threads,index=2,id=cd0 \
--drive file=/home/general/Downloads/windows-drivers-qemu-virtio-win-0.1.240-2023.iso,if=none,media=cdrom,aio=threads,index=3,id=cd1
+-device ide-hd,bus=ahci.0,drive=hd0 \
+-device ide-hd,bus=ahci.1,drive=hd1 \
+-device ide-cd,bus=ahci.2,drive=cd0 \
+-device ide-cd,bus=ahci.3,drive=cd1 \
+-drive file=vm1-disk0.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=0,id=hd0 \
+-drive file=vm1-disk1.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=1,id=hd1 \
+-drive file=live-image-amd64.hybrid.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=2,id=cd0 \
+-drive file=virtio-win-0.1.240-2023.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=3,id=cd1
 ```
 
 Here we used `ich9` ACHI SATA with 4 drives, two first are hard disk drives and 
@@ -581,12 +616,51 @@ seconds last are optical cd/dvd drives, `index` parameters indicates the order,
 and the `id` indicates where is attached in combination with `bus` from PCI storage.
 Note that `if=none` must be parse to associated with the specific `bus=ahci.#`!
 
-With the `aio=threads` option is the preferred option when storing the VM image 
-file on an ext4 file system (real machine) and emulated (guest) are not linux etx4!. 
-With other file systems with linux as guest and host, `aio=native` must be used.
+#### multiple storage usage using virtio
 
-More complex combinations can be made, inclusive just usage of one partition, 
-event a complete hard drive, or network mount drive also.
+This is the fastest, also best for Linux and BSD hosts, but worse for direct read disks.
+Any drive must be attached to a individual PCI virtio `-device virtio-blk-pci` is 
+used here for this example:
+
+```
+-device virtio-blk-pci,drive=hd0 \
+-device virtio-blk-pci,drive=hd1 \
+-device virtio-blk-pci,drive=cd0 \
+-device virtio-blk-pci,drive=cd1 \
+-drive file=vm1-disk0.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=0,id=hd0 \
+-drive file=vm1-disk1.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=1,id=hd1 \
+-drive file=live-image-amd64.hybrid.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=2,id=cd0 \
+-drive file=virtio-win-0.1.240-2023.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=3,id=cd1
+```
+
+Here we used `virtio-blk` for each drive, two first are hard disk drives and 
+seconds last are optical cd/dvd drives, but as `index` indicates the order it 
+will not work for boot order, and the `id` indicates where is attached.
+Note that `if=none` must be parse to associated with the specific `drive=<id>`!
+
+#### multiple storage usage using scsi
+
+This is the balanced, most compatible, performed, that works for most combinations.
+Any drive must be attached to a bus that needs a SCSi hub `-device pvscsi` is 
+used here for this example:
+
+```
+-device pvscsi,id=scsi0 \
+-device scsi-hd,bus=scsi0.0,drive=hd0 \
+-device scsi-hd,bus=scsi0.0,drive=hd1 \
+-device scsi-cd,bus=scsi0.0,drive=cd0 \
+-device scsi-cd,bus=scsi0.0,drive=cd1 \
+-drive file=vm1-disk0.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=0,id=hd0 \
+-drive file=vm1-disk1.img,format=qcow2,if=none,media=disk,aio=threads,cache=writeback,index=1,id=hd1 \
+-drive file=live-image-amd64.hybrid.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=2,id=cd0 \
+-drive file=virtio-win-0.1.240-2023.iso,if=none,media=cdrom,aio=threads,cache=writethrough,index=3,id=cd1
+```
+
+Here we used the VmWare `pvscsi` for each drive, two first are hard disk drives and 
+seconds last are optical cd/dvd drives, but as `index` indicates the order it 
+will not work for boot order, and the `id` indicates where is attached.
+Note that `if=none` must be parse to associated with the specific `bus=csci.#`!
+and the only well working SCSI hub is the `-device virtio-scsi-pci`
 
 ## Qemu usage
 
