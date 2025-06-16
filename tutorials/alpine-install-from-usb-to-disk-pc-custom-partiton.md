@@ -213,9 +213,39 @@ export KERNELOPTS=" acpi_enforce_resources=lax iomem=relaxed vsyscall=emulated "
 
 setup-disk -m sys /target
 
+apk del syslinux
+
+apk add grub grub-bios
+
+grub-install --compress=no --boot-directory=/target/boot /dev/sda
+
+cat > /target/etc/default/grub << EOF
+GRUB_DISTRIBUTOR="Alpine"
+GRUB_CMDLINE_LINUX_DEFAULT="rootfstype=ext4 modules=sd-mod,usb-storage,ext4 $KERNELOPTS"
+GRUB_TIMEOUT=6
+GRUB_DISABLE_SUBMENU=y
+EOF
+cp -f /target/etc/default/grub /etc/default/grub
+
+mount /dev/ /target/dev/--bind
+
+mount /proc/ /target/proc/--bind
+
+chroot /target
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+exit
+
+umount /target/proc
+
+umount /target/dev
+
 umount /target/boot
 
 umount /target
+
+reboot
 ```
 
 ## NOTES: offline mode
