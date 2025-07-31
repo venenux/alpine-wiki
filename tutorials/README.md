@@ -41,6 +41,8 @@ with Alpine Linux, that expects a minimal knowledge from reader to perform actio
 
 * Alpine in your phone: [alpine-tutorial-in-phones.md](alpine-tutorial-in-phones.md)
     * [phones-androit-allow-external-apps-install.md](phones-androit-allow-external-apps-install.md)
+* Manage your phone with Alpine [alpine-tutorial-manage-your-phone-android.md](alpine-tutorial-manage-your-phone-android.md)
+    * [phones-androit-allow-adb-usb-developer-mode.md](phones-androit-allow-adb-usb-developer-mode.md)
 
 ## DESKTOPS
 
